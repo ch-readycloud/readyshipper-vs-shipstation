@@ -140,7 +140,7 @@
 </div>
 <!-- Right column: 3D viewer + slider, contained to match left column height -->
 <div class="hidden lg:flex flex-col">
-<div id="hero-3d-wrapper" class="relative flex-1" style="min-height: 340px;">
+<div id="hero-3d-wrapper" class="relative flex-1 overflow-hidden" style="min-height: 0;">
 <div id="hero-3d" class="absolute inset-0"></div>
 <!-- Card overlays — positioned absolutely within this container -->
 <div id="card-rs" class="absolute bg-white rounded-2xl shadow-lg border border-slate-100 px-4 py-3 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 140px;">
@@ -164,7 +164,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet"/>
 </div>
 <!-- Slider row -->
-<div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-100 px-6 py-4 flex items-center gap-6 mt-2">
+<div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-100 px-6 py-4 flex items-center gap-6 flex-shrink-0">
 <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 whitespace-nowrap flex-shrink-0">Shipments/mo</label>
 <div class="flex-1 min-w-0">
 <input id="hero-volume-slider" type="range" min="0" max="9" value="3" step="1" class="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer"/>
@@ -203,17 +203,16 @@ const arrowHead = document.getElementById('arrow-head');
 // Scene
 const scene = new THREE.Scene();
 
-// Camera — use full container size
-let cw = container.clientWidth || window.innerWidth;
-let ch = container.clientHeight || 600;
-const frustumSize = 9;
+// Camera — fit to column container
+let cw = container.clientWidth || 600;
+let ch = container.clientHeight || 400;
+const frustumSize = 5;
 const aspect = cw / ch;
 const camera = new THREE.OrthographicCamera(
   -frustumSize * aspect / 2, frustumSize * aspect / 2,
   frustumSize / 2, -frustumSize / 2, 0.1, 100
 );
-// Offset camera to push bars toward the right side of viewport
-camera.position.set(0, 5, 10);
+camera.position.set(0, 4, 10);
 camera.lookAt(0, 2.0, 0);
 
 // Renderer — transparent, no shadows, no tone mapping
@@ -231,18 +230,18 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
 dirLight.position.set(3, 8, 5);
 scene.add(dirLight);
 
-// Bar dimensions — tight radius for subtle rounding only on edges
-const barWidth = 2.0;
-const barDepth = 1.6;
-const barRadius = 0.1;
-const ssMaxH = 7.0;
-const rsMaxH = 0.9;
+// Bar dimensions — sized for column container
+const barWidth = 1.4;
+const barDepth = 1.1;
+const barRadius = 0.08;
+const ssMaxH = 4.0;
+const rsMaxH = 0.6;
 
 // ShipStation bar — flat matte, MeshLambertMaterial for no reflections
 const ssGeo = new RoundedBoxGeometry(barWidth, 1, barDepth, 4, barRadius);
 const ssMat = new THREE.MeshLambertMaterial({ color: 0xb0bcc8 });
 const ssBar = new THREE.Mesh(ssGeo, ssMat);
-ssBar.position.set(1.8, 0, 0);
+ssBar.position.set(1.2, 0, 0);
 ssBar.scale.y = 0.001;
 scene.add(ssBar);
 
@@ -250,7 +249,7 @@ scene.add(ssBar);
 const rsGeo = new RoundedBoxGeometry(barWidth, 1, barDepth, 4, barRadius);
 const rsMat = new THREE.MeshLambertMaterial({ color: 0x2ee8a5 });
 const rsBar = new THREE.Mesh(rsGeo, rsMat);
-rsBar.position.set(-1.8, 0, 0);
+rsBar.position.set(-1.2, 0, 0);
 rsBar.scale.y = 0.001;
 scene.add(rsBar);
 
@@ -457,8 +456,8 @@ requestAnimationFrame(tick);
 
 // Resize handler
 window.addEventListener('resize', () => {
-  cw = container.clientWidth || window.innerWidth;
-  ch = container.clientHeight || 600;
+  cw = container.clientWidth || 600;
+  ch = container.clientHeight || 400;
   const a = cw / ch;
   camera.left = -frustumSize * a / 2;
   camera.right = frustumSize * a / 2;
