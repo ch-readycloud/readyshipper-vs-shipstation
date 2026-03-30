@@ -102,7 +102,7 @@
 <div class="absolute inset-0 z-0">
 <div id="hero-3d" class="w-full h-full"></div>
 </div>
-<div class="max-w-7xl mx-auto px-8 pt-16 pb-0 grid lg:grid-cols-2 gap-8 items-start relative z-10" style="min-height: 600px;">
+<div class="max-w-7xl mx-auto px-8 pt-16 pb-0 grid lg:grid-cols-2 gap-8 items-start relative z-10" style="min-height: 520px;">
 <div class="space-y-8 pb-16 lg:pb-24">
 <span class="inline-block text-secondary font-bold tracking-widest text-xs uppercase bg-secondary/10 px-4 py-1.5 rounded-full mb-2">Data as of 04/2026</span>
 <h1 class="font-headline font-black tracking-tight text-on-surface">
@@ -147,7 +147,7 @@
 </div>
 <!-- Horizontal volume slider below the bars -->
 <div class="relative z-20 max-w-7xl mx-auto px-8 pb-8 -mt-8">
-<div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-100 px-8 py-5 flex items-center gap-8 max-w-3xl ml-auto">
+<div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-100 px-8 py-5 flex items-center gap-8">
 <label class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 whitespace-nowrap flex-shrink-0">Shipments/mo</label>
 <div class="flex-1 min-w-0">
 <input id="hero-volume-slider" type="range" min="0" max="9" value="3" step="1" class="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer"/>
@@ -217,8 +217,8 @@ const camera = new THREE.OrthographicCamera(
   frustumSize / 2, -frustumSize / 2, 0.1, 100
 );
 // Offset camera to push bars toward the right side of viewport
-camera.position.set(1, 5, 8);
-camera.lookAt(-4, 2.5, 0);
+camera.position.set(1, 6, 8);
+camera.lookAt(-4, 3.0, 0);
 
 // Renderer — transparent, no shadows, no tone mapping
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -258,8 +258,8 @@ rsBar.position.set(-1.8, 0, 0);
 rsBar.scale.y = 0.001;
 scene.add(rsBar);
 
-// White fade at bar bases
-const fadeGeo = new THREE.PlaneGeometry(20, 4);
+// White fade at bar bases — subtle, only covers very bottom
+const fadeGeo = new THREE.PlaneGeometry(20, 2);
 const fadeMat = new THREE.ShaderMaterial({
   transparent: true,
   depthWrite: false,
@@ -274,13 +274,13 @@ const fadeMat = new THREE.ShaderMaterial({
   fragmentShader: `
     varying vec2 vUv;
     void main() {
-      float alpha = 1.0 - smoothstep(0.0, 0.7, vUv.y);
+      float alpha = (1.0 - smoothstep(0.0, 0.5, vUv.y)) * 0.6;
       gl_FragColor = vec4(1.0, 1.0, 1.0, alpha);
     }
   `
 });
 const fadePlane = new THREE.Mesh(fadeGeo, fadeMat);
-fadePlane.position.set(0, 3.0, 3.0);
+fadePlane.position.set(0, 0.5, 3.0);
 fadePlane.renderOrder = 999;
 scene.add(fadePlane);
 
@@ -318,6 +318,7 @@ const VOLUME_TIERS = [
 
 let currentSSTier = VOLUME_TIERS[3]; // default 1,000
 let targetSSMaxH = ssMaxH;
+let targetRSMaxH = rsMaxH;   // RS bar target height (proportional to price ratio)
 let targetRSDropY = 0;       // how far RS bar sinks below ground
 let targetRSOpacity = 1.0;   // RS bar material opacity
 let showJokeText = false;
@@ -335,18 +336,20 @@ function updateSlider(idx) {
   currentSSTier = tier;
   sliderVolLabel.textContent = tier.vol.toLocaleString();
   sliderSavings.textContent = '$' + (tier.ss - tier.rs).toLocaleString() + '/mo';
-  // Scale SS bar proportionally: price maps linearly to full height range
-  const minP = VOLUME_TIERS[0].ss, maxP = VOLUME_TIERS[VOLUME_TIERS.length - 1].ss;
-  const pct = (tier.ss - minP) / (maxP - minP);
-  targetSSMaxH = ssMaxH * (0.15 + pct * 0.85);
-  // RS bar sinks and fades as SS grows — starts at idx 4 (2K), fully gone by idx 9 (20K)
-  if (idx <= 3) {
+  // SS bar height is always ssMaxH (full height) — it represents the competitor cost
+  // RS bar height scales proportionally: rs/ss ratio of the SS bar height
+  // This makes the RS bar visually tiny next to the SS bar at high volumes
+  targetSSMaxH = ssMaxH;
+  const ratio = tier.rs / tier.ss; // e.g. 64/1499 = 0.04 at 20K
+  targetRSMaxH = ssMaxH * ratio;
+  // RS bar also sinks and fades at extreme volumes (15K+)
+  if (idx <= 7) {
     targetRSDropY = 0;
     targetRSOpacity = 1.0;
   } else {
-    const fadePct = (idx - 3) / 6; // 0 at idx 3, 1 at idx 9
-    targetRSDropY = fadePct * -1.5;
-    targetRSOpacity = Math.max(0.0, 1.0 - fadePct * 1.2);
+    const fadePct = (idx - 7) / 2; // 0 at idx 7, 1 at idx 9
+    targetRSDropY = fadePct * -0.5;
+    targetRSOpacity = Math.max(0.15, 1.0 - fadePct * 0.7);
   }
   // Update card counters
   ssTargetCost = tier.ss;
@@ -398,10 +401,10 @@ function tick(time) {
   const elapsed = time - startTime - 600;
 
   if (elapsed > 0) {
-    // ReadyShipper rises fast, stops
+    // ReadyShipper rises fast, stops — uses proportional target height
     const rsP = Math.min(elapsed / rsDur, 1);
     const rsE = easeOutCubic(rsP);
-    const rsH = 0.001 + rsE * rsMaxH;
+    const rsH = 0.001 + rsE * targetRSMaxH;
     rsBar.scale.y = rsH;
     rsBar.position.y = rsH * 0.5;
     rsCounter.textContent = '$' + Math.round(rsE * rsTargetCost);
@@ -436,12 +439,18 @@ function tick(time) {
         ssBar.scale.y = newH;
         ssBar.position.y = newH * 0.5;
       }
-      // RS bar sinks downward and fades
-      const rsBaseY = rsMaxH * 0.5;
+      // RS bar shrinks proportionally, sinks, and fades
+      const rsHDiff = targetRSMaxH - rsBar.scale.y;
+      if (Math.abs(rsHDiff) > 0.003) {
+        rsBar.scale.y += rsHDiff * 0.08;
+      }
+      const rsBaseY = rsBar.scale.y * 0.5;
       const rsTargetY = rsBaseY + targetRSDropY;
       const rsYDiff = rsTargetY - rsBar.position.y;
       if (Math.abs(rsYDiff) > 0.003) {
         rsBar.position.y += rsYDiff * 0.08;
+      } else {
+        rsBar.position.y = rsTargetY;
       }
       const opDiff = targetRSOpacity - rsMat.opacity;
       if (Math.abs(opDiff) > 0.005) {
