@@ -18,6 +18,19 @@
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+        @keyframes scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .ticker-strip {
+          width: max-content;
+          animation: scroll 18s linear infinite;
+        }
+        @media (min-width: 640px) {
+          .ticker-strip {
+            animation: scroll 40s linear infinite;
+          }
+        }
     </style>
 <script id="tailwind-config">
       tailwind.config = {
@@ -26,9 +39,9 @@
           extend: {
             colors: {
               "primary": "#18C98D",
-              "on-primary": "#003924",
+              "on-primary": "#ffffff",
               "primary-container": "#18C98D",
-              "on-primary-container": "#003924",
+              "on-primary-container": "#ffffff",
               "secondary": "#3b82f6",
               "on-secondary": "#ffffff",
               "surface": "#fcfcfc",
@@ -53,48 +66,17 @@
     </script>
 </head>
 <body class="bg-surface font-body text-on-surface antialiased">
-<!-- Top Navigation Shell -->
-<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none">
-<div class="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto">
-<div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white">ReadyCloud</div>
-<div class="hidden lg:flex items-center gap-8">
-<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-inter tracking-tight font-bold text-sm" href="#">Product</a>
-<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-inter tracking-tight font-bold text-sm" href="#">Solutions</a>
-<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-inter tracking-tight font-bold text-sm" href="#">Integrations</a>
-<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-inter tracking-tight font-bold text-sm" href="#">Pricing</a>
-</div>
-<div class="flex items-center gap-4">
-<!-- Fix 3: Mobile hamburger button -->
-<button id="mobile-menu-btn" class="lg:hidden text-slate-600 dark:text-slate-400 hover:text-emerald-600 transition-colors p-2" aria-label="Toggle menu">
-<span class="material-symbols-outlined text-2xl">menu</span>
-</button>
-<button class="text-slate-600 dark:text-slate-400 hover:text-emerald-600 font-inter tracking-tight font-bold text-sm px-4 py-2 transition-all duration-200 active:scale-95">Log In</button>
-<button class="bg-primary-container text-on-primary-container px-6 py-2.5 rounded-full font-inter tracking-tight font-bold text-sm hover:opacity-90 transition-all duration-200 active:scale-95">Contact Sales</button>
-</div>
-</div>
-<!-- Fix 3: Mobile menu dropdown -->
-<div id="mobile-menu" class="hidden lg:hidden bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-8 py-4 space-y-4">
-<a class="block text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-inter tracking-tight font-bold text-sm py-2" href="#">Product</a>
-<a class="block text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-inter tracking-tight font-bold text-sm py-2" href="#">Solutions</a>
-<a class="block text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-inter tracking-tight font-bold text-sm py-2" href="#">Integrations</a>
-<a class="block text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-inter tracking-tight font-bold text-sm py-2" href="#">Pricing</a>
-</div>
-</nav>
-<!-- Fix 3: Toggle script -->
-<script>
-document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-    var menu = document.getElementById('mobile-menu');
-    menu.classList.toggle('hidden');
-});
-</script>
+
 <!-- Hero Section -->
-<section class="pt-40 pb-24 px-8 max-w-7xl mx-auto relative overflow-hidden">
+<section class="pt-16 pb-24 px-8 max-w-7xl mx-auto relative overflow-hidden">
 <div class="absolute top-0 right-0 -z-10 w-1/2 h-full bg-gradient-to-l from-secondary/5 to-transparent rounded-full blur-3xl"></div>
 <div class="grid lg:grid-cols-2 gap-16 items-center">
 <div class="space-y-8">
 <span class="inline-block text-secondary font-bold tracking-widest text-xs uppercase bg-secondary/10 px-4 py-1.5 rounded-full">Pricing data as of 09/2025</span>
-<h1 class="font-headline text-6xl lg:text-8xl font-black tracking-tightest leading-[0.9] text-on-surface">
-                ReadyShipper <span class="text-primary italic">vs</span> ShipStation
+<h1 class="font-headline text-5xl lg:text-7xl font-black tracking-tight leading-[1] text-on-surface">
+<!-- ReadyShipper Logo -->
+<img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMiIgZGF0YS1uYW1lPSJMYXllciAyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTA4LjYxIDI4OC45Ij4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLmNscy0xIHsKICAgICAgICBmaWxsOiAjMThjOThkOwogICAgICB9CgogICAgICAuY2xzLTIgewogICAgICAgIGZpbGw6ICMyMzFmMjA7CiAgICAgIH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgogIDxnIGlkPSJMYXllcl8xLTIiIGRhdGEtbmFtZT0iTGF5ZXIgMSI+CiAgICA8Zz4KICAgICAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNODcuNzMsNjEuN2wtMi40Ni0xNi4xMkMtMi42OSw5Ny4wOSwxMi4yMiwyMzAuMDEsMTA5LjE0LDI2MC44M2wyLjQyLDI4LjA3Yy01MC43My0xMS4zMy05Mi44OS01Mi4xMi0xMDYuMzgtMTAyLjIzQy0xMy4zNywxMTcuOCwxOS4xNiw0Ny45LDgyLjQ4LDE2LjgybC0uNzMtMTYuODIsNDEuNjgsMjIuODUtMzUuNywzOC44NVoiLz4KICAgICAgPHBhdGggY2xhc3M9ImNscy0yIiBkPSJNMTUwLjY3LDgwLjc3bDY0LjUzLDM2LjEzLjA3LDc0LjExLTYzLjM3LDM2LjIxLTYyLjk1LTM1Ljk2LS4xNi03NC4xNCw2MS44OC0zNi4zNVpNMTAzLjE2LDEyMC42bDQ4LjYyLDI3LjIxLDQ4Ljg0LTI4LjI1LTQ4Ljg1LTI4LjI0LTQ4LjYxLDI5LjI4Wk0xNDcuMzMsMTU2LjM3bC00OS4wOS0yOC4wNXY1OC4ybDQ5LjA5LDI3LjM1di01Ny41Wk0yMDYuMjQsMTI4LjMybC00OS43OSwyOC40djU3LjE1bDQ5Ljc5LTI4LjA1di01Ny41WiIvPgogICAgPC9nPgogICAgPGc+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTI5MC41OCw3MC45OGg2MC42NmM3Ljc0LDAsMTQuMDEsMS4xNSwxOC44MiwzLjQ0LDQuOCwyLjMsOC40Miw1LjMzLDEwLjg2LDkuMSwyLjQ0LDMuNzcsMy44Nyw4LjE0LDQuMywxMy4xLjQzLDQuOTYuMDcsMTAuMTgtMS4wOCwxNS42NS0yLjMsMTEuNTQtNi4yLDIwLjM1LTExLjcyLDI2LjQyLTUuNTIsNi4wNy0xMi44LDEwLjE0LTIxLjgzLDEyLjIxdi40NGM1LjU5Ljg5LDkuNzksMi40NCwxMi41OCw0LjY2LDIuOCwyLjIyLDQuNjYsNS4wMyw1LjU5LDguNDQuOTMsMy40MSwxLjE4LDcuMzMuNzUsMTEuNzctLjQzLDQuNDQtMS4xNSw5LjMzLTIuMTUsMTQuNjUtMS40Myw3Ljk5LTIuNTEsMTQuMjUtMy4yMywxOC43Ni0uNzIsNC41Mi0xLjA4LDguMDMtMS4wOCwxMC41NSwwLDIuMzcuMzIsNC4wMy45Nyw1LC42NC45NiwxLjU0LDEuNzQsMi42OSwyLjMzbC0uMjIsMmgtMzguOTNjLTEtMi42Ni0xLjI5LTYuNDQtLjg2LTExLjMyLjQzLTQuODgsMS41OC0xMS44NCwzLjQ0LTIwLjg3LDEuMjktNi44MSwyLjExLTEyLjM5LDIuNDctMTYuNzYuMzYtNC4zNi4yMS03Ljc3LS40My0xMC4yMS0uNjQtMi40NC0xLjgzLTQuMTEtMy41NS01LTEuNzItLjg5LTQuMDItMS4zMy02Ljg4LTEuMzNoLTEzLjc3bC0xMy4xMiw2NS40OWgtMzYuMTNsMzEuODMtMTU4LjUyWk0zMTMuMTcsMTM3LjgxaDExLjE4YzMuNTgsMCw2LjctLjYzLDkuMzYtMS44OSwyLjY1LTEuMjYsNC45MS0yLjg5LDYuNzgtNC44OCwxLjg2LTIsMy4zMy00LjIyLDQuNDEtNi42NiwxLjA4LTIuNDQsMS44My00Ljg1LDIuMjYtNy4yMSwxLjE1LTUuOTIuNzUtMTAuNzMtMS4xOC0xNC40My0xLjk0LTMuNy02LjQ5LTUuNTUtMTMuNjYtNS41NWgtMTAuOTdsLTguMTcsNDAuNjNaIi8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTQyMi40MywxNzUuMzNsLTEuNTEsNy4zM2MtMS44Nyw5LjMzLTIuNCwxNi4yOC0xLjYxLDIwLjg3Ljc5LDQuNTksMy42OSw2Ljg4LDguNzEsNi44OCw0LjU5LDAsOC4xLTEuNzgsMTAuNTQtNS4zMywyLjQ0LTMuNTUsNC42Ni05LjEsNi42Ny0xNi42NWgzMi4yNmMtMy4zLDE1LjEtOS40NiwyNi4yNC0xOC41LDMzLjQxLTkuMDMsNy4xOC0yMC44NiwxMC43Ny0zNS40OSwxMC43Ny0xMC45LDAtMTkuMTQtMS44NS0yNC43NC01LjU1LTUuNTktMy43LTkuMzYtOC42Ni0xMS4yOS0xNC44OC0xLjk0LTYuMjItMi41MS0xMy4zOS0xLjcyLTIxLjU0Ljc5LTguMTQsMi4xMS0xNi42NSwzLjk4LTI1LjUzLDEuNzItOC40NCwzLjk4LTE2LjI0LDYuNzgtMjMuNDIsMi44LTcuMTgsNi40OS0xMy4zOSwxMS4wOC0xOC42NSw0LjU5LTUuMjUsMTAuMjUtOS4zNiwxNi45OS0xMi4zMiw2Ljc0LTIuOTYsMTQuODQtNC40NCwyNC4zMS00LjQ0LDEwLjc1LDAsMTguODUsMS42NywyNC4zLDUsNS40NSwzLjMzLDkuMSw4LjA3LDEwLjk3LDE0LjIxLDEuODYsNi4xNCwyLjMzLDEzLjQzLDEuNCwyMS44Ny0uOTMsOC40NC0yLjQsMTcuNzYtNC40MSwyNy45N2gtNTguNzJaTTQ1MS45LDE1NC40NmMxLjcyLTguNDQsMi4yNi0xNC44OCwxLjYxLTE5LjMycy0zLjQxLTYuNjYtOC4yOC02LjY2Yy01Ljc0LDAtOS44NiwyLjMtMTIuMzcsNi44OC0yLjUxLDQuNTktNC41NSwxMC45Ni02LjEzLDE5LjA5aDI1LjE3WiIvPgogICAgICA8cGF0aCBjbGFzcz0iY2xzLTIiIGQ9Ik01MDAuMDgsMTQ2LjI1YzEuODYtOC40NCw0LjQ0LTE1LjE3LDcuNzQtMjAuMiwzLjMtNS4wMyw3LjMxLTkuMDMsMTIuMDQtMTEuOTksNC41OS0yLjk2LDkuNTctNSwxNC45NS02LjExczExLjcyLTEuNjcsMTkuMDQtMS42N2MxNC4zNCwwLDI0LjIzLDIuNzQsMjkuNjgsOC4yMSw1LjQ1LDUuNDgsNi45NSwxNC41OCw0LjUyLDI3LjMxbC0xMi40Nyw2MS43MmMtLjQzLDIuMjItLjksNC41OS0xLjQsNy4xLS41LDIuNTItLjg2LDQuOTYtMS4wOCw3LjMzLS4yMiwyLjM3LS4yNSw0LjU1LS4xMSw2LjU1LjE0LDIsLjY0LDMuNjYsMS41LDVoLTMzLjU1Yy0uMjktMi4wNy0uMzItNC4yOS0uMTEtNi42Ni4yMS0yLjM3LjQ2LTQuNzQuNzUtNy4xaC0uNDNjLTMuNDQsNS4zMy03Ljg5LDkuNDctMTMuMzQsMTIuNDMtNS40NSwyLjk2LTExLjE4LDQuNDQtMTcuMjEsNC40NC05Ljg5LDAtMTYuOTYtMi44NS0yMS4xOS04LjU1LTQuMjMtNS43LTUuMDUtMTUuMDYtMi40Ny0yOC4wOCwxLjQzLTcuMSwzLjk4LTEzLjM2LDcuNjMtMTguNzYsMy42Ni01LjQsNy45Mi05LjM2LDEyLjgtMTEuODgsNC43My0yLjUyLDEwLjE0LTQuNDQsMTYuMjQtNS43Nyw2LjA5LTEuMzMsMTEuNzItMi42NywxNi44OC00LDIuNzItLjc0LDQuOTgtMS40NCw2Ljc4LTIuMTEsMS43OS0uNjcsMy4yMy0xLjQ4LDQuMy0yLjQ0LDEuMDgtLjk2LDEuOTQtMi4xOCwyLjU4LTMuNjYuNjQtMS40OCwxLjE4LTMuMzMsMS42MS01LjU1LjcyLTMuNy40My02LjYyLS44Ni04Ljc3LTEuMjktMi4xNC0zLjg3LTMuMjItNy43NC0zLjIyLTQuODgsMC04LjUsMS40NC0xMC44Niw0LjMzLTIuMzcsMi44OS00LjEyLDYuOTItNS4yNywxMi4xaC0zMC45N1pNNTIxLjE1LDE5Mi40M2MtMSw0Ljc0LS45LDguNDcuMzIsMTEuMjEsMS4yMiwyLjc0LDMuNDcsNC4xMSw2Ljc4LDQuMTEsMy43MywwLDcuMjQtMS4xOCwxMC41NC0zLjU1LDMuMy0yLjM3LDUuNTItNi42Niw2LjY3LTEyLjg4LDEuMTUtNS4wMywyLjA0LTkuMTgsMi42OS0xMi40My42NC0zLjI1LDEuMjUtNi4xNCwxLjgzLTguNjYtMy4wMSwxLjQ4LTUuNjMsMi42Ni03Ljg1LDMuNTUtMi4yMy44OS00LjEyLDEuNjMtNS43LDIuMjItMS41OC41OS0yLjk0LDEuMTEtNC4wOSwxLjU1LTEuMTUuNDQtMi4xNS45Ni0zLjAxLDEuNTUtMi4xNSwxLjQ4LTMuODcsMy4yMi01LjE2LDUuMjItMS4yOSwyLTIuMyw0LjctMy4wMSw4LjFaIi8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTY1My4yMiwyMTQuODVoLS40M2MtMSwyLjA4LTIuMzMsNC4xNS0zLjk4LDYuMjItMS42NSwyLjA3LTMuNjYsMy45Ni02LjAyLDUuNjYtMi4zNywxLjctNS4wOSwzLjExLTguMTcsNC4yMi0zLjA4LDEuMTEtNi41NiwxLjY3LTEwLjQzLDEuNjctOC44OSwwLTE1LjU5LTIuNTktMjAuMTEtNy43Ny00LjUyLTUuMTgtNi43OC0xMy43Ni02Ljc4LTI1Ljc1LDAtOC4xNCwxLjE1LTE3LjY4LDMuNDQtMjguNjQsMS44Ni05LjMzLDQuMDEtMTcuOTEsNi40NS0yNS43NSwyLjQ0LTcuODQsNS40NS0xNC42Miw5LjAzLTIwLjMyLDMuNTgtNS43LDcuODgtMTAuMTQsMTIuOTEtMTMuMzIsNS4wMi0zLjE4LDExLjExLTQuNzcsMTguMjgtNC43NywyLjQ0LDAsNC44NC4yNiw3LjIxLjc4LDIuMzcuNTIsNC41NSwxLjM3LDYuNTYsMi41NSwyLjAxLDEuMTksMy44LDIuODUsNS4zOCw1LDEuNTgsMi4xNSwyLjgsNC43NywzLjY2LDcuODhoLjQzbDEwLjMyLTUxLjUxaDM0Ljg0bC0zMS44MywxNTguNTJoLTMzLjU1bDIuOC0xNC42NVpNNjYxLjYxLDE3MC4yMmMxLTUuMzMsMS44Ni0xMC4yOSwyLjU4LTE0Ljg4LjcyLTQuNTksMS04LjU4Ljg2LTExLjk5LS4xNC0zLjQtLjg2LTYuMDctMi4xNS03Ljk5LTEuMjktMS45Mi0zLjQ2LTIuODktNi40OS0yLjg5LTMuMzMsMC02LjA0Ljg1LTguMTMsMi41NS0yLjEsMS43LTMuOTEsNC4xNS01LjQyLDcuMzMtMS41MiwzLjE4LTIuODIsNi45OS0zLjksMTEuNDMtMS4wOSw0LjQ0LTIuMjEsOS40LTMuMzYsMTQuODgtMSw0Ljg4LTEuODcsOS41OC0yLjU4LDE0LjEtLjcyLDQuNTItLjk3LDguNTEtLjc1LDExLjk5LjIyLDMuNDgsMSw2LjI5LDIuMzcsOC40NCwxLjM2LDIuMTUsMy43MSwzLjIyLDcuMDQsMy4yMiw1LjIsMCw5LjIxLTMuMTEsMTIuMDQtOS4zMiwyLjgyLTYuMjIsNS40Ni0xNS4xNyw3LjkyLTI2Ljg2WiIvPgogICAgICA8cGF0aCBjbGFzcz0iY2xzLTIiIGQ9Ik03MTkuODksMTA5LjM5aDM2LjEzbC0yLjgsODQuMTRoLjQzbDMwLjU0LTg0LjE0aDM0Ljg0bC01NS43MSwxMjFjLTMuNTYsNy42OS02Ljk1LDE0LjAyLTEwLjE2LDE4Ljk4LTMuMjEsNC45Ni02LjY2LDguODQtMTAuMzcsMTEuNjYtMy43LDIuODEtNy45NSw0Ljc3LTEyLjczLDUuODgtNC43OSwxLjExLTEwLjYyLDEuNjctMTcuNSwxLjY3aC03Ljk2Yy0xLjE1LDAtMi4zMy0uMDQtMy41NS0uMTEtMS4yMi0uMDgtMi40LS4xOS0zLjU1LS4zM2w1LjE2LTI1LjMxYzIuNDQuNTksNS4yMy44OSw4LjM5Ljg5czYuNTItLjkzLDkuNjgtMi43N2MzLjE1LTEuODUsNS43My01LjM3LDcuNzQtMTAuNTVsLTguNi0xMjFaIi8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTg0Ny44NywxODEuMWwtMS4wOCw1LjU1Yy0uNzIsMy4yNi0xLjA4LDYuMDctMS4wOCw4LjQ0LDAsMy44NS44OSw2LjkyLDIuNjksOS4yMSwxLjc5LDIuMyw1LjA1LDMuNDQsOS43OSwzLjQ0LDMuMTUsMCw1Ljg4LS41NSw4LjE3LTEuNjcsMi4yOS0xLjExLDQuMjYtMi41NSw1LjkxLTQuMzMsMS42NS0xLjc4LDIuOTctMy44MSwzLjk4LTYuMTEsMS0yLjI5LDEuNzItNC41NSwyLjE1LTYuNzcuODYtNC4yOS42NC03LjgtLjY1LTEwLjU1LTEuMjktMi43NC0zLjMtNS4xMS02LjAyLTcuMS0yLjczLTItNS45Mi0zLjc0LTkuNTctNS4yMi0zLjY2LTEuNDgtNy4zNS0zLjExLTExLjA4LTQuODgtMy43My0xLjc4LTcuMzUtMy44MS0xMC44Ni02LjExLTMuNTItMi4yOS02LjQ1LTUuMjItOC44Mi04Ljc3LTIuMzctMy41NS00LjAyLTcuODgtNC45NS0xMi45OS0uOTMtNS4xMS0uNjgtMTEuMzYuNzUtMTguNzYsMS4yOS02LjM2LDMuMzctMTIuMzYsNi4yNC0xNy45OCwyLjg3LTUuNjIsNi43NC0xMC41NSwxMS42Mi0xNC43Niw0Ljg3LTQuMjIsMTAuNzUtNy41OCwxNy42NC0xMC4xLDYuODgtMi41MSwxNC45OC0zLjc3LDI0LjMxLTMuNzdzMTYuNDUsMS4xMSwyMi4yNiwzLjMzYzUuODEsMi4yMiwxMC4yNSw1LjI5LDEzLjMzLDkuMjEsMy4wOCwzLjkyLDQuOTUsOC41MSw1LjU5LDEzLjc3LjY0LDUuMjUuMzIsMTAuOTItLjk3LDE2Ljk4bC0uNjQsMy43N2gtMzQuODRjMS41OC03Ljk5LDEuNjUtMTMuNTQuMjEtMTYuNjUtMS4yOS0zLjctNC41Mi01LjU1LTkuNjgtNS41NS05LjYxLDAtMTUuNTYsNS43LTE3Ljg1LDE3LjA5LTEuMTUsNS40OC0uNDMsOS44MSwyLjE1LDEyLjk5LDIuNTgsMy4xOCw2LjA5LDUuODgsMTAuNTQsOC4xLDQuNDQsMi4yMiw5LjMyLDQuNDEsMTQuNjMsNi41NSw1LjMsMi4xNSwxMC4wNCw0Ljk2LDE0LjIsOC40NCw0LjE2LDMuNDgsNy4zMSw4LjA3LDkuNDYsMTMuNzYsMi4xNSw1LjcsMi4yOSwxMy4yMS40MywyMi41NC0zLjczLDE4LjA2LTEwLjk0LDMwLjk3LTIxLjYyLDM4Ljc0LTEwLjY4LDcuNzctMjQuMzQsMTEuNjYtNDAuOTcsMTEuNjYtNi40NSwwLTEyLjYyLS41OS0xOC41LTEuNzgtNS44OC0xLjE5LTEwLjg2LTMuMzMtMTQuOTUtNi40NC00LjA5LTMuMTEtNy4wMy03LjMzLTguODItMTIuNjUtMS43OS01LjMzLTEuODMtMTIuMTMtLjExLTIwLjQzbDIuMTUtMTAuMjFoMzQuODRaIi8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTk1NC4xMiw3MC45OGgzNC44NGwtMTAuMzIsNTEuNTFoLjQzYzQuMDEtNS45Miw4LjUtMTAuMSwxMy40NC0xMi41NHMxMC40My0zLjY2LDE2LjQ1LTMuNjZjOS44OSwwLDE2Ljg4LDIuNjYsMjAuOTcsNy45OSw0LjA5LDUuMzMsNC45OCwxMy43NywyLjY5LDI1LjMxbC0xOC4wNyw4OS45MmgtMzQuODRsMTYuMzUtODEuOTJjLjg2LTQuMjkuNjgtNy42Ni0uNTQtMTAuMS0xLjIyLTIuNDQtMy40OC0zLjY2LTYuNzctMy42NnMtNi40OSwxLjM3LTkuNTcsNC4xMWMtMy4wOCwyLjc0LTUuMiw3LjA3LTYuMzQsMTIuOTlsLTE1LjcsNzguNTloLTM0Ljg0bDMxLjgzLTE1OC41MloiLz4KICAgICAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTA1OC44NywxMDkuMzloMzQuODRsLTI0LjA5LDEyMC4xMWgtMzQuODRsMjQuMDktMTIwLjExWk0xMDY3LjA0LDY5LjIxaDM0Ljg0bC01LjU5LDI3LjUzaC0zNC44NGw1LjU5LTI3LjUzWiIvPgogICAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMTEzLjkzLDEwOS4zOWgzMy41NWwtMy4wMSwxNC42NWguNDNjMS0yLjA3LDIuMzMtNC4xNCwzLjk4LTYuMjIsMS42NS0yLjA3LDMuNjktMy45Niw2LjEzLTUuNjYsMi40NC0xLjcsNS4yLTMuMTEsOC4yOC00LjIyLDMuMDgtMS4xMSw2LjU2LTEuNjcsMTAuNDMtMS42Nyw4Ljg5LDAsMTUuNTksMi41OSwyMC4xMSw3Ljc3LDQuNTIsNS4xOCw2Ljc4LDEzLjc2LDYuNzgsMjUuNzUsMCw4LjE0LTEuMTUsMTcuNjktMy40NCwyOC42NC0xLjg3LDkuMzMtNC4wMiwxNy45MS02LjQ1LDI1Ljc1LTIuNDQsNy44NS01LjQ1LDE0LjYyLTkuMDMsMjAuMzEtMy41OSw1LjctNy45MiwxMC4xNC0xMy4wMSwxMy4zMi01LjA5LDMuMTgtMTEuMTUsNC43Ny0xOC4xNyw0Ljc3LTIuNDQsMC00Ljg0LS4yMi03LjIxLS42Ny0yLjM3LS40NC00LjU1LTEuMy02LjU2LTIuNTUtMi4wMS0xLjI2LTMuOC0yLjkyLTUuMzgtNS0xLjU4LTIuMDctMi44LTQuNzQtMy42Ni03Ljk5aC0uNDNsLTEwLjU0LDUyLjE3aC0zNC44NGwzMi4wNS0xNTkuMTlaTTExMzYuMDgsMTY4LjY3Yy0xLDUuMzMtMS44NywxMC4yOS0yLjU4LDE0Ljg4LS43Miw0LjU5LTEsOC41OS0uODYsMTEuOTkuMTQsMy40MS44Niw2LjA3LDIuMTUsNy45OSwxLjI5LDEuOTIsMy40NCwyLjg5LDYuNDUsMi44OXM1LjgxLS44NSw3Ljk2LTIuNTVjMi4xNS0xLjcsMy45OC00LjE0LDUuNDktNy4zMywxLjUtMy4xOCwyLjgtNi45OSwzLjg3LTExLjQzczIuMTgtOS40LDMuMzMtMTQuODhjMS00Ljg4LDEuODYtOS41OCwyLjU4LTE0LjEuNzItNC41MS45Ny04LjUxLjc1LTExLjk5LS4yMS0zLjQ4LTEuMDQtNi4yOS0yLjQ3LTguNDQtMS40My0yLjE0LTMuNzMtMy4yMi02Ljg4LTMuMjItNS4xNiwwLTkuMTQsMy4xMS0xMS45NCw5LjMycy01LjQxLDE1LjE3LTcuODUsMjYuODZaIi8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTEyMjUuNTYsMTA5LjM5aDMzLjU1bC0zLjAxLDE0LjY1aC40M2MxLTIuMDcsMi4zMy00LjE0LDMuOTgtNi4yMiwxLjY1LTIuMDcsMy42OS0zLjk2LDYuMTMtNS42NiwyLjQ0LTEuNyw1LjItMy4xMSw4LjI4LTQuMjIsMy4wOC0xLjExLDYuNTYtMS42NywxMC40My0xLjY3LDguODksMCwxNS41OSwyLjU5LDIwLjExLDcuNzcsNC41Miw1LjE4LDYuNzgsMTMuNzYsNi43OCwyNS43NSwwLDguMTQtMS4xNSwxNy42OS0zLjQ0LDI4LjY0LTEuODcsOS4zMy00LjAyLDE3LjkxLTYuNDUsMjUuNzUtMi40NCw3Ljg1LTUuNDUsMTQuNjItOS4wMywyMC4zMS0zLjU5LDUuNy03LjkyLDEwLjE0LTEzLjAxLDEzLjMyLTUuMDksMy4xOC0xMS4xNSw0Ljc3LTE4LjE3LDQuNzctMi40NCwwLTQuODQtLjIyLTcuMjEtLjY3LTIuMzctLjQ0LTQuNTUtMS4zLTYuNTYtMi41NS0yLjAxLTEuMjYtMy44LTIuOTItNS4zOC01LTEuNTgtMi4wNy0yLjgtNC43NC0zLjY2LTcuOTloLS40M2wtMTAuNTQsNTIuMTdoLTM0Ljg0bDMyLjA1LTE1OS4xOVpNMTI0Ny43MSwxNjguNjdjLTEsNS4zMy0xLjg3LDEwLjI5LTIuNTgsMTQuODgtLjcyLDQuNTktMSw4LjU5LS44NiwxMS45OS4xNCwzLjQxLjg2LDYuMDcsMi4xNSw3Ljk5LDEuMjksMS45MiwzLjQ0LDIuODksNi40NSwyLjg5czUuODEtLjg1LDcuOTYtMi41NWMyLjE1LTEuNywzLjk4LTQuMTQsNS40OS03LjMzLDEuNS0zLjE4LDIuOC02Ljk5LDMuODctMTEuNDNzMi4xOC05LjQsMy4zMy0xNC44OGMxLTQuODgsMS44Ni05LjU4LDIuNTgtMTQuMS43Mi00LjUxLjk3LTguNTEuNzUtMTEuOTktLjIxLTMuNDgtMS4wNC02LjI5LTIuNDctOC40NC0xLjQzLTIuMTQtMy43My0zLjIyLTYuODgtMy4yMi01LjE2LDAtOS4xNCwzLjExLTExLjk0LDkuMzJzLTUuNDEsMTUuMTctNy44NSwyNi44NloiLz4KICAgICAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTM1NC44MywxNzUuMzNsLTEuNTEsNy4zM2MtMS44Nyw5LjMzLTIuNCwxNi4yOC0xLjYxLDIwLjg3Ljc5LDQuNTksMy42OSw2Ljg4LDguNzEsNi44OCw0LjU5LDAsOC4xLTEuNzgsMTAuNTQtNS4zMywyLjQ0LTMuNTUsNC42Ni05LjEsNi42Ny0xNi42NWgzMi4yNmMtMy4zLDE1LjEtOS40NiwyNi4yNC0xOC41LDMzLjQxLTkuMDMsNy4xOC0yMC44NiwxMC43Ny0zNS40OSwxMC43Ny0xMC45LDAtMTkuMTQtMS44NS0yNC43NC01LjU1LTUuNTktMy43LTkuMzYtOC42Ni0xMS4yOS0xNC44OC0xLjk0LTYuMjItMi41MS0xMy4zOS0xLjcyLTIxLjU0Ljc5LTguMTQsMi4xMS0xNi42NSwzLjk4LTI1LjUzLDEuNzItOC40NCwzLjk4LTE2LjI0LDYuNzgtMjMuNDIsMi44LTcuMTgsNi40OS0xMy4zOSwxMS4wOC0xOC42NSw0LjU5LTUuMjUsMTAuMjUtOS4zNiwxNi45OS0xMi4zMiw2Ljc0LTIuOTYsMTQuODQtNC40NCwyNC4zMS00LjQ0LDEwLjc1LDAsMTguODUsMS42NywyNC4zLDUsNS40NSwzLjMzLDkuMSw4LjA3LDEwLjk3LDE0LjIxLDEuODYsNi4xNCwyLjMzLDEzLjQzLDEuNCwyMS44Ny0uOTMsOC40NC0yLjQsMTcuNzYtNC40MSwyNy45N2gtNTguNzJaTTEzODQuMjksMTU0LjQ2YzEuNzItOC40NCwyLjI2LTE0Ljg4LDEuNjEtMTkuMzJzLTMuNDEtNi42Ni04LjI4LTYuNjZjLTUuNzQsMC05Ljg2LDIuMy0xMi4zNyw2Ljg4LTIuNTEsNC41OS00LjU1LDEwLjk2LTYuMTMsMTkuMDloMjUuMTdaIi8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTE0NDAuNjQsMTA5LjM5aDMzLjU1bC0zLjQ0LDE2Ljg3aC40M2MzLjMtNS4zMyw3LjY0LTkuOTksMTMuMDEtMTMuOTlzMTEuNzItNS45OSwxOS4wNC01Ljk5aDIuNThjLjQzLDAsLjg2LjA0LDEuMjkuMTEuNDMuMDguOTMuMTksMS41LjMzbC02LjY3LDMzLjc1Yy0xLjcyLS4yOS0zLjMtLjUyLTQuNzMtLjY3LTEuNDMtLjE1LTMuMDEtLjIyLTQuNzMtLjIyLTcuMDMsMC0xMi45OCwxLjYzLTE3Ljg1LDQuODgtNC44OCwzLjI2LTguMSw4Ljg4LTkuNjgsMTYuODdsLTEzLjU1LDY4LjE2aC0zNC44NGwyNC4wOS0xMjAuMTFaIi8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=" alt="ReadyShipper" class="h-12 lg:h-16 w-auto mb-4"/>
+<span class="text-primary italic">vs</span> ShipStation
             </h1>
 <p class="text-xl text-on-surface-variant max-w-xl leading-relaxed font-medium">
                 Stop paying for growth. While others charge tiered volume fees and hidden surcharges, ReadyShipper offers flat-rate power for high-volume merchants.
@@ -114,11 +96,11 @@ document.getElementById('mobile-menu-btn').addEventListener('click', function() 
                 </li>
 </ul>
 <div class="flex flex-wrap gap-4 pt-4">
-<button class="bg-primary text-on-primary px-10 py-4 rounded-full font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20">Get a Free Quote</button>
+<button class="bg-primary text-white px-10 py-4 rounded-full font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20">Get a Free Quote</button>
 <button class="bg-surface-container-high text-on-surface px-10 py-4 rounded-full font-bold text-lg hover:bg-slate-200 transition-all">Book a Demo</button>
 </div>
 </div>
-<div class="relative bg-white rounded-[2rem] p-10 shadow-2xl border border-slate-100">
+<div class="relative bg-white rounded-[2rem] p-10 shadow-2xl border border-slate-100 lg:ml-8">
 <div class="flex items-end justify-between h-72 gap-6 mb-10">
 <div class="flex-1 space-y-3">
 <div class="bg-slate-100 w-full h-[85%] rounded-t-2xl relative group transition-all hover:bg-slate-200">
@@ -140,62 +122,132 @@ document.getElementById('mobile-menu-btn').addEventListener('click', function() 
 </div>
 </div>
 </section>
-<!-- Trust Bar -->
-<section class="bg-surface-container-low py-16 border-y border-slate-100">
+
+<!-- Trust Bar - Infinite Scroll Logo Carousel -->
+<section class="bg-surface-container-low py-12 border-y border-slate-100">
 <div class="max-w-7xl mx-auto px-8 text-center">
-<p class="text-slate-400 text-xs font-black tracking-[0.2em] uppercase mb-12">Trusted by thousands of merchants worldwide</p>
-<div class="flex flex-wrap justify-center items-center gap-12 lg:gap-24 opacity-30 grayscale hover:grayscale-0 transition-all duration-500">
-<div class="h-8 w-24 bg-slate-400 rounded-md"></div>
-<div class="h-10 w-32 bg-slate-400 rounded-md"></div>
-<div class="h-7 w-28 bg-slate-400 rounded-md"></div>
-<div class="h-9 w-36 bg-slate-400 rounded-md"></div>
-<div class="h-8 w-20 bg-slate-400 rounded-md"></div>
+<p class="text-slate-400 text-xs font-black tracking-[0.2em] uppercase mb-8">Trusted by thousands of merchants worldwide</p>
+</div>
+<div class="relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-10 sm:w-24 bg-gradient-to-r from-surface-container-low to-transparent z-10 pointer-events-none"></div>
+<div class="absolute right-0 top-0 bottom-0 w-10 sm:w-24 bg-gradient-to-l from-surface-container-low to-transparent z-10 pointer-events-none"></div>
+<div class="flex items-center ticker-strip">
+<!-- Set 1 -->
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/ah-logo-color.svg" alt="American Hanger" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/cs-logo-color.svg" alt="CS" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/dianese.svg" alt="Dainese" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/foot-locker.svg" alt="Foot Locker" class="w-auto object-contain max-w-[160px] h-12 sm:h-14"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/of-logo-768x178.svg" alt="Original Footwear" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/revolve-1.svg" alt="Revolve" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/Blue-Cross-Blue-Shield-Logo-thumb.svg" alt="Blue Cross Blue Shield" class="w-auto object-contain max-w-[160px] h-12 sm:h-14"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/ca.gov-portal-logo-bear.svg" alt="CA.gov" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/Crocs_wordmark.svg.svg" alt="Crocs" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/redbull-logo.jpg" alt="Red Bull" class="w-auto object-contain max-w-[160px] h-12 sm:h-14"/>
+</div>
+<!-- Set 2 (duplicate for seamless loop) -->
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/ah-logo-color.svg" alt="American Hanger" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/cs-logo-color.svg" alt="CS" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/dianese.svg" alt="Dainese" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/foot-locker.svg" alt="Foot Locker" class="w-auto object-contain max-w-[160px] h-12 sm:h-14"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/of-logo-768x178.svg" alt="Original Footwear" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/revolve-1.svg" alt="Revolve" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/Blue-Cross-Blue-Shield-Logo-thumb.svg" alt="Blue Cross Blue Shield" class="w-auto object-contain max-w-[160px] h-12 sm:h-14"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/ca.gov-portal-logo-bear.svg" alt="CA.gov" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/Crocs_wordmark.svg.svg" alt="Crocs" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
+</div>
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity">
+<img src="logos/redbull-logo.jpg" alt="Red Bull" class="w-auto object-contain max-w-[160px] h-12 sm:h-14"/>
+</div>
 </div>
 </div>
 </section>
+
 <!-- Savings Calculator -->
 <section class="py-32 px-8 max-w-7xl mx-auto">
-<div class="text-center mb-20 space-y-4">
+<div class="text-center mb-12 space-y-4">
 <h2 class="font-headline text-5xl font-black tracking-tight text-on-surface">The Cost of "Scale"</h2>
 <p class="text-xl text-on-surface-variant max-w-2xl mx-auto">Select your volume and see the real cost difference. No math degrees required.</p>
+</div>
+<!-- Volume selector above both cards -->
+<div class="max-w-md mx-auto mb-12">
+<label for="volume-selector" class="block text-center text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Monthly Shipment Volume</label>
+<div class="relative">
+<select id="volume-selector" class="w-full bg-white border-2 border-slate-200 rounded-xl py-5 px-6 font-bold text-on-surface text-center focus:ring-primary focus:border-primary appearance-none text-lg">
+<option value="1000">1,000 shipments / mo</option>
+<option value="5000" selected>5,000 shipments / mo</option>
+<option value="10000">10,000 shipments / mo</option>
+<option value="25000">25,000 shipments / mo</option>
+<option value="50000">50,000+ shipments / mo</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+</div>
 </div>
 <div class="grid md:grid-cols-2 gap-12 items-stretch">
 <!-- Competitor Card -->
 <div class="bg-slate-50 p-12 rounded-[2rem] flex flex-col border border-slate-100">
 <div class="mb-10">
-<h3 class="text-slate-400 font-black text-xs uppercase tracking-[0.2em] mb-6">ShipStation (Estimated)</h3>
-<div class="relative">
-<select class="w-full bg-white border-slate-200 rounded-xl py-5 px-6 font-bold text-on-surface focus:ring-secondary focus:border-secondary appearance-none">
-<option>1,000 shipments / mo</option>
-<option selected="">5,000 shipments / mo</option>
-<option>10,000+ shipments / mo</option>
-</select>
-<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
-</div>
+<h3 class="text-slate-400 font-black text-xs uppercase tracking-[0.2em] mb-2">ShipStation (Estimated)</h3>
 </div>
 <div class="mt-auto space-y-6">
 <div class="flex justify-between text-on-surface-variant font-medium">
 <span>Base Subscription</span>
-<span class="font-bold text-on-surface">$149.00</span>
+<span id="ss-base" class="font-bold text-on-surface">$149.00</span>
 </div>
 <div class="flex justify-between text-on-surface-variant font-medium">
-<span>Est. Payment Fees</span>
-<span class="font-bold text-on-surface">$210.00</span>
+<span>Est. Credit Card Fees</span>
+<span id="ss-cc-fees" class="font-bold text-on-surface">$87.50</span>
+</div>
+<div class="flex justify-between text-on-surface-variant font-medium">
+<span>Est. USPS/EasyPost Markup (~8%)</span>
+<span id="ss-usps-markup" class="font-bold text-on-surface">$2,000.00</span>
 </div>
 <div class="border-t border-slate-200 pt-8 flex justify-between items-baseline">
 <span class="text-lg font-bold text-slate-400 uppercase tracking-wider">Total Monthly</span>
-<span class="text-4xl font-black text-on-surface">$359.00</span>
+<span id="ss-total" class="text-4xl font-black text-on-surface">$2,236.50</span>
 </div>
 </div>
 </div>
 <!-- ReadyShipper Card -->
 <div class="bg-white p-12 rounded-[2rem] ring-2 ring-primary relative flex flex-col shadow-[0_32px_64px_-12px_rgba(24,201,141,0.15)] overflow-hidden">
-<div class="absolute top-0 right-0 bg-primary text-on-primary px-8 py-2 rounded-bl-2xl text-[10px] font-black uppercase tracking-[0.2em]">Recommended</div>
+<div class="absolute top-0 right-0 bg-primary text-white px-8 py-2 rounded-bl-2xl text-[10px] font-black uppercase tracking-[0.2em]">Recommended</div>
 <div class="mb-10">
-<h3 class="text-primary font-black text-xs uppercase tracking-[0.2em] mb-6">ReadyShipper Cloud</h3>
-<div class="w-full bg-primary/5 border border-primary/20 rounded-xl py-5 px-6 font-black text-primary text-center">
-                    Unlimited Shipments Included
-                </div>
+<h3 class="text-primary font-black text-xs uppercase tracking-[0.2em] mb-2">ReadyShipper Cloud</h3>
 </div>
 <div class="mt-auto space-y-6">
 <div class="flex justify-between text-on-surface-variant font-medium">
@@ -203,8 +255,12 @@ document.getElementById('mobile-menu-btn').addEventListener('click', function() 
 <span class="font-bold text-on-surface">$29.99</span>
 </div>
 <div class="flex justify-between text-on-surface-variant font-medium">
-<span>Payment Fees</span>
-<span class="font-black text-primary uppercase tracking-wider">Zero</span>
+<span>Credit Card Fees</span>
+<span class="font-black text-primary uppercase tracking-wider">$0</span>
+</div>
+<div class="flex justify-between text-on-surface-variant font-medium">
+<span>USPS Markup</span>
+<span class="font-black text-primary uppercase tracking-wider">$0</span>
 </div>
 <div class="border-t border-slate-100 pt-8 flex justify-between items-baseline">
 <span class="text-lg font-bold text-on-surface-variant uppercase tracking-wider">Total Monthly</span>
@@ -213,12 +269,38 @@ document.getElementById('mobile-menu-btn').addEventListener('click', function() 
 </div>
 <div class="mt-12 bg-primary p-8 rounded-2xl text-center relative">
 <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/20 to-transparent"></div>
-<p class="text-on-primary text-xs font-black mb-1 tracking-[0.2em] opacity-80">YOUR ANNUAL SAVINGS</p>
-<p class="text-5xl font-black text-on-primary tracking-tightest">$3,948.12</p>
+<p class="text-white text-xs font-black mb-1 tracking-[0.2em] opacity-80">YOUR ANNUAL SAVINGS</p>
+<p id="rs-savings" class="text-5xl font-black text-white tracking-tightest">$26,478.12</p>
 </div>
 </div>
 </div>
 </section>
+
+<script>
+// Savings calculator logic
+const volumeData = {
+  1000:  { base: 59,    ccFees: 17.50,  uspsMarkup: 400 },
+  5000:  { base: 149,   ccFees: 87.50,  uspsMarkup: 2000 },
+  10000: { base: 229,   ccFees: 175,    uspsMarkup: 4000 },
+  25000: { base: 399,   ccFees: 437.50, uspsMarkup: 10000 },
+  50000: { base: 499,   ccFees: 875,    uspsMarkup: 20000 },
+};
+
+function fmt(n) {
+  return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+document.getElementById('volume-selector').addEventListener('change', function() {
+  var d = volumeData[this.value];
+  var total = d.base + d.ccFees + d.uspsMarkup;
+  document.getElementById('ss-base').textContent = fmt(d.base);
+  document.getElementById('ss-cc-fees').textContent = fmt(d.ccFees);
+  document.getElementById('ss-usps-markup').textContent = fmt(d.uspsMarkup);
+  document.getElementById('ss-total').textContent = fmt(total);
+  document.getElementById('rs-savings').textContent = fmt((total - 29.99) * 12);
+});
+</script>
+
 <!-- Switching Timeline -->
 <section class="bg-on-surface text-surface py-32 px-8 overflow-hidden relative">
 <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_#18C98D_0%,_transparent_100%)] pointer-events-none"></div>
@@ -227,21 +309,21 @@ document.getElementById('mobile-menu-btn').addEventListener('click', function() 
 <div class="relative flex flex-col md:flex-row justify-between gap-16">
 <div class="absolute top-12 left-0 w-full h-[2px] bg-white/10 hidden md:block"></div>
 <div class="relative z-10 flex-1 flex flex-col items-center text-center space-y-6">
-<div class="w-24 h-24 bg-primary text-on-primary rounded-full flex items-center justify-center font-black text-2xl border-[6px] border-on-surface shadow-[0_0_40px_rgba(24,201,141,0.3)]">1</div>
+<div class="w-24 h-24 bg-primary text-white rounded-full flex items-center justify-center font-black text-2xl border-[6px] border-on-surface shadow-[0_0_40px_rgba(24,201,141,0.3)]">1</div>
 <div class="space-y-2">
 <h3 class="text-2xl font-black tracking-tight">Migrate Data</h3>
 <p class="text-slate-400 font-medium leading-relaxed max-w-[240px]">Import your history, customers, and inventory in minutes.</p>
 </div>
 </div>
 <div class="relative z-10 flex-1 flex flex-col items-center text-center space-y-6">
-<div class="w-24 h-24 bg-primary text-on-primary rounded-full flex items-center justify-center font-black text-2xl border-[6px] border-on-surface shadow-[0_0_40px_rgba(24,201,141,0.3)]">2</div>
+<div class="w-24 h-24 bg-primary text-white rounded-full flex items-center justify-center font-black text-2xl border-[6px] border-on-surface shadow-[0_0_40px_rgba(24,201,141,0.3)]">2</div>
 <div class="space-y-2">
 <h3 class="text-2xl font-black tracking-tight">Setup Channels</h3>
 <p class="text-slate-400 font-medium leading-relaxed max-w-[240px]">Connect Shopify, Amazon, eBay and 100+ others instantly.</p>
 </div>
 </div>
 <div class="relative z-10 flex-1 flex flex-col items-center text-center space-y-6">
-<div class="w-24 h-24 bg-primary text-on-primary rounded-full flex items-center justify-center font-black text-2xl border-[6px] border-on-surface shadow-[0_0_40px_rgba(24,201,141,0.3)]">3</div>
+<div class="w-24 h-24 bg-primary text-white rounded-full flex items-center justify-center font-black text-2xl border-[6px] border-on-surface shadow-[0_0_40px_rgba(24,201,141,0.3)]">3</div>
 <div class="space-y-2">
 <h3 class="text-2xl font-black tracking-tight">Go Live</h3>
 <p class="text-slate-400 font-medium leading-relaxed max-w-[240px]">Start printing 3+ labels per second on day one.</p>
@@ -250,113 +332,114 @@ document.getElementById('mobile-menu-btn').addEventListener('click', function() 
 </div>
 </div>
 </section>
-<!-- Feature Comparison Table (Fix 2: Expanded, Fix 4: Responsive) -->
+
+<!-- Feature Comparison Table -->
 <section class="py-32 px-8 max-w-7xl mx-auto">
 <div class="text-center mb-20">
 <h2 class="font-headline text-5xl font-black tracking-tight text-on-surface">The Full Breakdown</h2>
 </div>
-<!-- Fix 4: Mobile scroll hint -->
 <p class="text-sm text-slate-400 font-medium text-center mb-4 sm:hidden">Scroll to compare &rarr;</p>
-<div class="overflow-x-auto overflow-hidden rounded-[2rem] border border-slate-100 shadow-xl">
-<table class="min-w-[640px] w-full text-left border-collapse bg-white">
+<div class="overflow-x-auto overflow-hidden rounded-[2rem] shadow-xl">
+<table class="min-w-[640px] w-full text-left border-collapse">
 <thead>
-<tr class="bg-slate-50 border-b border-slate-100">
-<th class="py-8 px-10 font-bold text-xs uppercase tracking-[0.2em] text-slate-400">Feature</th>
-<th class="py-8 px-10 font-black text-2xl tracking-tight text-primary">ReadyShipper</th>
-<th class="py-8 px-10 font-bold text-xs uppercase tracking-[0.2em] text-slate-400">ShipStation</th>
+<tr class="bg-slate-900 text-white">
+<th class="py-6 px-8 font-bold text-xs uppercase tracking-[0.2em] text-slate-300 w-1/2">Feature</th>
+<th class="py-6 px-8 font-black text-lg tracking-tight text-primary w-1/4">ReadyShipper</th>
+<th class="py-6 px-8 font-bold text-xs uppercase tracking-[0.2em] text-slate-400 w-1/4">ShipStation</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-slate-50">
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">No credit card processing fees</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-slate-200 text-3xl">close</span></td>
+<tbody>
+<tr class="bg-white hover:bg-slate-50 transition-colors border-b border-slate-100">
+<td class="py-5 px-8 font-bold text-on-surface">No credit card processing fees</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">No per-label or volume surcharges</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-slate-200 text-3xl">close</span></td>
+<tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
+<td class="py-5 px-8 font-bold text-on-surface">No per-label or volume surcharges</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">No USPS/EasyPost backend markup</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-slate-200 text-3xl">close</span></td>
+<tr class="bg-white hover:bg-slate-50 transition-colors border-b border-slate-100">
+<td class="py-5 px-8 font-bold text-on-surface">No USPS/EasyPost backend markup</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">Bring your own carrier accounts — no BYOA fees</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-slate-200 text-3xl">close</span></td>
+<tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
+<td class="py-5 px-8 font-bold text-on-surface">Bring your own carrier accounts — no BYOA fees</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">3+ labels per second batch printing</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-slate-200 text-3xl">close</span></td>
+<tr class="bg-white hover:bg-slate-50 transition-colors border-b border-slate-100">
+<td class="py-5 px-8 font-bold text-on-surface">3+ labels per second batch printing</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">Instant 2-way order sync</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-slate-200 text-3xl">close</span></td>
+<tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
+<td class="py-5 px-8 font-bold text-on-surface">Instant 2-way order sync</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">Open Database Connectivity (ODBC) — no extra cost</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-slate-200 text-3xl">close</span></td>
+<tr class="bg-white hover:bg-slate-50 transition-colors border-b border-slate-100">
+<td class="py-5 px-8 font-bold text-on-surface">Open Database Connectivity (ODBC) — no extra cost</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">Combine and auto-split orders</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
+<td class="py-5 px-8 font-bold text-on-surface">Combine and auto-split orders</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
 </tr>
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">Returns and exchanges</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<tr class="bg-white hover:bg-slate-50 transition-colors border-b border-slate-100">
+<td class="py-5 px-8 font-bold text-on-surface">Returns and exchanges</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
 </tr>
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">Advanced warehouse management (pick-to-tote)</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-slate-200 text-3xl">close</span></td>
+<tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
+<td class="py-5 px-8 font-bold text-on-surface">Advanced warehouse management (pick-to-tote)</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">Advanced inventory management (scan-to-receive, forecasting)</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-slate-200 text-3xl">close</span></td>
+<tr class="bg-white hover:bg-slate-50 transition-colors border-b border-slate-100">
+<td class="py-5 px-8 font-bold text-on-surface">Advanced inventory management (scan-to-receive, forecasting)</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">Auto-routing</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
+<td class="py-5 px-8 font-bold text-on-surface">Auto-routing</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
 </tr>
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">Cubiscan integration</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-slate-200 text-3xl">close</span></td>
+<tr class="bg-white hover:bg-slate-50 transition-colors border-b border-slate-100">
+<td class="py-5 px-8 font-bold text-on-surface">Cubiscan integration</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">U.S.-based phone support</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-slate-200 text-3xl">close</span></td>
+<tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
+<td class="py-5 px-8 font-bold text-on-surface">U.S.-based phone support</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">Unlimited automations</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-slate-200 text-3xl">close</span></td>
+<tr class="bg-white hover:bg-slate-50 transition-colors border-b border-slate-100">
+<td class="py-5 px-8 font-bold text-on-surface">Unlimited automations</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
-<tr class="group hover:bg-slate-50 transition-colors">
-<td class="py-8 px-10 font-bold text-on-surface">Shipping API</td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-8 px-10"><span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<tr class="bg-slate-50 hover:bg-slate-100 transition-colors">
+<td class="py-5 px-8 font-bold text-on-surface">Shipping API</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
 </tr>
 </tbody>
 </table>
 </div>
 </section>
+
 <!-- Testimonial Section -->
 <section class="py-32 bg-slate-50 px-8 relative overflow-hidden">
-<div class="absolute top-0 left-0 text-primary/5 font-black text-[30rem] -translate-x-1/2 -translate-y-1/2 select-none">"</div>
+<div class="absolute top-0 left-0 text-primary/5 font-black text-[30rem] -translate-x-1/2 -translate-y-1/2 select-none">&ldquo;</div>
 <div class="max-w-4xl mx-auto text-center space-y-12 relative z-10">
 <blockquote class="text-4xl font-headline font-black text-on-surface leading-[1.1] tracking-tight">
-            "We were growing fast, and our shipping costs were growing even faster. Switching to ReadyShipper removed the volume penalties and gave us back <span class="text-primary">$2,400 a month</span> in margin. The setup was done before lunch."
+            &ldquo;We were growing fast, and our shipping costs were growing even faster. Switching to ReadyShipper removed the volume penalties and gave us back <span class="text-primary">$2,400 a month</span> in margin. The setup was done before lunch.&rdquo;
         </blockquote>
 <div class="flex flex-col items-center gap-4">
 <div class="w-20 h-20 rounded-full bg-white p-1 ring-4 ring-primary shadow-xl">
@@ -369,6 +452,7 @@ document.getElementById('mobile-menu-btn').addEventListener('click', function() 
 </div>
 </div>
 </section>
+
 <!-- Why Choose ReadyShipper Blocks -->
 <section class="py-32 px-8 max-w-7xl mx-auto space-y-40">
 <!-- Block 1 -->
@@ -384,17 +468,17 @@ document.getElementById('mobile-menu-btn').addEventListener('click', function() 
 </div>
 </div>
 <div class="rounded-[2.5rem] overflow-hidden shadow-2xl order-1 lg:order-2 ring-1 ring-slate-100">
-<img class="w-full aspect-[4/3] object-cover" data-alt="close up of financial reports with a clean modern calculator on a bright desk with green plants" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA31ndFpP0gLP9eq-_s88RNfLNwUo2GWd_bqEjrH9GjNCFsjDAMqZqZjW3S4GwAY4xsk37wvS_Ypp5sh6LV0FjAurzbE9eLluHTwCHuB_A1bSzou8w5roYko1WZPuzOF0o9gytkJQCPZRGAVYe00EVwR8CEk7afdY0QNYEg1CS7EDrRXlB_921h_jKYXGzNmebv-0kPE8_1n0eBBEm2GGymYBBDs24V6zn91JvZ5qNm18uGTX0KMNC8xnBndCidexPUtC4mDREwDmav"/>
+<img class="w-full aspect-[4/3] object-cover" alt="Financial reports on a clean modern desk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA31ndFpP0gLP9eq-_s88RNfLNwUo2GWd_bqEjrH9GjNCFsjDAMqZqZjW3S4GwAY4xsk37wvS_Ypp5sh6LV0FjAurzbE9eLluHTwCHuB_A1bSzou8w5roYko1WZPuzOF0o9gytkJQCPZRGAVYe00EVwR8CEk7afdY0QNYEg1CS7EDrRXlB_921h_jKYXGzNmebv-0kPE8_1n0eBBEm2GGymYBBDs24V6zn91JvZ5qNm18uGTX0KMNC8xnBndCidexPUtC4mDREwDmav"/>
 </div>
 </div>
 <!-- Block 2 -->
 <div class="grid lg:grid-cols-2 gap-24 items-center">
 <div class="rounded-[2.5rem] overflow-hidden shadow-2xl ring-1 ring-slate-100">
-<img class="w-full aspect-[4/3] object-cover" data-alt="fast paced warehouse sorting facility with motion blur and bright green accents representing speed and efficiency" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_r5Jz1Wt6EDQZE5ubS6BNqeXZxyd4QyWvH5MBqgfuG9qhfvUtcNLOO_t_gJMprE5W6bQLJKOI6YMEMZFQ0e-uuVkMpiTEr0KroDSg8QNl1jH_IqPHpo0TU0vcCGbimHOOAydvggt4RibjgGJKdF1qypVWAnz3HKHaPDV8jJLxCjaF-TWRXFUjlZWiw0eJBeGox6UOEC0cpf-mvbxOXfJBIvDure5MBuiQUJxuJKCf--pcHFvGBgH77_Advq7DzBt2VCjpOWClCYj-"/>
+<img class="w-full aspect-[4/3] object-cover" alt="Fast paced warehouse sorting facility" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_r5Jz1Wt6EDQZE5ubS6BNqeXZxyd4QyWvH5MBqgfuG9qhfvUtcNLOO_t_gJMprE5W6bQLJKOI6YMEMZFQ0e-uuVkMpiTEr0KroDSg8QNl1jH_IqPHpo0TU0vcCGbimHOOAydvggt4RibjgGJKdF1qypVWAnz3HKHaPDV8jJLxCjaF-TWRXFUjlZWiw0eJBeGox6UOEC0cpf-mvbxOXfJBIvDure5MBuiQUJxuJKCf--pcHFvGBgH77_Advq7DzBt2VCjpOWClCYj-"/>
 </div>
 <div class="space-y-8">
 <h3 class="font-headline text-5xl font-black text-on-surface leading-none tracking-tight">Built for Enterprise Speed</h3>
-<p class="text-xl text-on-surface-variant leading-relaxed font-medium">Don't let your software slow down your fulfillment. With ReadyShipper's local engine, you can generate 3+ labels per second—outpacing browser-based competitors by 400%.</p>
+<p class="text-xl text-on-surface-variant leading-relaxed font-medium">Don&rsquo;t let your software slow down your fulfillment. With ReadyShipper&rsquo;s local engine, you can generate 3+ labels per second&mdash;outpacing browser-based competitors by 400%.</p>
 <div class="pt-4">
 <a class="text-primary text-lg font-black flex items-center gap-3 group" href="#">
                     Watch performance benchmarks
@@ -404,7 +488,8 @@ document.getElementById('mobile-menu-btn').addEventListener('click', function() 
 </div>
 </div>
 </section>
-<!-- Pricing Section (Fix 9: Replaced Standard/Enterprise with Standard/Premium) -->
+
+<!-- Pricing Section -->
 <section class="py-32 bg-slate-50 px-8 relative">
 <div class="max-w-7xl mx-auto relative z-10">
 <div class="text-center mb-20 space-y-4">
@@ -460,20 +545,20 @@ document.getElementById('mobile-menu-btn').addEventListener('click', function() 
 <p class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span> Open Database Connectivity (ODBC)</p>
 </div>
 <div class="mt-auto">
-<button class="w-full bg-primary text-on-primary py-5 rounded-full font-black hover:opacity-90 transition-all uppercase tracking-widest text-sm shadow-xl shadow-primary/20">Contact Sales</button>
+<button class="w-full bg-primary text-white py-5 rounded-full font-black hover:opacity-90 transition-all uppercase tracking-widest text-sm shadow-xl shadow-primary/20">Contact Sales</button>
 </div>
 </div>
 </div>
-<!-- Fix 9: Note beneath cards -->
 <p class="text-center text-on-surface-variant font-bold text-sm mt-10">No credit card fees. No volume fees. No transaction costs. Ever.</p>
 </div>
 </section>
-<!-- Contact Form Section (Fix 5: Support claim, Fix 7: Phone field, Fix 8: Platform dropdown, Fix 10: Label associations) -->
+
+<!-- Contact Form Section -->
 <section class="bg-slate-950 py-32 px-8 text-white relative overflow-hidden">
 <div class="absolute right-0 bottom-0 w-1/3 h-full bg-primary/5 blur-[120px] rounded-full"></div>
 <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-24 items-center relative z-10">
 <div class="space-y-10">
-<h2 class="font-headline text-6xl font-black leading-[0.95] tracking-tightest">Ready to cut your shipping costs?</h2>
+<h2 class="font-headline text-5xl lg:text-6xl font-black leading-tight tracking-tight">Ready to cut your shipping costs?</h2>
 <p class="text-slate-400 text-xl font-medium leading-relaxed">Join 3,000+ merchants who escaped tiered pricing. Our specialists will build you a custom savings report in 24 hours.</p>
 <div class="space-y-8 pt-4">
 <div class="flex items-start gap-6">
@@ -508,7 +593,6 @@ document.getElementById('mobile-menu-btn').addEventListener('click', function() 
 <input id="email-address" class="w-full bg-slate-50 border-slate-100 rounded-xl p-4 font-bold focus:ring-2 focus:ring-primary focus:border-primary" placeholder="john@company.com" type="email"/>
 </div>
 </div>
-<!-- Fix 7: Phone number field -->
 <div class="space-y-2">
 <label for="phone-number" class="text-[10px] font-black uppercase tracking-widest text-slate-400">Phone Number</label>
 <input id="phone-number" class="w-full bg-slate-50 border-slate-100 rounded-xl p-4 font-bold focus:ring-2 focus:ring-primary focus:border-primary" placeholder="(555) 123-4567" type="tel"/>
@@ -522,7 +606,6 @@ document.getElementById('mobile-menu-btn').addEventListener('click', function() 
 <option>10,000+</option>
 </select>
 </div>
-<!-- Fix 8: Current Platform as dropdown -->
 <div class="space-y-2">
 <label for="current-platform" class="text-[10px] font-black uppercase tracking-widest text-slate-400">Current Platform</label>
 <select id="current-platform" class="w-full bg-slate-50 border-slate-100 rounded-xl p-4 font-bold focus:ring-2 focus:ring-primary focus:border-primary appearance-none">
@@ -534,12 +617,13 @@ document.getElementById('mobile-menu-btn').addEventListener('click', function() 
 <option value="other">Other</option>
 </select>
 </div>
-<button class="w-full bg-primary text-on-primary py-5 rounded-full font-black text-lg shadow-xl shadow-primary/20 hover:opacity-90 transition-all mt-4 tracking-tight">Start My Savings Report</button>
+<button class="w-full bg-primary text-white py-5 rounded-full font-black text-lg shadow-xl shadow-primary/20 hover:opacity-90 transition-all mt-4 tracking-tight">Start My Savings Report</button>
 </form>
 </div>
 </div>
 </section>
-<!-- FAQ Section (Fix 11: 4 additional FAQ items) -->
+
+<!-- FAQ Section -->
 <section class="py-32 px-8 max-w-4xl mx-auto">
 <h2 class="font-headline text-5xl font-black mb-16 text-on-surface tracking-tight">Frequently Asked Questions</h2>
 <div class="space-y-4">
@@ -579,7 +663,6 @@ document.getElementById('mobile-menu-btn').addEventListener('click', function() 
                 We support all major global carriers including UPS, FedEx, USPS (via Stamps.com or Endicia), DHL, and over 100+ LTL and regional carriers worldwide.
             </div>
 </details>
-<!-- Fix 11: 4 additional FAQ items -->
 <details class="group bg-white rounded-3xl border border-slate-100 transition-all duration-300">
 <summary class="list-none p-8 flex justify-between items-center cursor-pointer font-black text-xl select-none tracking-tight">
                 What's included in ReadyShipper's assisted onboarding?
@@ -618,56 +701,5 @@ document.getElementById('mobile-menu-btn').addEventListener('click', function() 
 </details>
 </div>
 </section>
-<!-- Footer Shell (Fix 6: HIPAA badge removed, Fix 1: Copyright year) -->
-<footer class="bg-slate-50 dark:bg-slate-950 w-full border-t border-slate-200 dark:border-slate-800">
-<div class="max-w-7xl mx-auto px-8 py-20">
-<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12 mb-20">
-<div class="col-span-2">
-<div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white mb-8">ReadyCloud</div>
-<p class="font-inter text-sm text-slate-500 dark:text-slate-400 mb-8 max-w-xs leading-relaxed">Building the future of high-performance e-commerce logistics with transparent, flat-rate technology.</p>
-<div class="flex items-center gap-4">
-<div class="w-14 h-14 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 flex items-center justify-center font-black text-[10px] text-slate-400 uppercase tracking-widest">SOC2</div>
-</div>
-</div>
-<div>
-<p class="text-slate-900 dark:text-white font-black text-xs uppercase tracking-widest mb-8">Product</p>
-<ul class="space-y-5 font-inter text-sm text-slate-500 dark:text-slate-400">
-<li><a class="hover:text-emerald-600 transition-colors hover:underline decoration-emerald-500/30" href="#">ReadyShipper</a></li>
-<li><a class="hover:text-emerald-600 transition-colors hover:underline decoration-emerald-500/30" href="#">ReadyReturns</a></li>
-<li><a class="hover:text-emerald-600 transition-colors hover:underline decoration-emerald-500/30" href="#">ReadyRespond</a></li>
-</ul>
-</div>
-<div>
-<p class="text-slate-900 dark:text-white font-black text-xs uppercase tracking-widest mb-8">Integrations</p>
-<ul class="space-y-5 font-inter text-sm text-slate-500 dark:text-slate-400">
-<li><a class="hover:text-emerald-600 transition-colors hover:underline decoration-emerald-500/30" href="#">Shopify</a></li>
-<li><a class="hover:text-emerald-600 transition-colors hover:underline decoration-emerald-500/30" href="#">Amazon</a></li>
-<li><a class="hover:text-emerald-600 transition-colors hover:underline decoration-emerald-500/30" href="#">BigCommerce</a></li>
-</ul>
-</div>
-<div>
-<p class="text-slate-900 dark:text-white font-black text-xs uppercase tracking-widest mb-8">Resources</p>
-<ul class="space-y-5 font-inter text-sm text-slate-500 dark:text-slate-400">
-<li><a class="hover:text-emerald-600 transition-colors hover:underline decoration-emerald-500/30" href="#">Blog</a></li>
-<li><a class="hover:text-emerald-600 transition-colors hover:underline decoration-emerald-500/30" href="#">Docs</a></li>
-<li><a class="hover:text-emerald-600 transition-colors hover:underline decoration-emerald-500/30" href="#">API Reference</a></li>
-</ul>
-</div>
-<div>
-<p class="text-slate-900 dark:text-white font-black text-xs uppercase tracking-widest mb-8">Legal</p>
-<ul class="space-y-5 font-inter text-sm text-slate-500 dark:text-slate-400">
-<li><a class="hover:text-emerald-600 transition-colors hover:underline decoration-emerald-500/30" href="#">Privacy Policy</a></li>
-<li><a class="hover:text-emerald-600 transition-colors hover:underline decoration-emerald-500/30" href="#">Terms of Service</a></li>
-</ul>
-</div>
-</div>
-<div class="pt-10 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-8">
-<p class="font-inter text-sm text-slate-500 dark:text-slate-400">&copy; 2026 ReadyCloud. All rights reserved.</p>
-<div class="flex gap-8">
-<a class="text-slate-400 hover:text-emerald-600 transition-all duration-300" href="#"><span class="material-symbols-outlined text-2xl">language</span></a>
-<a class="text-slate-400 hover:text-emerald-600 transition-all duration-300" href="#"><span class="material-symbols-outlined text-2xl">share</span></a>
-</div>
-</div>
-</div>
-</footer>
+
 </body></html>
