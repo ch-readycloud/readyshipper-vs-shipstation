@@ -101,28 +101,148 @@
 <button class="bg-surface-container-high text-on-surface px-10 py-4 rounded-full font-bold text-lg hover:bg-slate-200 transition-all">Book a Demo</button>
 </div>
 </div>
-<div class="space-y-6 lg:ml-8">
-<!-- Stat cards -->
-<div class="bg-white rounded-[2rem] p-8 shadow-2xl border border-slate-100 space-y-2">
-<p class="text-primary text-6xl font-black tracking-tight">$0</p>
-<p class="text-on-surface font-bold text-lg">Credit card & processing fees</p>
-<p class="text-on-surface-variant text-sm">While ShipStation merchants pay surcharges on every label</p>
+<!-- Animated 3D Bar Comparison -->
+<div class="relative lg:ml-8" style="perspective: 800px;">
+<div class="bg-white rounded-[2rem] p-8 pb-6 shadow-2xl border border-slate-100 overflow-hidden">
+<!-- Cost counter -->
+<div class="text-center mb-6">
+<p class="text-on-surface-variant text-xs font-black uppercase tracking-[0.2em] mb-1">Cost per 1,000 shipments</p>
+<div class="flex justify-center items-baseline gap-3">
+<div class="text-center">
+<p id="ss-counter" class="text-2xl font-black text-slate-900 tabular-nums">$0</p>
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">ShipStation</p>
 </div>
-<div class="grid grid-cols-2 gap-6">
-<div class="bg-white rounded-[1.5rem] p-6 shadow-xl border border-slate-100 space-y-2">
-<p class="text-primary text-4xl font-black tracking-tight">3+</p>
-<p class="text-on-surface font-bold text-sm">Labels printed per second</p>
-</div>
-<div class="bg-white rounded-[1.5rem] p-6 shadow-xl border border-slate-100 space-y-2">
-<p class="text-primary text-4xl font-black tracking-tight">0%</p>
-<p class="text-on-surface font-bold text-sm">USPS markup fees</p>
-</div>
-</div>
-<div class="bg-slate-900 rounded-[1.5rem] p-6 text-white space-y-2">
-<p class="text-primary text-4xl font-black tracking-tight">Same Day</p>
-<p class="text-slate-300 font-bold text-sm">Full migration, setup, and go-live</p>
+<div class="text-slate-200 text-lg font-bold">vs</div>
+<div class="text-center">
+<p id="rs-counter" class="text-2xl font-black text-primary tabular-nums">$0</p>
+<p class="text-[10px] font-bold text-primary uppercase tracking-widest mt-1">ReadyShipper</p>
 </div>
 </div>
+</div>
+<!-- 3D Bars container -->
+<div class="flex items-end justify-center gap-10 h-64 relative" style="transform-style: preserve-3d;">
+<!-- ShipStation 3D Bar -->
+<div class="flex flex-col items-center gap-3 relative">
+<div class="relative w-28" style="transform-style: preserve-3d; transform: rotateX(5deg) rotateY(-15deg);">
+<!-- Bar front face -->
+<div id="ss-bar" class="w-full rounded-t-xl relative transition-none" style="height: 0px; background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%);">
+<!-- Bar right face (3D depth) -->
+<div class="absolute top-0 right-0 w-4 h-full origin-left rounded-tr-xl" style="transform: skewY(-40deg) translateX(100%); background: linear-gradient(180deg, #7a8ba0 0%, #526278 100%);"></div>
+<!-- Bar top face -->
+<div class="absolute top-0 left-0 w-full h-4 origin-bottom rounded-t-xl" style="transform: skewX(-40deg) translateX(8px) translateY(-10px); background: linear-gradient(90deg, #a8b8c8 0%, #8a9ab0 100%);"></div>
+</div>
+</div>
+</div>
+<!-- ReadyShipper 3D Bar -->
+<div class="flex flex-col items-center gap-3 relative">
+<!-- Handwritten note (hidden initially) -->
+<div id="handwritten-note" class="absolute -left-4 top-2 z-20 opacity-0 transition-none pointer-events-none" style="transform: rotate(-6deg);">
+<svg width="140" height="80" viewBox="0 0 140 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute -left-8 -top-2">
+<!-- Hand-drawn arrow -->
+<path d="M120 70 C100 65, 60 58, 35 35 C28 28, 25 22, 28 18" stroke="#18C98D" stroke-width="2" fill="none" stroke-linecap="round" style="stroke-dasharray: 200; stroke-dashoffset: 200;" id="arrow-path"/>
+<!-- Arrowhead -->
+<path d="M22 24 L28 16 L34 24" stroke="#18C98D" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0" id="arrow-head"/>
+</svg>
+<p id="note-text" class="text-primary font-bold text-sm italic whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 18px; transform: rotate(-3deg);">No change.</p>
+</div>
+<div class="relative w-28" style="transform-style: preserve-3d; transform: rotateX(5deg) rotateY(-15deg);">
+<!-- Bar front face -->
+<div id="rs-bar" class="w-full rounded-t-xl relative transition-none" style="height: 0px; background: linear-gradient(180deg, #34d8a0 0%, #18C98D 100%);">
+<!-- Bar right face (3D depth) -->
+<div class="absolute top-0 right-0 w-4 h-full origin-left rounded-tr-xl" style="transform: skewY(-40deg) translateX(100%); background: linear-gradient(180deg, #20b87a 0%, #10a870 100%);"></div>
+<!-- Bar top face -->
+<div class="absolute top-0 left-0 w-full h-4 origin-bottom rounded-t-xl" style="transform: skewX(-40deg) translateX(8px) translateY(-10px); background: linear-gradient(90deg, #4ae8b0 0%, #2ad09a 100%);"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet"/>
+<script>
+(function() {
+  // Wait for page load
+  window.addEventListener('load', function() {
+    var ssBar = document.getElementById('ss-bar');
+    var rsBar = document.getElementById('rs-bar');
+    var ssCounter = document.getElementById('ss-counter');
+    var rsCounter = document.getElementById('rs-counter');
+    var note = document.getElementById('handwritten-note');
+    var noteText = document.getElementById('note-text');
+    var arrowPath = document.getElementById('arrow-path');
+    var arrowHead = document.getElementById('arrow-head');
+
+    var rsTarget = 30; // ReadyShipper flat cost
+    var ssFinalHeight = 220; // px
+    var rsFinalHeight = 48; // px
+    var duration = 3000; // ms for ShipStation to finish rising
+    var rsRiseDuration = 800; // ms for ReadyShipper to reach its height
+    var startTime = null;
+    var ssStartCost = 0;
+    var ssFinalCost = 499;
+
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    function easeInOutQuad(t) { return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2; }
+
+    function animate(ts) {
+      if (!startTime) startTime = ts;
+      var elapsed = ts - startTime;
+
+      // ReadyShipper rises quickly and stops
+      var rsProgress = Math.min(elapsed / rsRiseDuration, 1);
+      var rsEased = easeOutCubic(rsProgress);
+      var rsH = rsEased * rsFinalHeight;
+      rsBar.style.height = rsH + 'px';
+      var rsCost = Math.round(rsEased * rsTarget);
+      rsCounter.textContent = '$' + rsCost.toFixed(0);
+
+      // ShipStation rises slowly and keeps going
+      var ssProgress = Math.min(elapsed / duration, 1);
+      var ssEased = easeInOutQuad(ssProgress);
+      var ssH = ssEased * ssFinalHeight;
+      ssBar.style.height = ssH + 'px';
+      var ssCost = Math.round(ssEased * ssFinalCost);
+      ssCounter.textContent = '$' + ssCost.toLocaleString();
+
+      if (elapsed < duration) {
+        requestAnimationFrame(animate);
+      } else {
+        // Final values
+        ssBar.style.height = ssFinalHeight + 'px';
+        rsBar.style.height = rsFinalHeight + 'px';
+        ssCounter.textContent = '$' + ssFinalCost.toLocaleString();
+        rsCounter.textContent = '$' + rsTarget;
+        // Trigger handwritten note
+        setTimeout(showNote, 400);
+      }
+    }
+
+    function showNote() {
+      note.style.transition = 'opacity 0.5s ease';
+      note.style.opacity = '1';
+      // Animate arrow drawing
+      arrowPath.style.transition = 'stroke-dashoffset 0.8s ease-in-out';
+      arrowPath.style.strokeDashoffset = '0';
+      // Show arrowhead after line draws
+      setTimeout(function() {
+        arrowHead.style.transition = 'opacity 0.3s ease';
+        arrowHead.style.opacity = '1';
+      }, 700);
+      // Fade in text
+      setTimeout(function() {
+        noteText.style.transition = 'opacity 0.5s ease';
+        noteText.style.opacity = '1';
+      }, 900);
+    }
+
+    // Start after a brief delay
+    setTimeout(function() {
+      requestAnimationFrame(animate);
+    }, 500);
+  });
+})();
+</script>
 </div>
 </section>
 
