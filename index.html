@@ -107,25 +107,28 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet"/>
 <div class="relative">
 <!-- Three.js Canvas -->
-<div id="hero-3d" class="w-full" style="height: 480px;"></div>
-<!-- Floating card overlays -->
-<div id="card-rs" class="absolute bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl px-5 py-4 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 150px;">
+<div id="hero-3d" class="w-full" style="height: 500px;"></div>
+<!-- Bottom fade: white gradient fading upward to obscure bar bases -->
+<div class="absolute bottom-0 left-0 right-0 h-36 pointer-events-none z-10" style="background: linear-gradient(to top, #0a1628 0%, #0a1628 10%, transparent 100%);"></div>
+<!-- Floating card overlays — positioned by JS -->
+<div id="card-rs" class="absolute bg-white rounded-2xl shadow-2xl px-5 py-4 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 155px;">
 <p class="text-primary font-black text-xs uppercase tracking-widest mb-1">ReadyShipper</p>
 <p id="rs-counter" class="text-4xl font-black text-on-surface tracking-tight tabular-nums">$30</p>
 <p class="text-on-surface-variant text-xs font-bold mt-1">per 1,000 shipments</p>
 </div>
-<div id="card-ss" class="absolute bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl px-5 py-4 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 150px;">
+<div id="card-ss" class="absolute bg-white rounded-2xl shadow-2xl px-5 py-4 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 155px;">
 <p class="text-slate-400 font-black text-xs uppercase tracking-widest mb-1">ShipStation</p>
 <p id="ss-counter" class="text-4xl font-black text-on-surface tracking-tight tabular-nums">$499</p>
 <p class="text-on-surface-variant text-xs font-bold mt-1">per 1,000 shipments</p>
 </div>
 <!-- Handwritten note overlay -->
 <div id="handwritten-note" class="absolute z-30 opacity-0 pointer-events-none">
-<svg width="160" height="90" viewBox="0 0 160 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M130 12 C105 10, 70 14, 45 30 C32 40, 28 52, 30 62" stroke="#18C98D" stroke-width="2.5" fill="none" stroke-linecap="round" style="stroke-dasharray: 200; stroke-dashoffset: 200;" id="arrow-path"/>
-<path d="M24 58 L30 67 L36 58" stroke="#18C98D" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0" id="arrow-head"/>
+<!-- Arrow curves from text down toward RS bar top -->
+<svg width="120" height="100" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute left-0 top-6">
+<path d="M60 5 C50 10, 30 30, 25 55 C22 68, 24 78, 26 85" stroke="#18C98D" stroke-width="2.5" fill="none" stroke-linecap="round" style="stroke-dasharray: 200; stroke-dashoffset: 200;" id="arrow-path"/>
+<path d="M20 80 L26 90 L32 80" stroke="#18C98D" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0" id="arrow-head"/>
 </svg>
-<p id="note-text" class="absolute -top-1 right-0 whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 24px; font-weight: 700; color: #18C98D; transform: rotate(-3deg);">No change.</p>
+<p id="note-text" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 26px; font-weight: 700; color: #18C98D; transform: rotate(-4deg);">No change.</p>
 </div>
 </div>
 
@@ -146,133 +149,107 @@ const noteText = document.getElementById('note-text');
 const arrowPath = document.getElementById('arrow-path');
 const arrowHead = document.getElementById('arrow-head');
 
-// Scene
+// Scene — transparent background, no fog
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x0a1628, 0.04);
 
 // Camera
-const w = container.clientWidth;
-const h = container.clientHeight;
-const camera = new THREE.PerspectiveCamera(35, w / h, 0.1, 100);
-camera.position.set(5, 4.5, 9);
-camera.lookAt(0, 1.5, 0);
+let cw = container.clientWidth;
+let ch = container.clientHeight;
+const camera = new THREE.PerspectiveCamera(32, cw / ch, 0.1, 100);
+camera.position.set(5.5, 5, 10);
+camera.lookAt(0, 1.8, 0);
 
-// Renderer
+// Renderer — transparent
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-renderer.setSize(w, h);
+renderer.setClearColor(0x000000, 0);
+renderer.setSize(cw, ch);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.1;
+renderer.toneMappingExposure = 1.2;
 container.appendChild(renderer.domElement);
 
 // Lighting
-const ambientLight = new THREE.AmbientLight(0x4466aa, 0.4);
-scene.add(ambientLight);
+scene.add(new THREE.AmbientLight(0xffffff, 0.6));
 
-const dirLight = new THREE.DirectionalLight(0xffffff, 1.8);
-dirLight.position.set(5, 10, 6);
+const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
+dirLight.position.set(6, 12, 8);
 dirLight.castShadow = true;
 dirLight.shadow.mapSize.set(1024, 1024);
 dirLight.shadow.camera.near = 1;
-dirLight.shadow.camera.far = 25;
-dirLight.shadow.camera.left = -6;
-dirLight.shadow.camera.right = 6;
-dirLight.shadow.camera.top = 6;
+dirLight.shadow.camera.far = 30;
+dirLight.shadow.camera.left = -8;
+dirLight.shadow.camera.right = 8;
+dirLight.shadow.camera.top = 8;
 dirLight.shadow.camera.bottom = -2;
 dirLight.shadow.bias = -0.002;
 scene.add(dirLight);
 
-const rimLight = new THREE.DirectionalLight(0x18C98D, 0.4);
-rimLight.position.set(-4, 3, -3);
+// Green rim light from left
+const rimLight = new THREE.DirectionalLight(0x18C98D, 0.6);
+rimLight.position.set(-5, 4, -2);
 scene.add(rimLight);
 
-const fillLight = new THREE.PointLight(0x6688cc, 0.5, 20);
-fillLight.position.set(-3, 5, 4);
+// Soft fill from right
+const fillLight = new THREE.PointLight(0xaaccff, 0.4, 25);
+fillLight.position.set(4, 6, 5);
 scene.add(fillLight);
 
-// Ground plane - reflective dark surface
-const groundGeo = new THREE.PlaneGeometry(30, 30);
-const groundMat = new THREE.MeshStandardMaterial({
-  color: 0x0d1e33,
-  roughness: 0.25,
-  metalness: 0.6,
-});
-const ground = new THREE.Mesh(groundGeo, groundMat);
-ground.rotation.x = -Math.PI / 2;
-ground.position.y = -0.01;
-ground.receiveShadow = true;
-scene.add(ground);
-
-// Platform / base
-const platGeo = new RoundedBoxGeometry(7, 0.15, 4, 4, 0.05);
-const platMat = new THREE.MeshStandardMaterial({
-  color: 0x152238,
-  roughness: 0.3,
-  metalness: 0.5,
-});
-const platform = new THREE.Mesh(platGeo, platMat);
-platform.position.y = 0.075;
-platform.receiveShadow = true;
-platform.castShadow = true;
-scene.add(platform);
+// No ground or platform — bars float, bottom hidden by CSS gradient
 
 // Bar dimensions
-const barWidth = 1.6;
-const barDepth = 1.6;
-const barRadius = 0.12;
-const ssMaxH = 5.5;
-const rsMaxH = 1.0;
+const barWidth = 1.8;
+const barDepth = 1.8;
+const barRadius = 0.15;
+const ssMaxH = 6.0;
+const rsMaxH = 1.2;
 
-// ShipStation bar (gray/slate)
-const ssGeo = new RoundedBoxGeometry(barWidth, 1, barDepth, 4, barRadius);
+// ShipStation bar — muted warm gray
+const ssGeo = new RoundedBoxGeometry(barWidth, 1, barDepth, 5, barRadius);
 const ssMat = new THREE.MeshStandardMaterial({
-  color: 0x64748b,
-  roughness: 0.35,
-  metalness: 0.3,
+  color: 0x78869b,
+  roughness: 0.4,
+  metalness: 0.2,
 });
 const ssBar = new THREE.Mesh(ssGeo, ssMat);
 ssBar.castShadow = true;
-ssBar.receiveShadow = true;
-ssBar.position.set(1.5, 0, 0);
+ssBar.position.set(2.0, 0, 0);
 ssBar.scale.y = 0.001;
 scene.add(ssBar);
 
-// ReadyShipper bar (green)
-const rsGeo = new RoundedBoxGeometry(barWidth, 1, barDepth, 4, barRadius);
+// ReadyShipper bar — vibrant green
+const rsGeo = new RoundedBoxGeometry(barWidth, 1, barDepth, 5, barRadius);
 const rsMat = new THREE.MeshStandardMaterial({
   color: 0x18C98D,
-  roughness: 0.25,
-  metalness: 0.35,
-  emissive: 0x0a3d2a,
-  emissiveIntensity: 0.15,
+  roughness: 0.28,
+  metalness: 0.3,
+  emissive: 0x08442a,
+  emissiveIntensity: 0.2,
 });
 const rsBar = new THREE.Mesh(rsGeo, rsMat);
 rsBar.castShadow = true;
-rsBar.receiveShadow = true;
-rsBar.position.set(-1.5, 0, 0);
+rsBar.position.set(-2.0, 0, 0);
 rsBar.scale.y = 0.001;
 scene.add(rsBar);
 
-// Project 3D point to screen
-function toScreen(obj, yOffset) {
-  const v = new THREE.Vector3(obj.position.x, yOffset, obj.position.z);
+// Project 3D world point → screen pixel
+function toScreen(worldX, worldY, worldZ) {
+  const v = new THREE.Vector3(worldX, worldY, worldZ);
   v.project(camera);
   return {
-    x: (v.x * 0.5 + 0.5) * w,
-    y: (-v.y * 0.5 + 0.5) * h
+    x: (v.x * 0.5 + 0.5) * cw,
+    y: (-v.y * 0.5 + 0.5) * ch
   };
 }
 
-// Animation state
+// Animation
 const rsDur = 800;
 const ssDur = 3200;
 const rsTargetCost = 30;
 const ssTargetCost = 499;
 let startTime = 0;
 let animDone = false;
-let noteShown = false;
 
 function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 function easeInOutCubic(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
@@ -290,10 +267,10 @@ function tick(time) {
   requestAnimationFrame(tick);
 
   if (!startTime) startTime = time;
-  const elapsed = time - startTime - 600; // 600ms delay
+  const elapsed = time - startTime - 600;
 
   if (elapsed > 0) {
-    // ReadyShipper
+    // ReadyShipper rises fast, stops
     const rsP = Math.min(elapsed / rsDur, 1);
     const rsE = easeOutCubic(rsP);
     const rsH = 0.001 + rsE * rsMaxH;
@@ -301,7 +278,7 @@ function tick(time) {
     rsBar.position.y = rsH * 0.5;
     rsCounter.textContent = '$' + Math.round(rsE * rsTargetCost);
 
-    // ShipStation
+    // ShipStation keeps climbing
     const ssP = Math.min(elapsed / ssDur, 1);
     const ssE = easeInOutCubic(ssP);
     const ssH = 0.001 + ssE * ssMaxH;
@@ -309,13 +286,11 @@ function tick(time) {
     ssBar.position.y = ssH * 0.5;
     ssCounter.textContent = '$' + Math.round(ssE * ssTargetCost).toLocaleString();
 
-    // Show cards once bars start moving
     if (elapsed > 50) {
       cardRS.style.opacity = '1';
       cardSS.style.opacity = '1';
     }
 
-    // Done
     if (ssP >= 1 && !animDone) {
       animDone = true;
       rsCounter.textContent = '$' + rsTargetCost;
@@ -324,29 +299,31 @@ function tick(time) {
     }
   }
 
-  // Position card overlays
-  const rsScreen = toScreen(rsBar, rsBar.scale.y + 0.3);
-  const ssScreen = toScreen(ssBar, ssBar.scale.y + 0.3);
+  // Position cards at bar tops (centered on bar, above top face)
+  const rsTop = toScreen(rsBar.position.x, rsBar.scale.y + 0.2, rsBar.position.z);
+  const ssTop = toScreen(ssBar.position.x, ssBar.scale.y + 0.2, ssBar.position.z);
 
-  cardRS.style.left = (rsScreen.x - 75) + 'px';
-  cardRS.style.top = (rsScreen.y - 100) + 'px';
-  cardSS.style.left = (ssScreen.x - 75) + 'px';
-  cardSS.style.top = (ssScreen.y - 100) + 'px';
+  const cardW = 155;
+  const cardH = 95;
+  cardRS.style.left = (rsTop.x - cardW / 2) + 'px';
+  cardRS.style.top = (rsTop.y - cardH - 8) + 'px';
+  cardSS.style.left = (ssTop.x - cardW / 2) + 'px';
+  cardSS.style.top = (ssTop.y - cardH - 8) + 'px';
 
-  // Position handwritten note near the RS bar top
-  const notePos = toScreen(rsBar, rsBar.scale.y + 0.8);
-  noteEl.style.left = (notePos.x - 30) + 'px';
-  noteEl.style.top = (notePos.y - 80) + 'px';
+  // Position note: above RS bar, offset right so arrow points down at bar
+  const noteAnchor = toScreen(rsBar.position.x + 0.5, rsBar.scale.y + 1.8, rsBar.position.z);
+  noteEl.style.left = (noteAnchor.x - 40) + 'px';
+  noteEl.style.top = (noteAnchor.y - 20) + 'px';
 
   renderer.render(scene, camera);
 }
 
 requestAnimationFrame(tick);
 
-// Resize
+// Resize handler
 window.addEventListener('resize', () => {
-  const cw = container.clientWidth;
-  const ch = container.clientHeight;
+  cw = container.clientWidth;
+  ch = container.clientHeight;
   camera.aspect = cw / ch;
   camera.updateProjectionMatrix();
   renderer.setSize(cw, ch);
