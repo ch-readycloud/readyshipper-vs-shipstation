@@ -31,6 +31,35 @@
             animation: scroll 40s linear infinite;
           }
         }
+        /* Custom range slider */
+        input[type="range"]#hero-volume-slider {
+          -webkit-appearance: none;
+          appearance: none;
+          height: 8px;
+          background: #e2e8f0;
+          border-radius: 9999px;
+          outline: none;
+        }
+        input[type="range"]#hero-volume-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: #18C98D;
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(24, 201, 141, 0.4);
+          border: 3px solid white;
+        }
+        input[type="range"]#hero-volume-slider::-moz-range-thumb {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: #18C98D;
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(24, 201, 141, 0.4);
+          border: 3px solid white;
+        }
     </style>
 <script id="tailwind-config">
       tailwind.config = {
@@ -113,19 +142,43 @@
 <button class="bg-primary text-white px-10 py-4 rounded-full font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20">Learn More</button>
 </div>
 </div>
-<!-- Empty right column spacer for grid -->
-<div class="hidden lg:block" style="min-height: 400px;"></div>
+<!-- Volume slider beside the bars -->
+<div class="hidden lg:flex flex-col items-center justify-center" style="min-height: 400px;">
+<div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-100 px-6 py-8 w-full max-w-xs">
+<label class="block text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-2 text-center">Monthly Shipments</label>
+<p id="slider-volume-label" class="text-4xl font-black text-on-surface text-center tracking-tight mb-6">1,000</p>
+<input id="hero-volume-slider" type="range" min="0" max="9" value="3" step="1" class="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer accent-primary" style="accent-color: #18C98D;"/>
+<div class="flex justify-between text-[10px] font-bold text-slate-400 mt-2">
+<span>50</span>
+<span>20K</span>
+</div>
+<div class="mt-6 space-y-3">
+<div class="flex justify-between items-baseline">
+<span class="text-xs font-bold text-slate-400">ShipStation</span>
+<span id="slider-ss-price" class="text-lg font-black text-on-surface">$599/mo</span>
+</div>
+<div class="flex justify-between items-baseline">
+<span class="text-xs font-bold text-primary">ReadyShipper</span>
+<span id="slider-rs-price" class="text-lg font-black text-primary">$64/mo</span>
+</div>
+<div class="border-t border-slate-100 pt-3 flex justify-between items-baseline">
+<span class="text-xs font-bold text-slate-400">You save</span>
+<span id="slider-savings" class="text-lg font-black text-primary">$535/mo</span>
+</div>
+</div>
+</div>
+</div>
 </div>
 <!-- Card overlays — positioned absolutely within the section by JS -->
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet"/>
 <div id="card-rs" class="absolute bg-white rounded-2xl shadow-lg border border-slate-100 px-5 py-4 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 160px;">
 <p class="text-primary font-black text-xs uppercase tracking-widest mb-1">ReadyShipper</p>
-<p id="rs-counter" class="text-4xl font-black text-on-surface tracking-tight tabular-nums">$30</p>
+<p id="rs-counter" class="text-4xl font-black text-on-surface tracking-tight tabular-nums">$64</p>
 <p class="text-on-surface-variant text-xs font-bold mt-1">per 1,000 shipments</p>
 </div>
 <div id="card-ss" class="absolute bg-white rounded-2xl shadow-lg border border-slate-100 px-5 py-4 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 160px;">
 <p class="text-slate-400 font-black text-xs uppercase tracking-widest mb-1">ShipStation</p>
-<p id="ss-counter" class="text-4xl font-black text-on-surface tracking-tight tabular-nums">$499</p>
+<p id="ss-counter" class="text-4xl font-black text-on-surface tracking-tight tabular-nums">$599</p>
 <p class="text-on-surface-variant text-xs font-bold mt-1">per 1,000 shipments</p>
 </div>
 <div id="handwritten-note" class="absolute z-30 opacity-0 pointer-events-none">
@@ -246,10 +299,65 @@ function toScreen(worldX, worldY, worldZ) {
 // Animation
 const rsDur = 800;
 const ssDur = 3200;
-const rsTargetCost = 30;
-const ssTargetCost = 499;
+let rsTargetCost = 64;
+let ssTargetCost = 599;
 let startTime = 0;
 let animDone = false;
+
+// Slider volume tiers: [shipments, ssPrice, rsPrice]
+const VOLUME_TIERS = [
+  { vol: 50,    ss: 349,  rs: 64 },
+  { vol: 100,   ss: 399,  rs: 64 },
+  { vol: 500,   ss: 449,  rs: 64 },
+  { vol: 1000,  ss: 599,  rs: 64 },
+  { vol: 2000,  ss: 699,  rs: 64 },
+  { vol: 5000,  ss: 799,  rs: 64 },
+  { vol: 7500,  ss: 949,  rs: 64 },
+  { vol: 10000, ss: 1099, rs: 64 },
+  { vol: 15000, ss: 1349, rs: 64 },
+  { vol: 20000, ss: 1499, rs: 64 },
+];
+
+let currentSSTier = VOLUME_TIERS[3]; // default 1,000
+let targetSSMaxH = ssMaxH;
+
+const heroSlider = document.getElementById('hero-volume-slider');
+const sliderVolLabel = document.getElementById('slider-volume-label');
+const sliderSSPrice = document.getElementById('slider-ss-price');
+const sliderRSPrice = document.getElementById('slider-rs-price');
+const sliderSavings = document.getElementById('slider-savings');
+
+function updateSlider(idx) {
+  const tier = VOLUME_TIERS[idx];
+  currentSSTier = tier;
+  sliderVolLabel.textContent = tier.vol.toLocaleString();
+  sliderSSPrice.textContent = '$' + tier.ss + '/mo';
+  sliderRSPrice.textContent = '$' + tier.rs + '/mo';
+  sliderSavings.textContent = '$' + (tier.ss - tier.rs) + '/mo';
+  // Map SS price to bar height: min tier ($349) → ssMaxH * 0.35, max tier ($1499) → ssMaxH
+  const minP = 349, maxP = 1499;
+  const pct = (tier.ss - minP) / (maxP - minP);
+  targetSSMaxH = ssMaxH * (0.35 + pct * 0.65);
+  // Update card counters
+  ssTargetCost = tier.ss;
+  rsTargetCost = tier.rs;
+  if (animDone) {
+    ssCounter.textContent = '$' + tier.ss;
+    rsCounter.textContent = '$' + tier.rs;
+    // Update card subtitles
+    const ssSubtitle = cardSS.querySelector('p:last-child');
+    const rsSubtitle = cardRS.querySelector('p:last-child');
+    if (ssSubtitle) ssSubtitle.textContent = 'per ' + tier.vol.toLocaleString() + ' shipments';
+    if (rsSubtitle) rsSubtitle.textContent = 'per ' + tier.vol.toLocaleString() + ' shipments';
+  }
+}
+
+if (heroSlider) {
+  heroSlider.addEventListener('input', function() {
+    updateSlider(parseInt(this.value));
+  });
+  updateSlider(3);
+}
 
 function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 function easeInOutCubic(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
@@ -296,6 +404,18 @@ function tick(time) {
       rsCounter.textContent = '$' + rsTargetCost;
       ssCounter.textContent = '$' + ssTargetCost.toLocaleString();
       setTimeout(showNote, 500);
+    }
+
+    // After initial animation, smoothly lerp SS bar to slider-controlled height
+    if (animDone) {
+      const currentSSH = ssBar.scale.y;
+      const diff = targetSSMaxH - currentSSH;
+      if (Math.abs(diff) > 0.005) {
+        const newH = currentSSH + diff * 0.08;
+        ssBar.scale.y = newH;
+        ssBar.position.y = newH * 0.5;
+      }
+      // RS bar stays at its fixed height — no change
     }
   }
 
@@ -509,6 +629,10 @@ window.addEventListener('resize', () => {
 <div class="flex items-center gap-3 bg-primary/5 border border-primary/15 rounded-2xl px-5 py-4">
 <span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
 <span class="font-bold text-on-surface text-sm">No BYOA carrier fees</span>
+</div>
+<div class="flex items-center gap-3 bg-primary/5 border border-primary/15 rounded-2xl px-5 py-4">
+<span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-bold text-on-surface text-sm">No USPS surcharges</span>
 </div>
 </div>
 </div>
