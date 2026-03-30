@@ -68,30 +68,32 @@
 <body class="bg-surface font-body text-on-surface antialiased">
 
 <!-- Hero Section -->
-<section class="pt-16 pb-24 px-8 max-w-7xl mx-auto relative overflow-hidden">
-<div class="absolute top-0 right-0 -z-10 w-1/2 h-full bg-gradient-to-l from-secondary/5 to-transparent rounded-full blur-3xl"></div>
-<div class="grid lg:grid-cols-2 gap-16 items-center">
-<div class="space-y-8">
-<span class="inline-block text-secondary font-bold tracking-widest text-xs uppercase bg-secondary/10 px-4 py-1.5 rounded-full">Pricing data as of 04/2026</span>
-<h1 class="font-headline text-5xl lg:text-7xl font-black tracking-tight leading-[1] text-on-surface">
+<section class="relative overflow-hidden" style="background: linear-gradient(135deg, #0a1628 0%, #0f1f35 40%, #0a1a2e 100%);">
+<!-- Subtle gradient orbs -->
+<div class="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="absolute bottom-0 right-0 w-80 h-80 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-8 pt-16 pb-0 grid lg:grid-cols-2 gap-8 items-center relative z-10">
+<div class="space-y-8 pb-16 lg:pb-24">
+<span class="inline-block text-primary/80 font-bold tracking-widest text-xs uppercase bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20">Pricing data as of 04/2026</span>
+<h1 class="font-headline text-5xl lg:text-7xl font-black tracking-tight leading-[1] text-white">
 <!-- ReadyShipper Logo -->
 <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMiIgZGF0YS1uYW1lPSJMYXllciAyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTA4LjYxIDI4OC45Ij4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLmNscy0xIHsKICAgICAgICBmaWxsOiAjMThjOThkOwogICAgICB9CgogICAgICAuY2xzLTIgewogICAgICAgIGZpbGw6ICMyMzFmMjA7CiAgICAgIH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgogIDxnIGlkPSJMYXllcl8xLTIiIGRhdGEtbmFtZT0iTGF5ZXIgMSI+CiAgICA8Zz4KICAgICAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNODcuNzMsNjEuN2wtMi40Ni0xNi4xMkMtMi42OSw5Ny4wOSwxMi4yMiwyMzAuMDEsMTA5LjE0LDI2MC44M2wyLjQyLDI4LjA3Yy01MC43My0xMS4zMy05Mi44OS01Mi4xMi0xMDYuMzgtMTAyLjIzQy0xMy4zNywxMTcuOCwxOS4xNiw0Ny45LDgyLjQ4LDE2LjgybC0uNzMtMTYuODIsNDEuNjgsMjIuODUtMzUuNywzOC44NVoiLz4KICAgICAgPHBhdGggY2xhc3M9ImNscy0yIiBkPSJNMTUwLjY3LDgwLjc3bDY0LjUzLDM2LjEzLjA3LDc0LjExLTYzLjM3LDM2LjIxLTYyLjk1LTM1Ljk2LS4xNi03NC4xNCw2MS44OC0zNi4zNVpNMTAzLjE2LDEyMC42bDQ4LjYyLDI3LjIxLDQ4Ljg0LTI4LjI1LTQ4Ljg1LTI4LjI0LTQ4LjYxLDI5LjI4Wk0xNDcuMzMsMTU2LjM3bC00OS4wOS0yOC4wNXY1OC4ybDQ5LjA5LDI3LjM1di01Ny41Wk0yMDYuMjQsMTI4LjMybC00OS43OSwyOC40djU3LjE1bDQ5Ljc5LTI4LjA1di01Ny41WiIvPgogICAgPC9nPgogICAgPGc+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTI5MC41OCw3MC45OGg2MC42NmM3Ljc0LDAsMTQuMDEsMS4xNSwxOC44MiwzLjQ0LDQuOCwyLjMsOC40Miw1LjMzLDEwLjg2LDkuMSwyLjQ0LDMuNzcsMy44Nyw4LjE0LDQuMywxMy4xLjQzLDQuOTYuMDcsMTAuMTgtMS4wOCwxNS42NS0yLjMsMTEuNTQtNi4yLDIwLjM1LTExLjcyLDI2LjQyLTUuNTIsNi4wNy0xMi44LDEwLjE0LTIxLjgzLDEyLjIxdi40NGM1LjU5Ljg5LDkuNzksMi40NCwxMi41OCw0LjY2LDIuOCwyLjIyLDQuNjYsNS4wMyw1LjU5LDguNDQuOTMsMy40MSwxLjE4LDcuMzMuNzUsMTEuNzctLjQzLDQuNDQtMS4xNSw5LjMzLTIuMTUsMTQuNjUtMS40Myw3Ljk5LTIuNTEsMTQuMjUtMy4yMywxOC43Ni0uNzIsNC41Mi0xLjA4LDguMDMtMS4wOCwxMC41NSwwLDIuMzcuMzIsNC4wMy45Nyw1LC42NC45NiwxLjU0LDEuNzQsMi42OSwyLjMzbC0uMjIsMmgtMzguOTNjLTEtMi42Ni0xLjI5LTYuNDQtLjg2LTExLjMyLjQzLTQuODgsMS41OC0xMS44NCwzLjQ0LTIwLjg3LDEuMjktNi44MSwyLjExLTEyLjM5LDIuNDctMTYuNzYuMzYtNC4zNi4yMS03Ljc3LS40My0xMC4yMS0uNjQtMi40NC0xLjgzLTQuMTEtMy41NS01LTEuNzItLjg5LTQuMDItMS4zMy02Ljg4LTEuMzNoLTEzLjc3bC0xMy4xMiw2NS40OWgtMzYuMTNsMzEuODMtMTU4LjUyWk0zMTMuMTcsMTM3LjgxaDExLjE4YzMuNTgsMCw2LjctLjYzLDkuMzYtMS44OSwyLjY1LTEuMjYsNC45MS0yLjg5LDYuNzgtNC44OCwxLjg2LTIsMy4zMy00LjIyLDQuNDEtNi42NiwxLjA4LTIuNDQsMS44My00Ljg1LDIuMjYtNy4yMSwxLjE1LTUuOTIuNzUtMTAuNzMtMS4xOC0xNC40My0xLjk0LTMuNy02LjQ5LTUuNTUtMTMuNjYtNS41NWgtMTAuOTdsLTguMTcsNDAuNjNaIi8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTQyMi40MywxNzUuMzNsLTEuNTEsNy4zM2MtMS44Nyw5LjMzLTIuNCwxNi4yOC0xLjYxLDIwLjg3Ljc5LDQuNTksMy42OSw2Ljg4LDguNzEsNi44OCw0LjU5LDAsOC4xLTEuNzgsMTAuNTQtNS4zMywyLjQ0LTMuNTUsNC42Ni05LjEsNi42Ny0xNi42NWgzMi4yNmMtMy4zLDE1LjEtOS40NiwyNi4yNC0xOC41LDMzLjQxLTkuMDMsNy4xOC0yMC44NiwxMC43Ny0zNS40OSwxMC43Ny0xMC45LDAtMTkuMTQtMS44NS0yNC43NC01LjU1LTUuNTktMy43LTkuMzYtOC42Ni0xMS4yOS0xNC44OC0xLjk0LTYuMjItMi41MS0xMy4zOS0xLjcyLTIxLjU0Ljc5LTguMTQsMi4xMS0xNi42NSwzLjk4LTI1LjUzLDEuNzItOC40NCwzLjk4LTE2LjI0LDYuNzgtMjMuNDIsMi44LTcuMTgsNi40OS0xMy4zOSwxMS4wOC0xOC42NSw0LjU5LTUuMjUsMTAuMjUtOS4zNiwxNi45OS0xMi4zMiw2Ljc0LTIuOTYsMTQuODQtNC40NCwyNC4zMS00LjQ0LDEwLjc1LDAsMTguODUsMS42NywyNC4zLDUsNS40NSwzLjMzLDkuMSw4LjA3LDEwLjk3LDE0LjIxLDEuODYsNi4xNCwyLjMzLDEzLjQzLDEuNCwyMS44Ny0uOTMsOC40NC0yLjQsMTcuNzYtNC40MSwyNy45N2gtNTguNzJaTTQ1MS45LDE1NC40NmMxLjcyLTguNDQsMi4yNi0xNC44OCwxLjYxLTE5LjMycy0zLjQxLTYuNjYtOC4yOC02LjY2Yy01Ljc0LDAtOS44NiwyLjMtMTIuMzcsNi44OC0yLjUxLDQuNTktNC41NSwxMC45Ni02LjEzLDE5LjA5aDI1LjE3WiIvPgogICAgICA8cGF0aCBjbGFzcz0iY2xzLTIiIGQ9Ik01MDAuMDgsMTQ2LjI1YzEuODYtOC40NCw0LjQ0LTE1LjE3LDcuNzQtMjAuMiwzLjMtNS4wMyw3LjMxLTkuMDMsMTIuMDQtMTEuOTksNC41OS0yLjk2LDkuNTctNSwxNC45NS02LjExczExLjcyLTEuNjcsMTkuMDQtMS42N2MxNC4zNCwwLDI0LjIzLDIuNzQsMjkuNjgsOC4yMSw1LjQ1LDUuNDgsNi45NSwxNC41OCw0LjUyLDI3LjMxbC0xMi40Nyw2MS43MmMtLjQzLDIuMjItLjksNC41OS0xLjQsNy4xLS41LDIuNTItLjg2LDQuOTYtMS4wOCw3LjMzLS4yMiwyLjM3LS4yNSw0LjU1LS4xMSw2LjU1LjE0LDIsLjY0LDMuNjYsMS41LDVoLTMzLjU1Yy0uMjktMi4wNy0uMzItNC4yOS0uMTEtNi42Ni4yMS0yLjM3LjQ2LTQuNzQuNzUtNy4xaC0uNDNjLTMuNDQsNS4zMy03Ljg5LDkuNDctMTMuMzQsMTIuNDMtNS40NSwyLjk2LTExLjE4LDQuNDQtMTcuMjEsNC40NC05Ljg5LDAtMTYuOTYtMi44NS0yMS4xOS04LjU1LTQuMjMtNS43LTUuMDUtMTUuMDYtMi40Ny0yOC4wOCwxLjQzLTcuMSwzLjk4LTEzLjM2LDcuNjMtMTguNzYsMy42Ni01LjQsNy45Mi05LjM2LDEyLjgtMTEuODgsNC43My0yLjUyLDEwLjE0LTQuNDQsMTYuMjQtNS43Nyw2LjA5LTEuMzMsMTEuNzItMi42NywxNi44OC00LDIuNzItLjc0LDQuOTgtMS40NCw2Ljc4LTIuMTEsMS43OS0uNjcsMy4yMy0xLjQ4LDQuMy0yLjQ0LDEuMDgtLjk2LDEuOTQtMi4xOCwyLjU4LTMuNjYuNjQtMS40OCwxLjE4LTMuMzMsMS42MS01LjU1LjcyLTMuNy40My02LjYyLS44Ni04Ljc3LTEuMjktMi4xNC0zLjg3LTMuMjItNy43NC0zLjIyLTQuODgsMC04LjUsMS40NC0xMC44Niw0LjMzLTIuMzcsMi44OS00LjEyLDYuOTItNS4yNywxMi4xaC0zMC45N1pNNTIxLjE1LDE5Mi40M2MtMSw0Ljc0LS45LDguNDcuMzIsMTEuMjEsMS4yMiwyLjc0LDMuNDcsNC4xMSw2Ljc4LDQuMTEsMy43MywwLDcuMjQtMS4xOCwxMC41NC0zLjU1LDMuMy0yLjM3LDUuNTItNi42Niw2LjY3LTEyLjg4LDEuMTUtNS4wMywyLjA0LTkuMTgsMi42OS0xMi40My42NC0zLjI1LDEuMjUtNi4xNCwxLjgzLTguNjYtMy4wMSwxLjQ4LTUuNjMsMi42Ni03Ljg1LDMuNTUtMi4yMy44OS00LjEyLDEuNjMtNS43LDIuMjItMS41OC41OS0yLjk0LDEuMTEtNC4wOSwxLjU1LTEuMTUuNDQtMi4xNS45Ni0zLjAxLDEuNTUtMi4xNSwxLjQ4LTMuODcsMy4yMi01LjE2LDUuMjItMS4yOSwyLTIuMyw0LjctMy4wMSw4LjFaIi8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTY1My4yMiwyMTQuODVoLS40M2MtMSwyLjA4LTIuMzMsNC4xNS0zLjk4LDYuMjItMS42NSwyLjA3LTMuNjYsMy45Ni02LjAyLDUuNjYtMi4zNywxLjctNS4wOSwzLjExLTguMTcsNC4yMi0zLjA4LDEuMTEtNi41NiwxLjY3LTEwLjQzLDEuNjctOC44OSwwLTE1LjU5LTIuNTktMjAuMTEtNy43Ny00LjUyLTUuMTgtNi43OC0xMy43Ni02Ljc4LTI1Ljc1LDAtOC4xNCwxLjE1LTE3LjY4LDMuNDQtMjguNjQsMS44Ni05LjMzLDQuMDEtMTcuOTEsNi40NS0yNS43NSwyLjQ0LTcuODQsNS40NS0xNC42Miw5LjAzLTIwLjMyLDMuNTgtNS43LDcuODgtMTAuMTQsMTIuOTEtMTMuMzIsNS4wMi0zLjE4LDExLjExLTQuNzcsMTguMjgtNC43NywyLjQ0LDAsNC44NC4yNiw3LjIxLjc4LDIuMzcuNTIsNC41NSwxLjM3LDYuNTYsMi41NSwyLjAxLDEuMTksMy44LDIuODUsNS4zOCw1LDEuNTgsMi4xNSwyLjgsNC43NywzLjY2LDcuODhoLjQzbDEwLjMyLTUxLjUxaDM0Ljg0bC0zMS44MywxNTguNTJoLTMzLjU1bDIuOC0xNC42NVpNNjYxLjYxLDE3MC4yMmMxLTUuMzMsMS44Ni0xMC4yOSwyLjU4LTE0Ljg4LjcyLTQuNTksMS04LjU4Ljg2LTExLjk5LS4xNC0zLjQtLjg2LTYuMDctMi4xNS03Ljk5LTEuMjktMS45Mi0zLjQ2LTIuODktNi40OS0yLjg5LTMuMzMsMC02LjA0Ljg1LTguMTMsMi41NS0yLjEsMS43LTMuOTEsNC4xNS01LjQyLDcuMzMtMS41MiwzLjE4LTIuODIsNi45OS0zLjksMTEuNDMtMS4wOSw0LjQ0LTIuMjEsOS40LTMuMzYsMTQuODgtMSw0Ljg4LTEuODcsOS41OC0yLjU4LDE0LjEtLjcyLDQuNTItLjk3LDguNTEtLjc1LDExLjk5LjIyLDMuNDgsMSw2LjI5LDIuMzcsOC40NCwxLjM2LDIuMTUsMy43MSwzLjIyLDcuMDQsMy4yMiw1LjIsMCw5LjIxLTMuMTEsMTIuMDQtOS4zMiwyLjgyLTYuMjIsNS40Ni0xNS4xNyw3LjkyLTI2Ljg2WiIvPgogICAgICA8cGF0aCBjbGFzcz0iY2xzLTIiIGQ9Ik03MTkuODksMTA5LjM5aDM2LjEzbC0yLjgsODQuMTRoLjQzbDMwLjU0LTg0LjE0aDM0Ljg0bC01NS43MSwxMjFjLTMuNTYsNy42OS02Ljk1LDE0LjAyLTEwLjE2LDE4Ljk4LTMuMjEsNC45Ni02LjY2LDguODQtMTAuMzcsMTEuNjYtMy43LDIuODEtNy45NSw0Ljc3LTEyLjczLDUuODgtNC43OSwxLjExLTEwLjYyLDEuNjctMTcuNSwxLjY3aC03Ljk2Yy0xLjE1LDAtMi4zMy0uMDQtMy41NS0uMTEtMS4yMi0uMDgtMi40LS4xOS0zLjU1LS4zM2w1LjE2LTI1LjMxYzIuNDQuNTksNS4yMy44OSw4LjM5Ljg5czYuNTItLjkzLDkuNjgtMi43N2MzLjE1LTEuODUsNS43My01LjM3LDcuNzQtMTAuNTVsLTguNi0xMjFaIi8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTg0Ny44NywxODEuMWwtMS4wOCw1LjU1Yy0uNzIsMy4yNi0xLjA4LDYuMDctMS4wOCw4LjQ0LDAsMy44NS44OSw2LjkyLDIuNjksOS4yMSwxLjc5LDIuMyw1LjA1LDMuNDQsOS43OSwzLjQ0LDMuMTUsMCw1Ljg4LS41NSw4LjE3LTEuNjcsMi4yOS0xLjExLDQuMjYtMi41NSw1LjkxLTQuMzMsMS42NS0xLjc4LDIuOTctMy44MSwzLjk4LTYuMTEsMS0yLjI5LDEuNzItNC41NSwyLjE1LTYuNzcuODYtNC4yOS42NC03LjgtLjY1LTEwLjU1LTEuMjktMi43NC0zLjMtNS4xMS02LjAyLTcuMS0yLjczLTItNS45Mi0zLjc0LTkuNTctNS4yMi0zLjY2LTEuNDgtNy4zNS0zLjExLTExLjA4LTQuODgtMy43My0xLjc4LTcuMzUtMy44MS0xMC44Ni02LjExLTMuNTItMi4yOS02LjQ1LTUuMjItOC44Mi04Ljc3LTIuMzctMy41NS00LjAyLTcuODgtNC45NS0xMi45OS0uOTMtNS4xMS0uNjgtMTEuMzYuNzUtMTguNzYsMS4yOS02LjM2LDMuMzctMTIuMzYsNi4yNC0xNy45OCwyLjg3LTUuNjIsNi43NC0xMC41NSwxMS42Mi0xNC43Niw0Ljg3LTQuMjIsMTAuNzUtNy41OCwxNy42NC0xMC4xLDYuODgtMi41MSwxNC45OC0zLjc3LDI0LjMxLTMuNzdzMTYuNDUsMS4xMSwyMi4yNiwzLjMzYzUuODEsMi4yMiwxMC4yNSw1LjI5LDEzLjMzLDkuMjEsMy4wOCwzLjkyLDQuOTUsOC41MSw1LjU5LDEzLjc3LjY0LDUuMjUuMzIsMTAuOTItLjk3LDE2Ljk4bC0uNjQsMy43N2gtMzQuODRjMS41OC03Ljk5LDEuNjUtMTMuNTQuMjEtMTYuNjUtMS4yOS0zLjctNC41Mi01LjU1LTkuNjgtNS41NS05LjYxLDAtMTUuNTYsNS43LTE3Ljg1LDE3LjA5LTEuMTUsNS40OC0uNDMsOS44MSwyLjE1LDEyLjk5LDIuNTgsMy4xOCw2LjA5LDUuODgsMTAuNTQsOC4xLDQuNDQsMi4yMiw5LjMyLDQuNDEsMTQuNjMsNi41NSw1LjMsMi4xNSwxMC4wNCw0Ljk2LDE0LjIsOC40NCw0LjE2LDMuNDgsNy4zMSw4LjA3LDkuNDYsMTMuNzYsMi4xNSw1LjcsMi4yOSwxMy4yMS40MywyMi41NC0zLjczLDE4LjA2LTEwLjk0LDMwLjk3LTIxLjYyLDM4Ljc0LTEwLjY4LDcuNzctMjQuMzQsMTEuNjYtNDAuOTcsMTEuNjYtNi40NSwwLTEyLjYyLS41OS0xOC41LTEuNzgtNS44OC0xLjE5LTEwLjg2LTMuMzMtMTQuOTUtNi40NC00LjA5LTMuMTEtNy4wMy03LjMzLTguODItMTIuNjUtMS43OS01LjMzLTEuODMtMTIuMTMtLjExLTIwLjQzbDIuMTUtMTAuMjFoMzQuODRaIi8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTk1NC4xMiw3MC45OGgzNC44NGwtMTAuMzIsNTEuNTFoLjQzYzQuMDEtNS45Miw4LjUtMTAuMSwxMy40NC0xMi41NHMxMC40My0zLjY2LDE2LjQ1LTMuNjZjOS44OSwwLDE2Ljg4LDIuNjYsMjAuOTcsNy45OSw0LjA5LDUuMzMsNC45OCwxMy43NywyLjY5LDI1LjMxbC0xOC4wNyw4OS45MmgtMzQuODRsMTYuMzUtODEuOTJjLjg2LTQuMjkuNjgtNy42Ni0uNTQtMTAuMS0xLjIyLTIuNDQtMy40OC0zLjY2LTYuNzctMy42NnMtNi40OSwxLjM3LTkuNTcsNC4xMWMtMy4wOCwyLjc0LTUuMiw3LjA3LTYuMzQsMTIuOTlsLTE1LjcsNzguNTloLTM0Ljg0bDMxLjgzLTE1OC41MloiLz4KICAgICAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTA1OC44NywxMDkuMzloMzQuODRsLTI0LjA5LDEyMC4xMWgtMzQuODRsMjQuMDktMTIwLjExWk0xMDY3LjA0LDY5LjIxaDM0Ljg0bC01LjU5LDI3LjUzaC0zNC44NGw1LjU5LTI3LjUzWiIvPgogICAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMTEzLjkzLDEwOS4zOWgzMy41NWwtMy4wMSwxNC42NWguNDNjMS0yLjA3LDIuMzMtNC4xNCwzLjk4LTYuMjIsMS42NS0yLjA3LDMuNjktMy45Niw2LjEzLTUuNjYsMi40NC0xLjcsNS4yLTMuMTEsOC4yOC00LjIyLDMuMDgtMS4xMSw2LjU2LTEuNjcsMTAuNDMtMS42Nyw4Ljg5LDAsMTUuNTksMi41OSwyMC4xMSw3Ljc3LDQuNTIsNS4xOCw2Ljc4LDEzLjc2LDYuNzgsMjUuNzUsMCw4LjE0LTEuMTUsMTcuNjktMy40NCwyOC42NC0xLjg3LDkuMzMtNC4wMiwxNy45MS02LjQ1LDI1Ljc1LTIuNDQsNy44NS01LjQ1LDE0LjYyLTkuMDMsMjAuMzEtMy41OSw1LjctNy45MiwxMC4xNC0xMy4wMSwxMy4zMi01LjA5LDMuMTgtMTEuMTUsNC43Ny0xOC4xNyw0Ljc3LTIuNDQsMC00Ljg0LS4yMi03LjIxLS42Ny0yLjM3LS40NC00LjU1LTEuMy02LjU2LTIuNTUtMi4wMS0xLjI2LTMuOC0yLjkyLTUuMzgtNS0xLjU4LTIuMDctMi44LTQuNzQtMy42Ni03Ljk5aC0uNDNsLTEwLjU0LDUyLjE3aC0zNC44NGwzMi4wNS0xNTkuMTlaTTExMzYuMDgsMTY4LjY3Yy0xLDUuMzMtMS44NywxMC4yOS0yLjU4LDE0Ljg4LS43Miw0LjU5LTEsOC41OS0uODYsMTEuOTkuMTQsMy40MS44Niw2LjA3LDIuMTUsNy45OSwxLjI5LDEuOTIsMy40NCwyLjg5LDYuNDUsMi44OXM1LjgxLS44NSw3Ljk2LTIuNTVjMi4xNS0xLjcsMy45OC00LjE0LDUuNDktNy4zMywxLjUtMy4xOCwyLjgtNi45OSwzLjg3LTExLjQzczIuMTgtOS40LDMuMzMtMTQuODhjMS00Ljg4LDEuODYtOS41OCwyLjU4LTE0LjEuNzItNC41MS45Ny04LjUxLjc1LTExLjk5LS4yMS0zLjQ4LTEuMDQtNi4yOS0yLjQ3LTguNDQtMS40My0yLjE0LTMuNzMtMy4yMi02Ljg4LTMuMjItNS4xNiwwLTkuMTQsMy4xMS0xMS45NCw5LjMycy01LjQxLDE1LjE3LTcuODUsMjYuODZaIi8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTEyMjUuNTYsMTA5LjM5aDMzLjU1bC0zLjAxLDE0LjY1aC40M2MxLTIuMDcsMi4zMy00LjE0LDMuOTgtNi4yMiwxLjY1LTIuMDcsMy42OS0zLjk2LDYuMTMtNS42NiwyLjQ0LTEuNyw1LjItMy4xMSw4LjI4LTQuMjIsMy4wOC0xLjExLDYuNTYtMS42NywxMC40My0xLjY3LDguODksMCwxNS41OSwyLjU5LDIwLjExLDcuNzcsNC41Miw1LjE4LDYuNzgsMTMuNzYsNi43OCwyNS43NSwwLDguMTQtMS4xNSwxNy42OS0zLjQ0LDI4LjY0LTEuODcsOS4zMy00LjAyLDE3LjkxLTYuNDUsMjUuNzUtMi40NCw3Ljg1LTUuNDUsMTQuNjItOS4wMywyMC4zMS0zLjU5LDUuNy03LjkyLDEwLjE0LTEzLjAxLDEzLjMyLTUuMDksMy4xOC0xMS4xNSw0Ljc3LTE4LjE3LDQuNzctMi40NCwwLTQuODQtLjIyLTcuMjEtLjY3LTIuMzctLjQ0LTQuNTUtMS4zLTYuNTYtMi41NS0yLjAxLTEuMjYtMy44LTIuOTItNS4zOC01LTEuNTgtMi4wNy0yLjgtNC43NC0zLjY2LTcuOTloLS40M2wtMTAuNTQsNTIuMTdoLTM0Ljg0bDMyLjA1LTE1OS4xOVpNMTI0Ny43MSwxNjguNjdjLTEsNS4zMy0xLjg3LDEwLjI5LTIuNTgsMTQuODgtLjcyLDQuNTktMSw4LjU5LS44NiwxMS45OS4xNCwzLjQxLjg2LDYuMDcsMi4xNSw3Ljk5LDEuMjksMS45MiwzLjQ0LDIuODksNi40NSwyLjg5czUuODEtLjg1LDcuOTYtMi41NWMyLjE1LTEuNywzLjk4LTQuMTQsNS40OS03LjMzLDEuNS0zLjE4LDIuOC02Ljk5LDMuODctMTEuNDNzMi4xOC05LjQsMy4zMy0xNC44OGMxLTQuODgsMS44Ni05LjU4LDIuNTgtMTQuMS43Mi00LjUxLjk3LTguNTEuNzUtMTEuOTktLjIxLTMuNDgtMS4wNC02LjI5LTIuNDctOC40NC0xLjQzLTIuMTQtMy43My0zLjIyLTYuODgtMy4yMi01LjE2LDAtOS4xNCwzLjExLTExLjk0LDkuMzJzLTUuNDEsMTUuMTctNy44NSwyNi44NloiLz4KICAgICAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTM1NC44MywxNzUuMzNsLTEuNTEsNy4zM2MtMS44Nyw5LjMzLTIuNCwxNi4yOC0xLjYxLDIwLjg3Ljc5LDQuNTksMy42OSw2Ljg4LDguNzEsNi44OCw0LjU5LDAsOC4xLTEuNzgsMTAuNTQtNS4zMywyLjQ0LTMuNTUsNC42Ni05LjEsNi42Ny0xNi42NWgzMi4yNmMtMy4zLDE1LjEtOS40NiwyNi4yNC0xOC41LDMzLjQxLTkuMDMsNy4xOC0yMC44NiwxMC43Ny0zNS40OSwxMC43Ny0xMC45LDAtMTkuMTQtMS44NS0yNC43NC01LjU1LTUuNTktMy43LTkuMzYtOC42Ni0xMS4yOS0xNC44OC0xLjk0LTYuMjItMi41MS0xMy4zOS0xLjcyLTIxLjU0Ljc5LTguMTQsMi4xMS0xNi42NSwzLjk4LTI1LjUzLDEuNzItOC40NCwzLjk4LTE2LjI0LDYuNzgtMjMuNDIsMi44LTcuMTgsNi40OS0xMy4zOSwxMS4wOC0xOC42NSw0LjU5LTUuMjUsMTAuMjUtOS4zNiwxNi45OS0xMi4zMiw2Ljc0LTIuOTYsMTQuODQtNC40NCwyNC4zMS00LjQ0LDEwLjc1LDAsMTguODUsMS42NywyNC4zLDUsNS40NSwzLjMzLDkuMSw4LjA3LDEwLjk3LDE0LjIxLDEuODYsNi4xNCwyLjMzLDEzLjQzLDEuNCwyMS44Ny0uOTMsOC40NC0yLjQsMTcuNzYtNC40MSwyNy45N2gtNTguNzJaTTEzODQuMjksMTU0LjQ2YzEuNzItOC40NCwyLjI2LTE0Ljg4LDEuNjEtMTkuMzJzLTMuNDEtNi42Ni04LjI4LTYuNjZjLTUuNzQsMC05Ljg2LDIuMy0xMi4zNyw2Ljg4LTIuNTEsNC41OS00LjU1LDEwLjk2LTYuMTMsMTkuMDloMjUuMTdaIi8+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTE0NDAuNjQsMTA5LjM5aDMzLjU1bC0zLjQ0LDE2Ljg3aC40M2MzLjMtNS4zMyw3LjY0LTkuOTksMTMuMDEtMTMuOTlzMTEuNzItNS45OSwxOS4wNC01Ljk5aDIuNThjLjQzLDAsLjg2LjA0LDEuMjkuMTEuNDMuMDguOTMuMTksMS41LjMzbC02LjY3LDMzLjc1Yy0xLjcyLS4yOS0zLjMtLjUyLTQuNzMtLjY3LTEuNDMtLjE1LTMuMDEtLjIyLTQuNzMtLjIyLTcuMDMsMC0xMi45OCwxLjYzLTE3Ljg1LDQuODgtNC44OCwzLjI2LTguMSw4Ljg4LTkuNjgsMTYuODdsLTEzLjU1LDY4LjE2aC0zNC44NGwyNC4wOS0xMjAuMTFaIi8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=" alt="ReadyShipper" class="h-12 lg:h-16 w-auto mb-4"/>
 <span class="text-primary italic text-4xl lg:text-5xl">vs</span>
-<span class="block mt-4 text-4xl lg:text-5xl font-bold text-slate-500">ShipStation</span>
+<span class="block mt-4 text-4xl lg:text-5xl font-bold text-slate-400">ShipStation</span>
             </h1>
-<p class="text-xl text-on-surface-variant max-w-xl leading-relaxed font-medium">
+<p class="text-lg text-slate-400 max-w-xl leading-relaxed font-medium">
                 Stop paying for growth. While others charge tiered volume fees and hidden surcharges, ReadyShipper offers flat-rate power for high-volume merchants.
             </p>
 <ul class="space-y-4">
-<li class="flex items-center gap-3 text-on-surface font-semibold">
+<li class="flex items-center gap-3 text-white font-semibold">
 <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
                     No credit card processing fees
                 </li>
-<li class="flex items-center gap-3 text-on-surface font-semibold">
+<li class="flex items-center gap-3 text-white font-semibold">
 <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
                     No volume-based pricing tiers
                 </li>
-<li class="flex items-center gap-3 text-on-surface font-semibold">
+<li class="flex items-center gap-3 text-white font-semibold">
 <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
                     Same-day enterprise setup
                 </li>
@@ -101,145 +103,254 @@
 <button class="bg-surface-container-high text-on-surface px-10 py-4 rounded-full font-bold text-lg hover:bg-slate-200 transition-all">Book a Demo</button>
 </div>
 </div>
-<!-- Animated Bar Comparison -->
+<!-- Three.js 3D Bar Comparison -->
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet"/>
-<div class="relative lg:ml-8">
-<div class="bg-white rounded-[2rem] p-8 pb-8 shadow-2xl border border-slate-100">
-<!-- Cost counter -->
-<div class="text-center mb-8">
-<p class="text-on-surface-variant text-xs font-black uppercase tracking-[0.2em] mb-3">Cost per 1,000 shipments</p>
+<div class="relative">
+<!-- Three.js Canvas -->
+<div id="hero-3d" class="w-full" style="height: 480px;"></div>
+<!-- Floating card overlays -->
+<div id="card-rs" class="absolute bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl px-5 py-4 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 150px;">
+<p class="text-primary font-black text-xs uppercase tracking-widest mb-1">ReadyShipper</p>
+<p id="rs-counter" class="text-4xl font-black text-on-surface tracking-tight tabular-nums">$30</p>
+<p class="text-on-surface-variant text-xs font-bold mt-1">per 1,000 shipments</p>
 </div>
-<!-- Bars area -->
-<div class="flex items-end justify-center gap-12 sm:gap-16" style="height: 280px;">
-<!-- ShipStation Bar Column -->
-<div class="flex flex-col items-center" style="width: 120px;">
-<!-- Counter floats above bar -->
-<p id="ss-counter" class="text-xl font-black text-slate-800 tabular-nums mb-2 opacity-0">$0</p>
-<!-- Bar wrapper — grows upward -->
-<div class="w-full relative">
-<div id="ss-bar" class="w-full rounded-t-lg relative" style="height: 0px;">
-<!-- Front face gradient -->
-<div class="absolute inset-0 rounded-t-lg" style="background: linear-gradient(180deg, #b0bec5 0%, #78909c 50%, #546e7a 100%);"></div>
-<!-- Right edge for subtle 3D -->
-<div class="absolute top-0 right-0 w-3 h-full rounded-tr-lg" style="background: linear-gradient(180deg, #90a4ae 0%, #607d8b 50%, #455a64 100%);"></div>
-<!-- Top surface -->
-<div class="absolute top-0 left-0 w-full h-2 rounded-t-lg" style="background: linear-gradient(180deg, #cfd8dc 0%, #b0bec5 100%);"></div>
+<div id="card-ss" class="absolute bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl px-5 py-4 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 150px;">
+<p class="text-slate-400 font-black text-xs uppercase tracking-widest mb-1">ShipStation</p>
+<p id="ss-counter" class="text-4xl font-black text-on-surface tracking-tight tabular-nums">$499</p>
+<p class="text-on-surface-variant text-xs font-bold mt-1">per 1,000 shipments</p>
 </div>
-</div>
-<!-- Label below -->
-<p class="text-xs font-black text-slate-400 uppercase tracking-widest mt-4">ShipStation</p>
-</div>
-<!-- ReadyShipper Bar Column -->
-<div class="flex flex-col items-center relative" style="width: 120px;">
-<!-- Counter floats above bar -->
-<p id="rs-counter" class="text-xl font-black text-primary tabular-nums mb-2 opacity-0">$0</p>
-<!-- Bar wrapper -->
-<div class="w-full relative">
-<div id="rs-bar" class="w-full rounded-t-lg relative" style="height: 0px;">
-<!-- Front face gradient -->
-<div class="absolute inset-0 rounded-t-lg" style="background: linear-gradient(180deg, #5ee8b7 0%, #18C98D 50%, #10a870 100%);"></div>
-<!-- Right edge for subtle 3D -->
-<div class="absolute top-0 right-0 w-3 h-full rounded-tr-lg" style="background: linear-gradient(180deg, #34d8a0 0%, #15b57d 50%, #0d9060 100%);"></div>
-<!-- Top surface -->
-<div class="absolute top-0 left-0 w-full h-2 rounded-t-lg" style="background: linear-gradient(180deg, #80f0cc 0%, #5ee8b7 100%);"></div>
-</div>
-</div>
-<!-- Label below -->
-<p class="text-xs font-black text-primary uppercase tracking-widest mt-4">ReadyShipper</p>
-<!-- Handwritten note — positioned to the right of the bar -->
-<div id="handwritten-note" class="absolute -right-8 opacity-0 pointer-events-none" style="bottom: 60px;">
+<!-- Handwritten note overlay -->
+<div id="handwritten-note" class="absolute z-30 opacity-0 pointer-events-none">
 <svg width="160" height="90" viewBox="0 0 160 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-<!-- Curved arrow pointing down-left toward the bar top -->
-<path d="M130 15 C110 12, 80 10, 55 20 C40 26, 30 38, 32 50" stroke="#18C98D" stroke-width="2.5" fill="none" stroke-linecap="round" style="stroke-dasharray: 200; stroke-dashoffset: 200;" id="arrow-path"/>
-<!-- Arrowhead pointing down -->
-<path d="M26 46 L32 54 L38 46" stroke="#18C98D" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0" id="arrow-head"/>
+<path d="M130 12 C105 10, 70 14, 45 30 C32 40, 28 52, 30 62" stroke="#18C98D" stroke-width="2.5" fill="none" stroke-linecap="round" style="stroke-dasharray: 200; stroke-dashoffset: 200;" id="arrow-path"/>
+<path d="M24 58 L30 67 L36 58" stroke="#18C98D" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0" id="arrow-head"/>
 </svg>
-<!-- Text positioned above the arrow curve -->
-<p id="note-text" class="absolute top-0 right-0 text-primary whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 22px; font-weight: 700; transform: rotate(-2deg);">No change.</p>
-</div>
-</div>
-</div>
+<p id="note-text" class="absolute -top-1 right-0 whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 24px; font-weight: 700; color: #18C98D; transform: rotate(-3deg);">No change.</p>
 </div>
 </div>
 
-<script>
-(function() {
-  window.addEventListener('load', function() {
-    var ssBar = document.getElementById('ss-bar');
-    var rsBar = document.getElementById('rs-bar');
-    var ssCounter = document.getElementById('ss-counter');
-    var rsCounter = document.getElementById('rs-counter');
-    var note = document.getElementById('handwritten-note');
-    var noteText = document.getElementById('note-text');
-    var arrowPath = document.getElementById('arrow-path');
-    var arrowHead = document.getElementById('arrow-head');
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
-    var rsTargetCost = 30;
-    var ssTargetCost = 499;
-    var ssFinalHeight = 240;
-    var rsFinalHeight = 44;
-    var ssDuration = 3200;
-    var rsRiseDuration = 700;
-    var startTime = null;
+const container = document.getElementById('hero-3d');
+const cardRS = document.getElementById('card-rs');
+const cardSS = document.getElementById('card-ss');
+const rsCounter = document.getElementById('rs-counter');
+const ssCounter = document.getElementById('ss-counter');
+const noteEl = document.getElementById('handwritten-note');
+const noteText = document.getElementById('note-text');
+const arrowPath = document.getElementById('arrow-path');
+const arrowHead = document.getElementById('arrow-head');
 
-    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-    function easeInOut(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+// Scene
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x0a1628, 0.04);
 
-    // Show counters
-    ssCounter.style.transition = 'opacity 0.3s';
-    rsCounter.style.transition = 'opacity 0.3s';
+// Camera
+const w = container.clientWidth;
+const h = container.clientHeight;
+const camera = new THREE.PerspectiveCamera(35, w / h, 0.1, 100);
+camera.position.set(5, 4.5, 9);
+camera.lookAt(0, 1.5, 0);
 
-    function animate(ts) {
-      if (!startTime) startTime = ts;
-      var elapsed = ts - startTime;
+// Renderer
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setSize(w, h);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+container.appendChild(renderer.domElement);
 
-      // Show counters immediately
-      ssCounter.style.opacity = '1';
-      rsCounter.style.opacity = '1';
+// Lighting
+const ambientLight = new THREE.AmbientLight(0x4466aa, 0.4);
+scene.add(ambientLight);
 
-      // ReadyShipper — rises fast, stops early
-      var rsP = Math.min(elapsed / rsRiseDuration, 1);
-      var rsE = easeOutCubic(rsP);
-      rsBar.style.height = (rsE * rsFinalHeight) + 'px';
-      rsCounter.textContent = '$' + Math.round(rsE * rsTargetCost);
+const dirLight = new THREE.DirectionalLight(0xffffff, 1.8);
+dirLight.position.set(5, 10, 6);
+dirLight.castShadow = true;
+dirLight.shadow.mapSize.set(1024, 1024);
+dirLight.shadow.camera.near = 1;
+dirLight.shadow.camera.far = 25;
+dirLight.shadow.camera.left = -6;
+dirLight.shadow.camera.right = 6;
+dirLight.shadow.camera.top = 6;
+dirLight.shadow.camera.bottom = -2;
+dirLight.shadow.bias = -0.002;
+scene.add(dirLight);
 
-      // ShipStation — rises slowly over full duration
-      var ssP = Math.min(elapsed / ssDuration, 1);
-      var ssE = easeInOut(ssP);
-      ssBar.style.height = (ssE * ssFinalHeight) + 'px';
-      ssCounter.textContent = '$' + Math.round(ssE * ssTargetCost).toLocaleString();
+const rimLight = new THREE.DirectionalLight(0x18C98D, 0.4);
+rimLight.position.set(-4, 3, -3);
+scene.add(rimLight);
 
-      if (elapsed < ssDuration) {
-        requestAnimationFrame(animate);
-      } else {
-        ssBar.style.height = ssFinalHeight + 'px';
-        rsBar.style.height = rsFinalHeight + 'px';
-        ssCounter.textContent = '$' + ssTargetCost.toLocaleString();
-        rsCounter.textContent = '$' + rsTargetCost;
-        setTimeout(showNote, 500);
-      }
+const fillLight = new THREE.PointLight(0x6688cc, 0.5, 20);
+fillLight.position.set(-3, 5, 4);
+scene.add(fillLight);
+
+// Ground plane - reflective dark surface
+const groundGeo = new THREE.PlaneGeometry(30, 30);
+const groundMat = new THREE.MeshStandardMaterial({
+  color: 0x0d1e33,
+  roughness: 0.25,
+  metalness: 0.6,
+});
+const ground = new THREE.Mesh(groundGeo, groundMat);
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -0.01;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// Platform / base
+const platGeo = new RoundedBoxGeometry(7, 0.15, 4, 4, 0.05);
+const platMat = new THREE.MeshStandardMaterial({
+  color: 0x152238,
+  roughness: 0.3,
+  metalness: 0.5,
+});
+const platform = new THREE.Mesh(platGeo, platMat);
+platform.position.y = 0.075;
+platform.receiveShadow = true;
+platform.castShadow = true;
+scene.add(platform);
+
+// Bar dimensions
+const barWidth = 1.6;
+const barDepth = 1.6;
+const barRadius = 0.12;
+const ssMaxH = 5.5;
+const rsMaxH = 1.0;
+
+// ShipStation bar (gray/slate)
+const ssGeo = new RoundedBoxGeometry(barWidth, 1, barDepth, 4, barRadius);
+const ssMat = new THREE.MeshStandardMaterial({
+  color: 0x64748b,
+  roughness: 0.35,
+  metalness: 0.3,
+});
+const ssBar = new THREE.Mesh(ssGeo, ssMat);
+ssBar.castShadow = true;
+ssBar.receiveShadow = true;
+ssBar.position.set(1.5, 0, 0);
+ssBar.scale.y = 0.001;
+scene.add(ssBar);
+
+// ReadyShipper bar (green)
+const rsGeo = new RoundedBoxGeometry(barWidth, 1, barDepth, 4, barRadius);
+const rsMat = new THREE.MeshStandardMaterial({
+  color: 0x18C98D,
+  roughness: 0.25,
+  metalness: 0.35,
+  emissive: 0x0a3d2a,
+  emissiveIntensity: 0.15,
+});
+const rsBar = new THREE.Mesh(rsGeo, rsMat);
+rsBar.castShadow = true;
+rsBar.receiveShadow = true;
+rsBar.position.set(-1.5, 0, 0);
+rsBar.scale.y = 0.001;
+scene.add(rsBar);
+
+// Project 3D point to screen
+function toScreen(obj, yOffset) {
+  const v = new THREE.Vector3(obj.position.x, yOffset, obj.position.z);
+  v.project(camera);
+  return {
+    x: (v.x * 0.5 + 0.5) * w,
+    y: (-v.y * 0.5 + 0.5) * h
+  };
+}
+
+// Animation state
+const rsDur = 800;
+const ssDur = 3200;
+const rsTargetCost = 30;
+const ssTargetCost = 499;
+let startTime = 0;
+let animDone = false;
+let noteShown = false;
+
+function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+function easeInOutCubic(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+
+function showNote() {
+  noteEl.style.transition = 'opacity 0.6s ease';
+  noteEl.style.opacity = '1';
+  arrowPath.style.transition = 'stroke-dashoffset 0.8s ease-in-out';
+  arrowPath.style.strokeDashoffset = '0';
+  setTimeout(() => { arrowHead.style.transition = 'opacity 0.3s'; arrowHead.style.opacity = '1'; }, 700);
+  setTimeout(() => { noteText.style.transition = 'opacity 0.5s'; noteText.style.opacity = '1'; }, 900);
+}
+
+function tick(time) {
+  requestAnimationFrame(tick);
+
+  if (!startTime) startTime = time;
+  const elapsed = time - startTime - 600; // 600ms delay
+
+  if (elapsed > 0) {
+    // ReadyShipper
+    const rsP = Math.min(elapsed / rsDur, 1);
+    const rsE = easeOutCubic(rsP);
+    const rsH = 0.001 + rsE * rsMaxH;
+    rsBar.scale.y = rsH;
+    rsBar.position.y = rsH * 0.5;
+    rsCounter.textContent = '$' + Math.round(rsE * rsTargetCost);
+
+    // ShipStation
+    const ssP = Math.min(elapsed / ssDur, 1);
+    const ssE = easeInOutCubic(ssP);
+    const ssH = 0.001 + ssE * ssMaxH;
+    ssBar.scale.y = ssH;
+    ssBar.position.y = ssH * 0.5;
+    ssCounter.textContent = '$' + Math.round(ssE * ssTargetCost).toLocaleString();
+
+    // Show cards once bars start moving
+    if (elapsed > 50) {
+      cardRS.style.opacity = '1';
+      cardSS.style.opacity = '1';
     }
 
-    function showNote() {
-      note.style.transition = 'opacity 0.6s ease';
-      note.style.opacity = '1';
-      // Draw arrow
-      arrowPath.style.transition = 'stroke-dashoffset 0.8s ease-in-out';
-      arrowPath.style.strokeDashoffset = '0';
-      setTimeout(function() {
-        arrowHead.style.transition = 'opacity 0.3s ease';
-        arrowHead.style.opacity = '1';
-      }, 700);
-      // Text fades in
-      setTimeout(function() {
-        noteText.style.transition = 'opacity 0.5s ease';
-        noteText.style.opacity = '1';
-      }, 900);
+    // Done
+    if (ssP >= 1 && !animDone) {
+      animDone = true;
+      rsCounter.textContent = '$' + rsTargetCost;
+      ssCounter.textContent = '$' + ssTargetCost.toLocaleString();
+      setTimeout(showNote, 500);
     }
+  }
 
-    setTimeout(function() { requestAnimationFrame(animate); }, 600);
-  });
-})();
+  // Position card overlays
+  const rsScreen = toScreen(rsBar, rsBar.scale.y + 0.3);
+  const ssScreen = toScreen(ssBar, ssBar.scale.y + 0.3);
+
+  cardRS.style.left = (rsScreen.x - 75) + 'px';
+  cardRS.style.top = (rsScreen.y - 100) + 'px';
+  cardSS.style.left = (ssScreen.x - 75) + 'px';
+  cardSS.style.top = (ssScreen.y - 100) + 'px';
+
+  // Position handwritten note near the RS bar top
+  const notePos = toScreen(rsBar, rsBar.scale.y + 0.8);
+  noteEl.style.left = (notePos.x - 30) + 'px';
+  noteEl.style.top = (notePos.y - 80) + 'px';
+
+  renderer.render(scene, camera);
+}
+
+requestAnimationFrame(tick);
+
+// Resize
+window.addEventListener('resize', () => {
+  const cw = container.clientWidth;
+  const ch = container.clientHeight;
+  camera.aspect = cw / ch;
+  camera.updateProjectionMatrix();
+  renderer.setSize(cw, ch);
+});
 </script>
 </div>
 </section>
