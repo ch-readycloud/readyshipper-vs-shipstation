@@ -115,10 +115,11 @@
 <button class="bg-primary text-white px-10 py-4 rounded-full font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20">Learn More</button>
 </div>
 </div>
-<!-- Floating card overlays and note — positioned by JS over the full-width 3D pane -->
+<!-- Empty right column spacer for grid -->
+<div class="hidden lg:block" style="min-height: 400px;"></div>
+</div>
+<!-- Card overlays — positioned absolutely within the section by JS -->
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet"/>
-<div class="relative pointer-events-none" style="min-height: 400px;">
-<!-- Floating card overlays — positioned by JS, offset to the side like Rippling -->
 <div id="card-rs" class="absolute bg-white rounded-2xl shadow-lg border border-slate-100 px-5 py-4 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 160px;">
 <p class="text-primary font-black text-xs uppercase tracking-widest mb-1">ReadyShipper</p>
 <p id="rs-counter" class="text-4xl font-black text-on-surface tracking-tight tabular-nums">$30</p>
@@ -129,15 +130,12 @@
 <p id="ss-counter" class="text-4xl font-black text-on-surface tracking-tight tabular-nums">$499</p>
 <p class="text-on-surface-variant text-xs font-bold mt-1">per 1,000 shipments</p>
 </div>
-<!-- Handwritten note overlay -->
 <div id="handwritten-note" class="absolute z-30 opacity-0 pointer-events-none">
-<!-- Arrow curves from text down toward RS bar top -->
 <svg width="120" height="100" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute left-0 top-6">
 <path d="M60 5 C50 10, 30 30, 25 55 C22 68, 24 78, 26 85" stroke="#1d1a22" stroke-width="2.5" fill="none" stroke-linecap="round" style="stroke-dasharray: 200; stroke-dashoffset: 200;" id="arrow-path"/>
 <path d="M20 80 L26 90 L32 80" stroke="#1d1a22" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0" id="arrow-head"/>
 </svg>
 <p id="note-text" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 26px; font-weight: 700; color: #1d1a22; transform: rotate(-4deg);">No change.</p>
-</div>
 </div>
 
 <script type="importmap">
@@ -169,8 +167,9 @@ const camera = new THREE.OrthographicCamera(
   -frustumSize * aspect / 2, frustumSize * aspect / 2,
   frustumSize / 2, -frustumSize / 2, 0.1, 100
 );
-camera.position.set(5, 5, 8);
-camera.lookAt(0, 1.5, 0);
+// Offset camera to push bars toward the right side of viewport
+camera.position.set(1, 5, 8);
+camera.lookAt(-4, 1.5, 0);
 
 // Renderer — transparent, no shadows, no tone mapping
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -277,20 +276,19 @@ function tick(time) {
   }
 
   // RS card: to the left of the RS bar, not overlapping
-  const rsEdge = toScreen(rsBar.position.x - 1.5, rsBar.scale.y * 0.5, rsBar.position.z);
-  cardRS.style.left = (rsEdge.x - 180) + 'px';
-  cardRS.style.top = (rsEdge.y - 50) + 'px';
+  const rsLeft = toScreen(rsBar.position.x - barWidth/2 - 0.2, rsBar.scale.y * 0.5, rsBar.position.z);
+  cardRS.style.left = (rsLeft.x - 165) + 'px';
+  cardRS.style.top = (rsLeft.y - 50) + 'px';
 
   // SS card: to the right of the SS bar, not overlapping
-  const ssEdge = toScreen(ssBar.position.x + 1.5, ssBar.scale.y * 0.5, ssBar.position.z);
-  cardSS.style.left = (ssEdge.x + 15) + 'px';
-  cardSS.style.top = (ssEdge.y - 50) + 'px';
+  const ssRight = toScreen(ssBar.position.x + barWidth/2 + 0.2, ssBar.scale.y * 0.5, ssBar.position.z);
+  cardSS.style.left = ssRight.x + 'px';
+  cardSS.style.top = (ssRight.y - 50) + 'px';
 
-  // Position note: above RS bar top, clearly above without overlapping
-  // Note above RS bar
-  const rsBarTop = toScreen(rsBar.position.x, rsBar.scale.y + 0.3, rsBar.position.z);
-  noteEl.style.left = (rsBarTop.x - 20) + 'px';
-  noteEl.style.top = (rsBarTop.y - 120) + 'px';
+  // Note above RS bar top
+  const rsTop = toScreen(rsBar.position.x, rsBar.scale.y + 0.3, rsBar.position.z);
+  noteEl.style.left = (rsTop.x - 20) + 'px';
+  noteEl.style.top = (rsTop.y - 120) + 'px';
 
   renderer.render(scene, camera);
 }
@@ -299,8 +297,8 @@ requestAnimationFrame(tick);
 
 // Resize handler
 window.addEventListener('resize', () => {
-  cw = container.clientWidth;
-  ch = container.clientHeight;
+  cw = container.clientWidth || window.innerWidth;
+  ch = container.clientHeight || 600;
   const a = cw / ch;
   camera.left = -frustumSize * a / 2;
   camera.right = frustumSize * a / 2;
