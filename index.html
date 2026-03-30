@@ -101,68 +101,69 @@
 <button class="bg-surface-container-high text-on-surface px-10 py-4 rounded-full font-bold text-lg hover:bg-slate-200 transition-all">Book a Demo</button>
 </div>
 </div>
-<!-- Animated 3D Bar Comparison -->
-<div class="relative lg:ml-8" style="perspective: 800px;">
-<div class="bg-white rounded-[2rem] p-8 pb-6 shadow-2xl border border-slate-100 overflow-hidden">
+<!-- Animated Bar Comparison -->
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet"/>
+<div class="relative lg:ml-8">
+<div class="bg-white rounded-[2rem] p-8 pb-8 shadow-2xl border border-slate-100">
 <!-- Cost counter -->
-<div class="text-center mb-6">
-<p class="text-on-surface-variant text-xs font-black uppercase tracking-[0.2em] mb-1">Cost per 1,000 shipments</p>
-<div class="flex justify-center items-baseline gap-3">
-<div class="text-center">
-<p id="ss-counter" class="text-2xl font-black text-slate-900 tabular-nums">$0</p>
-<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">ShipStation</p>
+<div class="text-center mb-8">
+<p class="text-on-surface-variant text-xs font-black uppercase tracking-[0.2em] mb-3">Cost per 1,000 shipments</p>
 </div>
-<div class="text-slate-200 text-lg font-bold">vs</div>
-<div class="text-center">
-<p id="rs-counter" class="text-2xl font-black text-primary tabular-nums">$0</p>
-<p class="text-[10px] font-bold text-primary uppercase tracking-widest mt-1">ReadyShipper</p>
-</div>
-</div>
-</div>
-<!-- 3D Bars container -->
-<div class="flex items-end justify-center gap-10 h-64 relative" style="transform-style: preserve-3d;">
-<!-- ShipStation 3D Bar -->
-<div class="flex flex-col items-center gap-3 relative">
-<div class="relative w-28" style="transform-style: preserve-3d; transform: rotateX(5deg) rotateY(-15deg);">
-<!-- Bar front face -->
-<div id="ss-bar" class="w-full rounded-t-xl relative transition-none" style="height: 0px; background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%);">
-<!-- Bar right face (3D depth) -->
-<div class="absolute top-0 right-0 w-4 h-full origin-left rounded-tr-xl" style="transform: skewY(-40deg) translateX(100%); background: linear-gradient(180deg, #7a8ba0 0%, #526278 100%);"></div>
-<!-- Bar top face -->
-<div class="absolute top-0 left-0 w-full h-4 origin-bottom rounded-t-xl" style="transform: skewX(-40deg) translateX(8px) translateY(-10px); background: linear-gradient(90deg, #a8b8c8 0%, #8a9ab0 100%);"></div>
+<!-- Bars area -->
+<div class="flex items-end justify-center gap-12 sm:gap-16" style="height: 280px;">
+<!-- ShipStation Bar Column -->
+<div class="flex flex-col items-center" style="width: 120px;">
+<!-- Counter floats above bar -->
+<p id="ss-counter" class="text-xl font-black text-slate-800 tabular-nums mb-2 opacity-0">$0</p>
+<!-- Bar wrapper — grows upward -->
+<div class="w-full relative">
+<div id="ss-bar" class="w-full rounded-t-lg relative" style="height: 0px;">
+<!-- Front face gradient -->
+<div class="absolute inset-0 rounded-t-lg" style="background: linear-gradient(180deg, #b0bec5 0%, #78909c 50%, #546e7a 100%);"></div>
+<!-- Right edge for subtle 3D -->
+<div class="absolute top-0 right-0 w-3 h-full rounded-tr-lg" style="background: linear-gradient(180deg, #90a4ae 0%, #607d8b 50%, #455a64 100%);"></div>
+<!-- Top surface -->
+<div class="absolute top-0 left-0 w-full h-2 rounded-t-lg" style="background: linear-gradient(180deg, #cfd8dc 0%, #b0bec5 100%);"></div>
 </div>
 </div>
+<!-- Label below -->
+<p class="text-xs font-black text-slate-400 uppercase tracking-widest mt-4">ShipStation</p>
 </div>
-<!-- ReadyShipper 3D Bar -->
-<div class="flex flex-col items-center gap-3 relative">
-<!-- Handwritten note (hidden initially) -->
-<div id="handwritten-note" class="absolute -left-4 top-2 z-20 opacity-0 transition-none pointer-events-none" style="transform: rotate(-6deg);">
-<svg width="140" height="80" viewBox="0 0 140 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute -left-8 -top-2">
-<!-- Hand-drawn arrow -->
-<path d="M120 70 C100 65, 60 58, 35 35 C28 28, 25 22, 28 18" stroke="#18C98D" stroke-width="2" fill="none" stroke-linecap="round" style="stroke-dasharray: 200; stroke-dashoffset: 200;" id="arrow-path"/>
-<!-- Arrowhead -->
-<path d="M22 24 L28 16 L34 24" stroke="#18C98D" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0" id="arrow-head"/>
+<!-- ReadyShipper Bar Column -->
+<div class="flex flex-col items-center relative" style="width: 120px;">
+<!-- Counter floats above bar -->
+<p id="rs-counter" class="text-xl font-black text-primary tabular-nums mb-2 opacity-0">$0</p>
+<!-- Bar wrapper -->
+<div class="w-full relative">
+<div id="rs-bar" class="w-full rounded-t-lg relative" style="height: 0px;">
+<!-- Front face gradient -->
+<div class="absolute inset-0 rounded-t-lg" style="background: linear-gradient(180deg, #5ee8b7 0%, #18C98D 50%, #10a870 100%);"></div>
+<!-- Right edge for subtle 3D -->
+<div class="absolute top-0 right-0 w-3 h-full rounded-tr-lg" style="background: linear-gradient(180deg, #34d8a0 0%, #15b57d 50%, #0d9060 100%);"></div>
+<!-- Top surface -->
+<div class="absolute top-0 left-0 w-full h-2 rounded-t-lg" style="background: linear-gradient(180deg, #80f0cc 0%, #5ee8b7 100%);"></div>
+</div>
+</div>
+<!-- Label below -->
+<p class="text-xs font-black text-primary uppercase tracking-widest mt-4">ReadyShipper</p>
+<!-- Handwritten note — positioned to the right of the bar -->
+<div id="handwritten-note" class="absolute -right-8 opacity-0 pointer-events-none" style="bottom: 60px;">
+<svg width="160" height="90" viewBox="0 0 160 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Curved arrow pointing down-left toward the bar top -->
+<path d="M130 15 C110 12, 80 10, 55 20 C40 26, 30 38, 32 50" stroke="#18C98D" stroke-width="2.5" fill="none" stroke-linecap="round" style="stroke-dasharray: 200; stroke-dashoffset: 200;" id="arrow-path"/>
+<!-- Arrowhead pointing down -->
+<path d="M26 46 L32 54 L38 46" stroke="#18C98D" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0" id="arrow-head"/>
 </svg>
-<p id="note-text" class="text-primary font-bold text-sm italic whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 18px; transform: rotate(-3deg);">No change.</p>
-</div>
-<div class="relative w-28" style="transform-style: preserve-3d; transform: rotateX(5deg) rotateY(-15deg);">
-<!-- Bar front face -->
-<div id="rs-bar" class="w-full rounded-t-xl relative transition-none" style="height: 0px; background: linear-gradient(180deg, #34d8a0 0%, #18C98D 100%);">
-<!-- Bar right face (3D depth) -->
-<div class="absolute top-0 right-0 w-4 h-full origin-left rounded-tr-xl" style="transform: skewY(-40deg) translateX(100%); background: linear-gradient(180deg, #20b87a 0%, #10a870 100%);"></div>
-<!-- Bar top face -->
-<div class="absolute top-0 left-0 w-full h-4 origin-bottom rounded-t-xl" style="transform: skewX(-40deg) translateX(8px) translateY(-10px); background: linear-gradient(90deg, #4ae8b0 0%, #2ad09a 100%);"></div>
-</div>
+<!-- Text positioned above the arrow curve -->
+<p id="note-text" class="absolute top-0 right-0 text-primary whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 22px; font-weight: 700; transform: rotate(-2deg);">No change.</p>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet"/>
 <script>
 (function() {
-  // Wait for page load
   window.addEventListener('load', function() {
     var ssBar = document.getElementById('ss-bar');
     var rsBar = document.getElementById('rs-bar');
@@ -173,73 +174,70 @@
     var arrowPath = document.getElementById('arrow-path');
     var arrowHead = document.getElementById('arrow-head');
 
-    var rsTarget = 30; // ReadyShipper flat cost
-    var ssFinalHeight = 220; // px
-    var rsFinalHeight = 48; // px
-    var duration = 3000; // ms for ShipStation to finish rising
-    var rsRiseDuration = 800; // ms for ReadyShipper to reach its height
+    var rsTargetCost = 30;
+    var ssTargetCost = 499;
+    var ssFinalHeight = 240;
+    var rsFinalHeight = 44;
+    var ssDuration = 3200;
+    var rsRiseDuration = 700;
     var startTime = null;
-    var ssStartCost = 0;
-    var ssFinalCost = 499;
 
     function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-    function easeInOutQuad(t) { return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2; }
+    function easeInOut(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+
+    // Show counters
+    ssCounter.style.transition = 'opacity 0.3s';
+    rsCounter.style.transition = 'opacity 0.3s';
 
     function animate(ts) {
       if (!startTime) startTime = ts;
       var elapsed = ts - startTime;
 
-      // ReadyShipper rises quickly and stops
-      var rsProgress = Math.min(elapsed / rsRiseDuration, 1);
-      var rsEased = easeOutCubic(rsProgress);
-      var rsH = rsEased * rsFinalHeight;
-      rsBar.style.height = rsH + 'px';
-      var rsCost = Math.round(rsEased * rsTarget);
-      rsCounter.textContent = '$' + rsCost.toFixed(0);
+      // Show counters immediately
+      ssCounter.style.opacity = '1';
+      rsCounter.style.opacity = '1';
 
-      // ShipStation rises slowly and keeps going
-      var ssProgress = Math.min(elapsed / duration, 1);
-      var ssEased = easeInOutQuad(ssProgress);
-      var ssH = ssEased * ssFinalHeight;
-      ssBar.style.height = ssH + 'px';
-      var ssCost = Math.round(ssEased * ssFinalCost);
-      ssCounter.textContent = '$' + ssCost.toLocaleString();
+      // ReadyShipper — rises fast, stops early
+      var rsP = Math.min(elapsed / rsRiseDuration, 1);
+      var rsE = easeOutCubic(rsP);
+      rsBar.style.height = (rsE * rsFinalHeight) + 'px';
+      rsCounter.textContent = '$' + Math.round(rsE * rsTargetCost);
 
-      if (elapsed < duration) {
+      // ShipStation — rises slowly over full duration
+      var ssP = Math.min(elapsed / ssDuration, 1);
+      var ssE = easeInOut(ssP);
+      ssBar.style.height = (ssE * ssFinalHeight) + 'px';
+      ssCounter.textContent = '$' + Math.round(ssE * ssTargetCost).toLocaleString();
+
+      if (elapsed < ssDuration) {
         requestAnimationFrame(animate);
       } else {
-        // Final values
         ssBar.style.height = ssFinalHeight + 'px';
         rsBar.style.height = rsFinalHeight + 'px';
-        ssCounter.textContent = '$' + ssFinalCost.toLocaleString();
-        rsCounter.textContent = '$' + rsTarget;
-        // Trigger handwritten note
-        setTimeout(showNote, 400);
+        ssCounter.textContent = '$' + ssTargetCost.toLocaleString();
+        rsCounter.textContent = '$' + rsTargetCost;
+        setTimeout(showNote, 500);
       }
     }
 
     function showNote() {
-      note.style.transition = 'opacity 0.5s ease';
+      note.style.transition = 'opacity 0.6s ease';
       note.style.opacity = '1';
-      // Animate arrow drawing
+      // Draw arrow
       arrowPath.style.transition = 'stroke-dashoffset 0.8s ease-in-out';
       arrowPath.style.strokeDashoffset = '0';
-      // Show arrowhead after line draws
       setTimeout(function() {
         arrowHead.style.transition = 'opacity 0.3s ease';
         arrowHead.style.opacity = '1';
       }, 700);
-      // Fade in text
+      // Text fades in
       setTimeout(function() {
         noteText.style.transition = 'opacity 0.5s ease';
         noteText.style.opacity = '1';
       }, 900);
     }
 
-    // Start after a brief delay
-    setTimeout(function() {
-      requestAnimationFrame(animate);
-    }, 500);
+    setTimeout(function() { requestAnimationFrame(animate); }, 600);
   });
 })();
 </script>
