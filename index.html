@@ -146,7 +146,7 @@
 <div class="hidden lg:block" style="min-height: 400px;"></div>
 </div>
 <!-- Horizontal volume slider below the bars -->
-<div class="relative z-20 max-w-7xl mx-auto px-8 pb-10 -mt-4">
+<div class="relative z-20 max-w-7xl mx-auto px-8 pb-8 -mt-8">
 <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-100 px-8 py-5 flex items-center gap-8 max-w-3xl ml-auto">
 <label class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 whitespace-nowrap flex-shrink-0">Shipments/mo</label>
 <div class="flex-1 min-w-0">
@@ -218,7 +218,7 @@ const camera = new THREE.OrthographicCamera(
 );
 // Offset camera to push bars toward the right side of viewport
 camera.position.set(1, 5, 8);
-camera.lookAt(-4, 1.5, 0);
+camera.lookAt(-4, 2.5, 0);
 
 // Renderer — transparent, no shadows, no tone mapping
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -239,7 +239,7 @@ scene.add(dirLight);
 const barWidth = 2.0;
 const barDepth = 1.6;
 const barRadius = 0.1;
-const ssMaxH = 4.5;
+const ssMaxH = 7.0;
 const rsMaxH = 0.9;
 
 // ShipStation bar — flat matte, MeshLambertMaterial for no reflections
@@ -280,7 +280,7 @@ const fadeMat = new THREE.ShaderMaterial({
   `
 });
 const fadePlane = new THREE.Mesh(fadeGeo, fadeMat);
-fadePlane.position.set(0, 2.0, 3.0);
+fadePlane.position.set(0, 3.0, 3.0);
 fadePlane.renderOrder = 999;
 scene.add(fadePlane);
 
@@ -318,36 +318,57 @@ const VOLUME_TIERS = [
 
 let currentSSTier = VOLUME_TIERS[3]; // default 1,000
 let targetSSMaxH = ssMaxH;
+let targetRSDropY = 0;       // how far RS bar sinks below ground
+let targetRSOpacity = 1.0;   // RS bar material opacity
+let showJokeText = false;
 
 const heroSlider = document.getElementById('hero-volume-slider');
 const sliderVolLabel = document.getElementById('slider-volume-label');
 const sliderSavings = document.getElementById('slider-savings');
 const noteSubtext = document.getElementById('note-subtext');
 
+// Make RS material transparent-capable
+rsMat.transparent = true;
+
 function updateSlider(idx) {
   const tier = VOLUME_TIERS[idx];
   currentSSTier = tier;
   sliderVolLabel.textContent = tier.vol.toLocaleString();
   sliderSavings.textContent = '$' + (tier.ss - tier.rs).toLocaleString() + '/mo';
-  // Scale SS bar proportionally: price maps linearly to height
+  // Scale SS bar proportionally: price maps linearly to full height range
   const minP = VOLUME_TIERS[0].ss, maxP = VOLUME_TIERS[VOLUME_TIERS.length - 1].ss;
   const pct = (tier.ss - minP) / (maxP - minP);
-  targetSSMaxH = ssMaxH * (0.30 + pct * 0.70);
+  targetSSMaxH = ssMaxH * (0.15 + pct * 0.85);
+  // RS bar sinks and fades as SS grows — starts at idx 4 (2K), fully gone by idx 9 (20K)
+  if (idx <= 3) {
+    targetRSDropY = 0;
+    targetRSOpacity = 1.0;
+  } else {
+    const fadePct = (idx - 3) / 6; // 0 at idx 3, 1 at idx 9
+    targetRSDropY = fadePct * -1.5;
+    targetRSOpacity = Math.max(0.0, 1.0 - fadePct * 1.2);
+  }
   // Update card counters
   ssTargetCost = tier.ss;
   rsTargetCost = tier.rs;
   if (animDone) {
     ssCounter.textContent = '$' + tier.ss.toLocaleString();
     rsCounter.textContent = '$' + tier.rs;
-    // Update card subtitles
     const ssSubtitle = cardSS.querySelector('p:last-child');
     const rsSubtitle = cardRS.querySelector('p:last-child');
     if (ssSubtitle) ssSubtitle.textContent = 'per ' + tier.vol.toLocaleString() + ' shipments/mo';
     if (rsSubtitle) rsSubtitle.textContent = 'per ' + tier.vol.toLocaleString() + ' shipments/mo';
   }
   // Show "(we're down here)" joke for 15K+ tiers
+  const wasJoke = showJokeText;
+  showJokeText = idx >= 8;
   if (noteSubtext && animDone) {
-    noteSubtext.style.opacity = idx >= 8 ? '1' : '0';
+    noteSubtext.style.opacity = showJokeText ? '1' : '0';
+    // Shift "No change." text up to make room for joke line
+    if (noteText) {
+      noteText.style.transition = 'transform 0.5s ease';
+      noteText.style.transform = showJokeText ? 'rotate(-4deg) translateY(-14px)' : 'rotate(-4deg)';
+    }
   }
 }
 
@@ -385,10 +406,10 @@ function tick(time) {
     rsBar.position.y = rsH * 0.5;
     rsCounter.textContent = '$' + Math.round(rsE * rsTargetCost);
 
-    // ShipStation keeps climbing
+    // ShipStation keeps climbing — animate to current slider target height
     const ssP = Math.min(elapsed / ssDur, 1);
     const ssE = easeInOutCubic(ssP);
-    const ssH = 0.001 + ssE * ssMaxH;
+    const ssH = 0.001 + ssE * targetSSMaxH;
     ssBar.scale.y = ssH;
     ssBar.position.y = ssH * 0.5;
     ssCounter.textContent = '$' + Math.round(ssE * ssTargetCost).toLocaleString();
@@ -407,29 +428,44 @@ function tick(time) {
 
     // After initial animation, smoothly lerp SS bar to slider-controlled height
     if (animDone) {
+      // SS bar lerp
       const currentSSH = ssBar.scale.y;
-      const diff = targetSSMaxH - currentSSH;
-      if (Math.abs(diff) > 0.005) {
-        const newH = currentSSH + diff * 0.08;
+      const ssDiff = targetSSMaxH - currentSSH;
+      if (Math.abs(ssDiff) > 0.005) {
+        const newH = currentSSH + ssDiff * 0.08;
         ssBar.scale.y = newH;
         ssBar.position.y = newH * 0.5;
       }
-      // RS bar stays at its fixed height — no change
+      // RS bar sinks downward and fades
+      const rsBaseY = rsMaxH * 0.5;
+      const rsTargetY = rsBaseY + targetRSDropY;
+      const rsYDiff = rsTargetY - rsBar.position.y;
+      if (Math.abs(rsYDiff) > 0.003) {
+        rsBar.position.y += rsYDiff * 0.08;
+      }
+      const opDiff = targetRSOpacity - rsMat.opacity;
+      if (Math.abs(opDiff) > 0.005) {
+        rsMat.opacity += opDiff * 0.08;
+      }
+      // Hide/show RS card based on opacity
+      cardRS.style.opacity = rsMat.opacity > 0.15 ? '1' : '0';
     }
   }
 
-  // RS card: to the left of the RS bar, not overlapping
-  const rsLeft = toScreen(rsBar.position.x - barWidth/2 - 0.2, rsBar.scale.y * 0.5, rsBar.position.z);
+  // RS card: to the left of the RS bar, tracking its actual position
+  const rsLeft = toScreen(rsBar.position.x - barWidth/2 - 0.2, rsBar.position.y, rsBar.position.z);
   cardRS.style.left = (rsLeft.x - 165) + 'px';
   cardRS.style.top = (rsLeft.y - 50) + 'px';
 
   // SS card: to the right of the SS bar, not overlapping
-  const ssRight = toScreen(ssBar.position.x + barWidth/2 + 0.2, ssBar.scale.y * 0.5, ssBar.position.z);
+  const ssRight = toScreen(ssBar.position.x + barWidth/2 + 0.2, ssBar.position.y, ssBar.position.z);
   cardSS.style.left = ssRight.x + 'px';
   cardSS.style.top = (ssRight.y - 50) + 'px';
 
-  // Note above RS bar top
-  const rsTop = toScreen(rsBar.position.x, rsBar.scale.y + 0.3, rsBar.position.z);
+  // Note above RS bar top — shifts up when joke text is visible
+  const noteExtraY = showJokeText ? 0.5 : 0;
+  const rsTopWorld = rsBar.position.y + rsBar.scale.y * 0.5 + 0.3 + noteExtraY;
+  const rsTop = toScreen(rsBar.position.x, rsTopWorld, rsBar.position.z);
   noteEl.style.left = (rsTop.x - 20) + 'px';
   noteEl.style.top = (rsTop.y - 135) + 'px';
 
