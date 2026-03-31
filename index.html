@@ -266,26 +266,31 @@ const ssMaxH = 3.2;
 const rsMaxH = 0.6;
 
 // Helper: rebuild bar geometry at a given height (preserves constant bevel radius)
-function setBarHeight(mesh, h) {
+// baseY offsets the bar vertically (negative = recessed into pit)
+function setBarHeight(mesh, h, baseY) {
   const safeH = Math.max(h, 0.01);
   if (mesh.geometry) mesh.geometry.dispose();
   mesh.geometry = new RoundedBoxGeometry(barWidth, safeH, barDepth, 4, barRadius);
-  mesh.position.y = safeH * 0.5;
+  mesh.position.y = safeH * 0.5 + (baseY || 0);
 }
-// Track current rendered height to avoid unnecessary rebuilds
+// Track current rendered height
 let ssCurrentH = 0.01;
 let rsCurrentH = 0.01;
+// Bars start recessed in the pit, animate to baseY=0
+const pitStartY = -0.5;
+let ssBaseY = pitStartY;
+let rsBaseY = pitStartY;
 
 // ShipStation bar — flat matte, MeshLambertMaterial for no reflections
 const ssMat = new THREE.MeshLambertMaterial({ color: 0xb0bcc8 });
 const ssBar = new THREE.Mesh(new RoundedBoxGeometry(barWidth, 0.01, barDepth, 4, barRadius), ssMat);
-ssBar.position.set(1.2, 0, 0);
+ssBar.position.set(1.2, pitStartY, 0);
 scene.add(ssBar);
 
 // ReadyShipper bar — flat green
 const rsMat = new THREE.MeshLambertMaterial({ color: 0x18C98D, emissive: 0x18C98D, emissiveIntensity: 0.25 });
 const rsBar = new THREE.Mesh(new RoundedBoxGeometry(barWidth, 0.01, barDepth, 4, barRadius), rsMat);
-rsBar.position.set(-1.2, 0, 0);
+rsBar.position.set(-1.2, pitStartY, 0);
 scene.add(rsBar);
 
 // Floor with cutouts — bars rise through rectangular holes
@@ -321,31 +326,47 @@ rsHole.lineTo(rsHoleX - holeW/2, -holeD/2);
 floorShape.holes.push(rsHole);
 
 const floorGeo = new THREE.ShapeGeometry(floorShape);
-const floorMat = new THREE.MeshLambertMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+const floorMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
 const floor = new THREE.Mesh(floorGeo, floorMat);
 floor.rotation.x = -Math.PI / 2;
 floor.position.y = 0;
 scene.add(floor);
 
-// Subtle inner glow — dark edges inside the holes for depth
-const rimGeo = new THREE.PlaneGeometry(holeW, holeD);
-const rimMat = new THREE.MeshBasicMaterial({ color: 0xe0e4e8, side: THREE.DoubleSide });
-// SS hole rim (back wall)
-const ssRimBack = new THREE.Mesh(new THREE.PlaneGeometry(holeW, 0.15), rimMat);
-ssRimBack.position.set(ssHoleX, -0.075, -holeD/2);
-scene.add(ssRimBack);
-const ssRimLeft = new THREE.Mesh(new THREE.PlaneGeometry(holeD, 0.15), rimMat);
-ssRimLeft.position.set(ssHoleX - holeW/2, -0.075, 0);
-ssRimLeft.rotation.y = Math.PI / 2;
-scene.add(ssRimLeft);
-// RS hole rim (back wall)
-const rsRimBack = new THREE.Mesh(new THREE.PlaneGeometry(holeW, 0.15), rimMat);
-rsRimBack.position.set(rsHoleX, -0.075, -holeD/2);
-scene.add(rsRimBack);
-const rsRimLeft = new THREE.Mesh(new THREE.PlaneGeometry(holeD, 0.15), rimMat);
-rsRimLeft.position.set(rsHoleX - holeW/2, -0.075, 0);
-rsRimLeft.rotation.y = Math.PI / 2;
-scene.add(rsRimLeft);
+// Pit walls — visible sides of the recessed holes
+const pitDepth = 0.6;
+const wallDarkMat = new THREE.MeshBasicMaterial({ color: 0xe8eaed, side: THREE.DoubleSide });
+const wallMedMat = new THREE.MeshBasicMaterial({ color: 0xf0f1f3, side: THREE.DoubleSide });
+// Bottom of each pit
+const pitBottomMat = new THREE.MeshBasicMaterial({ color: 0xf5f5f5, side: THREE.DoubleSide });
+
+function createPit(holeX) {
+  // Back wall (visible from isometric angle)
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(holeW, pitDepth), wallDarkMat);
+  back.position.set(holeX, -pitDepth / 2, -holeD / 2);
+  scene.add(back);
+  // Left wall
+  const left = new THREE.Mesh(new THREE.PlaneGeometry(holeD, pitDepth), wallDarkMat);
+  left.position.set(holeX - holeW / 2, -pitDepth / 2, 0);
+  left.rotation.y = Math.PI / 2;
+  scene.add(left);
+  // Right wall (slightly lighter — less shadow from this angle)
+  const right = new THREE.Mesh(new THREE.PlaneGeometry(holeD, pitDepth), wallMedMat);
+  right.position.set(holeX + holeW / 2, -pitDepth / 2, 0);
+  right.rotation.y = -Math.PI / 2;
+  scene.add(right);
+  // Front wall (slightly lighter)
+  const front = new THREE.Mesh(new THREE.PlaneGeometry(holeW, pitDepth), wallMedMat);
+  front.position.set(holeX, -pitDepth / 2, holeD / 2);
+  front.rotation.y = Math.PI;
+  scene.add(front);
+  // Pit bottom
+  const bottom = new THREE.Mesh(new THREE.PlaneGeometry(holeW, holeD), pitBottomMat);
+  bottom.rotation.x = -Math.PI / 2;
+  bottom.position.set(holeX, -pitDepth, 0);
+  scene.add(bottom);
+}
+createPit(ssHoleX);
+createPit(rsHoleX);
 
 // Project 3D world point → screen pixel
 function toScreen(worldX, worldY, worldZ) {
@@ -487,17 +508,20 @@ function tick(time) {
 
   if (elapsed > 0 && !animDone) {
     // --- Initial entrance animation (runs only until complete) ---
+    // Bars rise from pit (baseY animates from pitStartY → 0)
     const rsP = Math.min(elapsed / rsDur, 1);
     const rsE = easeOutCubic(rsP);
     rsCurrentH = 0.01 + rsE * targetRSMaxH;
-    setBarHeight(rsBar, rsCurrentH);
+    rsBaseY = pitStartY * (1 - rsE);
+    setBarHeight(rsBar, rsCurrentH, rsBaseY);
     rsBar.position.x = -1.2;
     rsCounter.textContent = '$' + Math.round(rsE * rsTargetCost);
 
     const ssP = Math.min(elapsed / ssDur, 1);
     const ssE = easeInOutCubic(ssP);
     ssCurrentH = 0.01 + ssE * targetSSMaxH;
-    setBarHeight(ssBar, ssCurrentH);
+    ssBaseY = pitStartY * (1 - ssE);
+    setBarHeight(ssBar, ssCurrentH, ssBaseY);
     ssBar.position.x = 1.2;
     ssCounter.textContent = '$' + Math.round(ssE * ssTargetCost).toLocaleString();
 
@@ -561,7 +585,7 @@ function tick(time) {
   // Compute target card screen positions from bar 3D positions
   const rsLeftTarget = toScreen(rsBar.position.x - barWidth/2 - 0.2, rsBar.position.y, rsBar.position.z);
   const ssRightTarget = toScreen(ssBar.position.x + barWidth/2 + 0.2, ssBar.position.y, ssBar.position.z);
-  const rsTopWorld = rsCurrentH + 0.3;
+  const rsTopWorld = rsCurrentH + rsBaseY + 0.3;
   const rsTopTarget = toScreen(rsBar.position.x, rsTopWorld, rsBar.position.z);
 
   const tRSX = rsLeftTarget.x - 145, tRSY = rsLeftTarget.y - 40;
