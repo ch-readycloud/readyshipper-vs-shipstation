@@ -151,20 +151,20 @@ For merchants shipping 100+ USPS packages/day
 <div id="hero-3d-wrapper" class="relative" style="height: 460px;">
 <div id="hero-3d" class="absolute inset-0"></div>
 <!-- Card overlays — positioned absolutely within this container -->
-<div id="card-rs" class="absolute bg-white rounded-2xl shadow-lg border border-slate-100 px-4 py-3 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 140px; left: 0; top: 0; will-change: transform;">
-<p class="text-primary font-black text-[10px] uppercase tracking-widest mb-0.5">ReadyShipper</p>
-<p id="rs-counter" class="text-2xl font-black text-on-surface tracking-tight tabular-nums">$64</p>
-<p class="text-primary text-[9px] font-bold mt-1">No additional fees</p>
-<p id="rs-subtitle" class="text-on-surface-variant text-[10px] font-bold mt-0.5">per 10,000 shipments/mo</p>
+<div id="card-rs" class="absolute bg-white rounded-2xl shadow-lg border border-slate-100 px-5 py-4 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 160px; left: 0; top: 0; will-change: transform;">
+<p class="text-primary font-black text-xs uppercase tracking-widest mb-0.5">ReadyShipper</p>
+<p id="rs-counter" class="text-3xl font-black text-on-surface tracking-tight tabular-nums">$64</p>
+<p class="text-primary text-[11px] font-bold mt-1">No additional fees</p>
+<p id="rs-subtitle" class="text-on-surface-variant text-xs font-bold mt-0.5">per 10,000 shipments/mo</p>
 </div>
-<div id="card-ss" class="absolute bg-white rounded-2xl shadow-lg border border-slate-100 px-4 py-3 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 160px; left: 0; top: 0; will-change: transform;">
-<p class="text-slate-400 font-black text-[10px] uppercase tracking-widest mb-0.5">ShipStation</p>
-<p id="ss-counter" class="text-2xl font-black text-on-surface tracking-tight tabular-nums">$1,899</p>
+<div id="card-ss" class="absolute bg-white rounded-2xl shadow-lg border border-slate-100 px-5 py-4 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 180px; left: 0; top: 0; will-change: transform;">
+<p class="text-slate-400 font-black text-xs uppercase tracking-widest mb-0.5">ShipStation</p>
+<p id="ss-counter" class="text-3xl font-black text-on-surface tracking-tight tabular-nums">$1,899</p>
 <div id="ss-fee-breakdown" class="flex flex-col gap-0.5 mt-1 mb-1">
-<p id="ss-fee-carrier" class="text-[9px] font-bold text-red-500 tabular-nums" style="display:none;">+ $800 carrier acct fee</p>
-<p id="ss-fee-cc" class="text-[9px] font-bold text-red-500 tabular-nums" style="display:none;">+ $120 credit card fee</p>
+<p id="ss-fee-carrier" class="text-[11px] font-bold text-red-500 tabular-nums" style="display:none;">+ $800 carrier acct fee</p>
+<p id="ss-fee-cc" class="text-[11px] font-bold text-red-500 tabular-nums" style="display:none;">+ $120 credit card fee</p>
 </div>
-<p id="ss-subtitle" class="text-on-surface-variant text-[10px] font-bold mt-0.5">per 10,000 shipments/mo</p>
+<p id="ss-subtitle" class="text-on-surface-variant text-xs font-bold mt-0.5">per 10,000 shipments/mo</p>
 </div>
 <div id="handwritten-note" class="absolute z-30 opacity-0 pointer-events-none" style="left: 0; top: 0; will-change: transform;">
 <p id="note-text" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: #1d1a22; transform: rotate(-4deg) translateY(18px); transition: transform 0.5s ease, opacity 0.5s ease;">No change.</p>
@@ -179,17 +179,17 @@ For merchants shipping 100+ USPS packages/day
 <!-- Slider row -->
 <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-100 px-5 py-4 flex-shrink-0">
 <div class="flex items-center justify-between mb-3">
-<label class="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400">Monthly shipments</label>
+<label class="text-[11px] font-black uppercase tracking-[0.15em] text-slate-400">Monthly shipments</label>
 <div class="flex items-center gap-4">
-<p id="slider-volume-label" class="text-lg font-black text-on-surface tracking-tight tabular-nums" style="min-width: 60px; text-align: right;">10,000</p>
+<p id="slider-volume-label" class="text-xl font-black text-on-surface tracking-tight tabular-nums" style="min-width: 70px; text-align: right;">10,000</p>
 <div class="border-l border-slate-200 pl-4 flex items-center gap-2">
-<span class="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400">Save</span>
-<span id="slider-savings" class="text-lg font-black text-primary tracking-tight tabular-nums" style="min-width: 115px; text-align: right;">$1,835/mo</span>
+<span class="text-[11px] font-black uppercase tracking-[0.15em] text-slate-400">Save</span>
+<span id="slider-savings" class="text-xl font-black text-primary tracking-tight tabular-nums" style="min-width: 130px; text-align: right;">$1,835/mo</span>
 </div>
 </div>
 </div>
 <input id="hero-volume-slider" type="range" min="0" max="6" value="3" step="1" class="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer"/>
-<div class="relative text-[8px] font-bold text-slate-400 mt-1.5" style="height: 14px;">
+<div class="relative text-[10px] font-bold text-slate-400 mt-2" style="height: 16px;">
 <span style="position:absolute;left:calc(0% + 12px);transform:translateX(-50%)">2K</span>
 <span style="position:absolute;left:calc(16.67% + 8px);transform:translateX(-50%)">5K</span>
 <span style="position:absolute;left:calc(33.33% + 4px);transform:translateX(-50%)">7.5K</span>
