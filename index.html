@@ -263,8 +263,8 @@ const barWidth = 1.4;
 const barDepth = 1.1;
 const barRadius = 0.05;
 // SS bar: base height + linear growth per dollar. Goes off screen ~20K.
-const ssBaseH = 1.8;
-const ssGrowthRate = 0.0008;
+const ssBaseH = 1.88;
+const ssGrowthRate = 0.00031;
 
 // Helper: rebuild bar geometry at a given height (preserves constant bevel radius)
 // baseY offsets the bar vertically (negative = recessed into pit)
@@ -462,18 +462,17 @@ function updateSlider(idx) {
   if (ssSubtitle) ssSubtitle.textContent = 'per ' + tier.vol.toLocaleString() + ' shipments/mo';
   if (rsSubtitle) rsSubtitle.textContent = 'per ' + tier.vol.toLocaleString() + ' shipments/mo';
 
-  // RS bar recesses into pit past 20K — sinks proportionally so only
-  // a sliver peeks above the floor. Deeper tiers = more recessed.
-  if (idx >= 5) {
-    // Sink by a fraction of the bar height (leaves ~30% visible at 20K, ~15% at 25K)
-    const recessPct = (idx - 4) * 0.35; // 20K=35%, 25K=70% hidden
+  // RS bar recesses into pit past 15K — sinks proportionally
+  if (idx >= 4) {
+    // 15K=25%, 20K=50%, 25K=75% hidden
+    const recessPct = (idx - 3) * 0.25;
     targetRSBaseY = barRestY - targetRSMaxH * recessPct;
   } else {
     targetRSBaseY = barRestY;
   }
 
-  // Show "(we're down here)" joke for 20K+ tiers
-  showJokeText = idx >= 5;
+  // Show "(we're down here)" joke for 15K+ tiers
+  showJokeText = idx >= 4;
   if (animDone) {
     if (noteSubtext) noteSubtext.style.opacity = showJokeText ? '1' : '0';
     if (noteText) noteText.style.transform = showJokeText ? 'rotate(-4deg) translateY(0px)' : 'rotate(-4deg) translateY(18px)';
