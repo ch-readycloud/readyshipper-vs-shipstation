@@ -263,7 +263,7 @@ const barWidth = 1.4;
 const barDepth = 1.1;
 const barRadius = 0.05;
 const ssMaxH = 3.2;
-const rsMaxH = 0.6;
+const rsFixedH = 0.8; // RS bar stays a fixed visible height — the price tells the story
 
 // Helper: rebuild bar geometry at a given height (preserves constant bevel radius)
 // baseY offsets the bar vertically (negative = recessed into pit)
@@ -333,30 +333,6 @@ floor.rotation.x = -Math.PI / 2;
 floor.position.y = 0;
 scene.add(floor);
 
-// Floor reflections — soft radial glow around each bar's base
-function createGlow(holeX, r, g, b) {
-  const size = barWidth * 1.8;
-  const canvas = document.createElement('canvas');
-  canvas.width = 128; canvas.height = 128;
-  const ctx = canvas.getContext('2d');
-  const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-  grad.addColorStop(0, 'rgba('+r+','+g+','+b+',0.35)');
-  grad.addColorStop(0.5, 'rgba('+r+','+g+','+b+',0.12)');
-  grad.addColorStop(1.0, 'rgba('+r+','+g+','+b+',0)');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 128, 128);
-  const tex = new THREE.CanvasTexture(canvas);
-  const mesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(size, size),
-    new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false })
-  );
-  mesh.rotation.x = -Math.PI / 2;
-  mesh.position.set(holeX, 0.003, 0);
-  scene.add(mesh);
-  return mesh;
-}
-createGlow(ssHoleX, 176, 188, 200);
-createGlow(rsHoleX, 24, 201, 141);
 
 // Pit walls — visible sides of the recessed holes
 const pitDepth = 0.6;
@@ -430,7 +406,7 @@ const VOLUME_TIERS = [
 
 let currentSSTier = VOLUME_TIERS[3]; // default 10,000
 let targetSSMaxH = ssMaxH;
-let targetRSMaxH = rsMaxH;   // RS bar target height (proportional to price ratio)
+let targetRSMaxH = rsFixedH;
 let showJokeText = false;
 
 const heroSlider = document.getElementById('hero-volume-slider');
@@ -466,9 +442,8 @@ function updateSlider(idx) {
   const ssPct = Math.min((ssEffective - ssMinP) / (Math.max(ssMaxEffective, ssEffective) - ssMinP), 1);
   targetSSMaxH = ssMaxH * (0.35 + ssPct * 0.65);
 
-  // RS bar: proportional to RS/ssEffective price ratio
-  const ratio = tier.rs / ssEffective;
-  targetRSMaxH = Math.max(targetSSMaxH * ratio, 0.03);
+  // RS bar: fixed height — always clearly visible, price label tells the story
+  targetRSMaxH = rsFixedH;
 
   // Update target costs (tick loop lerps the displayed values)
   ssTargetCost = ssEffective;
