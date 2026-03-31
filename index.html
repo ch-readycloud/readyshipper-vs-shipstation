@@ -151,13 +151,13 @@ For merchants shipping 100+ USPS packages/day
 <div id="hero-3d-wrapper" class="relative" style="height: 460px;">
 <div id="hero-3d" class="absolute inset-0"></div>
 <!-- Card overlays — positioned absolutely within this container -->
-<div id="card-rs" class="absolute bg-white rounded-2xl shadow-lg border border-slate-100 px-4 py-3 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 140px;">
+<div id="card-rs" class="absolute bg-white rounded-2xl shadow-lg border border-slate-100 px-4 py-3 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 140px; left: 0; top: 0; will-change: transform;">
 <p class="text-primary font-black text-[10px] uppercase tracking-widest mb-0.5">ReadyShipper</p>
 <p id="rs-counter" class="text-2xl font-black text-on-surface tracking-tight tabular-nums">$64</p>
 <p class="text-primary text-[9px] font-bold mt-1">No additional fees</p>
 <p class="text-on-surface-variant text-[10px] font-bold mt-0.5">per 10,000 shipments/mo</p>
 </div>
-<div id="card-ss" class="absolute bg-white rounded-2xl shadow-lg border border-slate-100 px-4 py-3 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 160px;">
+<div id="card-ss" class="absolute bg-white rounded-2xl shadow-lg border border-slate-100 px-4 py-3 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 160px; left: 0; top: 0; will-change: transform;">
 <p class="text-slate-400 font-black text-[10px] uppercase tracking-widest mb-0.5">ShipStation</p>
 <p id="ss-counter" class="text-2xl font-black text-on-surface tracking-tight tabular-nums">$1,927</p>
 <div id="ss-fee-breakdown" class="flex flex-col gap-0.5 mt-1 mb-1">
@@ -166,7 +166,7 @@ For merchants shipping 100+ USPS packages/day
 </div>
 <p class="text-on-surface-variant text-[10px] font-bold mt-0.5">per 10,000 shipments/mo</p>
 </div>
-<div id="handwritten-note" class="absolute z-30 opacity-0 pointer-events-none">
+<div id="handwritten-note" class="absolute z-30 opacity-0 pointer-events-none" style="left: 0; top: 0; will-change: transform;">
 <p id="note-text" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: #1d1a22; transform: rotate(-4deg) translateY(18px); transition: transform 0.5s ease, opacity 0.5s ease;">No change.</p>
 <p id="note-subtext" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 14px; font-weight: 700; color: #18C98D; transform: rotate(-4deg); margin-top: -2px; transition: opacity 0.5s ease;">(we're down here)</p>
 <svg width="100" height="70" viewBox="0 0 100 70" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-top: 0px; margin-left: 10px;">
@@ -305,6 +305,10 @@ let displayedSSCost = 0;
 let displayedRSCost = 0;
 let displayedSavings = 0;
 let targetSavings = 0;
+// Lerped card screen positions
+let cardRSX = 0, cardRSY = 0, cardSSX = 0, cardSSY = 0;
+let noteX = 0, noteY = 0;
+let cardPosInited = false;
 
 // Slider volume tiers: [shipments, ssPrice, rsPrice]
 const VOLUME_TIERS = [
@@ -452,17 +456,21 @@ function tick(time) {
 
     // After initial animation, smoothly lerp bars and counters (frame-rate independent)
     if (animDone) {
-      const lerpFactor = 1 - Math.pow(1 - 0.04, dt * 60);
+      const lerpFactor = 1 - Math.pow(1 - 0.1, dt * 60);
       // SS bar
       const ssDiff = targetSSMaxH - ssBar.scale.y;
-      if (Math.abs(ssDiff) > 0.003) {
+      if (Math.abs(ssDiff) > 0.001) {
         ssBar.scale.y += ssDiff * lerpFactor;
+      } else {
+        ssBar.scale.y = targetSSMaxH;
       }
       ssBar.position.y = ssBar.scale.y * 0.5;
       // RS bar
       const rsHDiff = targetRSMaxH - rsBar.scale.y;
       if (Math.abs(rsHDiff) > 0.001) {
         rsBar.scale.y += rsHDiff * lerpFactor;
+      } else {
+        rsBar.scale.y = targetRSMaxH;
       }
       rsBar.position.y = rsBar.scale.y * 0.5;
       // Smooth price counters
@@ -485,21 +493,36 @@ function tick(time) {
     }
   }
 
-  // RS card: to the left of the RS bar, tracking its actual position
-  const rsLeft = toScreen(rsBar.position.x - barWidth/2 - 0.2, rsBar.position.y, rsBar.position.z);
-  cardRS.style.left = (rsLeft.x - 145) + 'px';
-  cardRS.style.top = (rsLeft.y - 40) + 'px';
-
-  // SS card: to the right of the SS bar
-  const ssRight = toScreen(ssBar.position.x + barWidth/2 + 0.2, ssBar.position.y, ssBar.position.z);
-  cardSS.style.left = ssRight.x + 'px';
-  cardSS.style.top = (ssRight.y - 40) + 'px';
-
-  // Note above RS bar top — constant offset, no jumping
+  // Compute target card screen positions from bar 3D positions
+  const rsLeftTarget = toScreen(rsBar.position.x - barWidth/2 - 0.2, rsBar.position.y, rsBar.position.z);
+  const ssRightTarget = toScreen(ssBar.position.x + barWidth/2 + 0.2, ssBar.position.y, ssBar.position.z);
   const rsTopWorld = rsBar.position.y + rsBar.scale.y * 0.5 + 0.3;
-  const rsTop = toScreen(rsBar.position.x, rsTopWorld, rsBar.position.z);
-  noteEl.style.left = (rsTop.x - 15) + 'px';
-  noteEl.style.top = (rsTop.y - 120) + 'px';
+  const rsTopTarget = toScreen(rsBar.position.x, rsTopWorld, rsBar.position.z);
+
+  const tRSX = rsLeftTarget.x - 145, tRSY = rsLeftTarget.y - 40;
+  const tSSX = ssRightTarget.x, tSSY = ssRightTarget.y - 40;
+  const tNX = rsTopTarget.x - 15, tNY = rsTopTarget.y - 120;
+
+  // Initialize or lerp card positions
+  if (!cardPosInited) {
+    cardRSX = tRSX; cardRSY = tRSY;
+    cardSSX = tSSX; cardSSY = tSSY;
+    noteX = tNX; noteY = tNY;
+    cardPosInited = true;
+  } else {
+    const posLerp = 1 - Math.pow(1 - 0.12, dt * 60);
+    cardRSX += (tRSX - cardRSX) * posLerp;
+    cardRSY += (tRSY - cardRSY) * posLerp;
+    cardSSX += (tSSX - cardSSX) * posLerp;
+    cardSSY += (tSSY - cardSSY) * posLerp;
+    noteX += (tNX - noteX) * posLerp;
+    noteY += (tNY - noteY) * posLerp;
+  }
+
+  // Apply lerped positions via transform (avoids layout thrash)
+  cardRS.style.transform = 'translate(' + cardRSX.toFixed(1) + 'px,' + cardRSY.toFixed(1) + 'px)';
+  cardSS.style.transform = 'translate(' + cardSSX.toFixed(1) + 'px,' + cardSSY.toFixed(1) + 'px)';
+  noteEl.style.transform = 'translate(' + noteX.toFixed(1) + 'px,' + noteY.toFixed(1) + 'px)';
 
   renderer.render(scene, camera);
 }
