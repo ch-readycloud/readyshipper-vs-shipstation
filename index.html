@@ -286,7 +286,7 @@ ssBar.position.set(1.2, pitStartY, 0);
 scene.add(ssBar);
 
 // ReadyShipper bar — flat green
-const rsMat = new THREE.MeshLambertMaterial({ color: 0x2ED49A });
+const rsMat = new THREE.MeshLambertMaterial({ color: 0x4BE8AE, emissive: 0x18C98D, emissiveIntensity: 0.15 });
 const rsBar = new THREE.Mesh(new RoundedBoxGeometry(barWidth, 0.01, barDepth, 4, barRadius), rsMat);
 rsBar.position.set(-1.2, pitStartY, 0);
 scene.add(rsBar);
