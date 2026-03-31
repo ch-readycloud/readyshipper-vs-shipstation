@@ -433,12 +433,12 @@ function updateSlider(idx) {
 
   targetSavings = ssEffective - tier.rs;
 
-  // Both bars use same sqrt price→height scale (keeps RS visible while proportional)
+  // SS bar: scales linearly against fixed absolute max
   const absMax = Math.round((VOLUME_TIERS[VOLUME_TIERS.length - 1].ss
     + VOLUME_TIERS[VOLUME_TIERS.length - 1].vol * 0.08) * 1.015);
-  const sqrtMax = Math.sqrt(absMax);
-  targetSSMaxH = ssMaxH * (Math.sqrt(ssEffective) / sqrtMax);
-  targetRSMaxH = ssMaxH * (Math.sqrt(tier.rs) / sqrtMax);
+  targetSSMaxH = ssMaxH * (ssEffective / absMax);
+  // RS bar: direct price ratio of SS bar height (e.g. $64/$1927 = ~3%)
+  targetRSMaxH = targetSSMaxH * (tier.rs / ssEffective);
 
   // Update target costs (tick loop lerps the displayed values)
   ssTargetCost = ssEffective;
