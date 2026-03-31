@@ -216,7 +216,6 @@ For merchants shipping 100+ USPS packages/day
 <script type="module">
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { Reflector } from 'three/addons/objects/Reflector.js';
 
 const container = document.getElementById('hero-3d');
 const cardRS = document.getElementById('card-rs');
@@ -326,28 +325,44 @@ rsHole.lineTo(rsHoleX - holeW/2, holeD/2);
 rsHole.lineTo(rsHoleX - holeW/2, -holeD/2);
 floorShape.holes.push(rsHole);
 
-// Glassy reflective floor using Reflector
+// White floor
 const floorGeo = new THREE.ShapeGeometry(floorShape);
-const floor = new Reflector(floorGeo, {
-  color: 0xffffff,
-  textureWidth: cw * window.devicePixelRatio,
-  textureHeight: ch * window.devicePixelRatio,
-  clipBias: 0.003,
-});
+const floorMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+const floor = new THREE.Mesh(floorGeo, floorMat);
 floor.rotation.x = -Math.PI / 2;
 floor.position.y = 0;
 scene.add(floor);
 
-// Tint layer on top of the reflector to make it mostly white with subtle reflection
-const tintGeo = new THREE.ShapeGeometry(floorShape);
-const tintMat = new THREE.MeshBasicMaterial({
-  color: 0xffffff, transparent: true, opacity: 0.7,
-  side: THREE.DoubleSide, depthWrite: false
-});
-const tint = new THREE.Mesh(tintGeo, tintMat);
-tint.rotation.x = -Math.PI / 2;
-tint.position.y = 0.001;
-scene.add(tint);
+// Floor reflections — stretched colored planes on the floor surface
+// Oriented along the isometric camera direction for a glassy look
+function createReflection(holeX, colorHex) {
+  // Reflection extends diagonally toward camera (isometric 45°: +x, +z direction)
+  const reflLen = 2.5;
+  const reflW = barWidth * 0.9;
+  const canvas = document.createElement('canvas');
+  canvas.width = 64; canvas.height = 256;
+  const ctx = canvas.getContext('2d');
+  const g = ctx.createLinearGradient(0, 0, 0, 256);
+  g.addColorStop(0, colorHex + 'aa');   // near bar: ~67% opacity
+  g.addColorStop(0.3, colorHex + '55'); // fading
+  g.addColorStop(0.7, colorHex + '18'); // almost gone
+  g.addColorStop(1.0, colorHex + '00'); // transparent
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, 64, 256);
+  const tex = new THREE.CanvasTexture(canvas);
+  const mat = new THREE.MeshBasicMaterial({
+    map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide
+  });
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(reflW, reflLen), mat);
+  mesh.rotation.x = -Math.PI / 2;
+  // Position: start at the bar hole, stretch toward the camera (+x, +z)
+  mesh.rotation.z = Math.PI / 4; // 45° to align with isometric view
+  mesh.position.set(holeX + reflLen * 0.3, 0.002, reflLen * 0.3);
+  scene.add(mesh);
+  return mesh;
+}
+createReflection(ssHoleX, '#8a9bab');
+createReflection(rsHoleX, '#18C98D');
 
 // Pit walls — visible sides of the recessed holes
 const pitDepth = 0.6;
