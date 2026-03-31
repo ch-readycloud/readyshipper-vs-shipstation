@@ -11,6 +11,12 @@
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
+        #volume-selector {
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            background-image: none !important;
+        }
         .bg-glass {
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -530,7 +536,7 @@ window.addEventListener('resize', () => {
 <div class="max-w-md mx-auto mb-12">
 <label for="volume-selector" class="block text-center text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Monthly Shipment Volume</label>
 <div class="relative">
-<select id="volume-selector" class="w-full bg-white border-2 border-slate-200 rounded-xl py-5 pl-6 pr-12 font-bold text-on-surface text-center focus:ring-primary focus:border-primary text-lg" style="-webkit-appearance:none;-moz-appearance:none;appearance:none;">
+<select id="volume-selector" class="w-full bg-white border-2 border-slate-200 rounded-xl py-5 pl-6 pr-12 font-bold text-on-surface text-center focus:ring-primary focus:border-primary text-lg" style="-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:none;">
 <option value="2000">2,000 shipments / mo</option>
 <option value="4000" selected>4,000 shipments / mo</option>
 <option value="6000">6,000 shipments / mo</option>
