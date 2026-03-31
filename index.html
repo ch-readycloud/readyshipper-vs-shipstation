@@ -216,6 +216,7 @@ For merchants shipping 100+ USPS packages/day
 <script type="module">
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { Reflector } from 'three/addons/objects/Reflector.js';
 
 const container = document.getElementById('hero-3d');
 const cardRS = document.getElementById('card-rs');
@@ -289,7 +290,7 @@ ssBar.position.set(1.2, pitStartY, 0);
 scene.add(ssBar);
 
 // ReadyShipper bar — flat green
-const rsMat = new THREE.MeshLambertMaterial({ color: 0x18C98D, emissive: 0x18C98D, emissiveIntensity: 0.1 });
+const rsMat = new THREE.MeshLambertMaterial({ color: 0x18C98D });
 const rsBar = new THREE.Mesh(new RoundedBoxGeometry(barWidth, 0.01, barDepth, 4, barRadius), rsMat);
 rsBar.position.set(-1.2, pitStartY, 0);
 scene.add(rsBar);
@@ -325,41 +326,51 @@ rsHole.lineTo(rsHoleX - holeW/2, holeD/2);
 rsHole.lineTo(rsHoleX - holeW/2, -holeD/2);
 floorShape.holes.push(rsHole);
 
+// Glassy reflective floor using Reflector
 const floorGeo = new THREE.ShapeGeometry(floorShape);
-const floorMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
-const floor = new THREE.Mesh(floorGeo, floorMat);
+const floor = new Reflector(floorGeo, {
+  color: 0xffffff,
+  textureWidth: cw * window.devicePixelRatio,
+  textureHeight: ch * window.devicePixelRatio,
+  clipBias: 0.003,
+});
 floor.rotation.x = -Math.PI / 2;
 floor.position.y = 0;
 scene.add(floor);
+
+// Tint layer on top of the reflector to make it mostly white with subtle reflection
+const tintGeo = new THREE.ShapeGeometry(floorShape);
+const tintMat = new THREE.MeshBasicMaterial({
+  color: 0xffffff, transparent: true, opacity: 0.7,
+  side: THREE.DoubleSide, depthWrite: false
+});
+const tint = new THREE.Mesh(tintGeo, tintMat);
+tint.rotation.x = -Math.PI / 2;
+tint.position.y = 0.001;
+scene.add(tint);
 
 // Pit walls — visible sides of the recessed holes
 const pitDepth = 0.6;
 const wallDarkMat = new THREE.MeshBasicMaterial({ color: 0xe8eaed, side: THREE.DoubleSide });
 const wallMedMat = new THREE.MeshBasicMaterial({ color: 0xf0f1f3, side: THREE.DoubleSide });
-// Bottom of each pit
 const pitBottomMat = new THREE.MeshBasicMaterial({ color: 0xf5f5f5, side: THREE.DoubleSide });
 
 function createPit(holeX) {
-  // Back wall (visible from isometric angle)
   const back = new THREE.Mesh(new THREE.PlaneGeometry(holeW, pitDepth), wallDarkMat);
   back.position.set(holeX, -pitDepth / 2, -holeD / 2);
   scene.add(back);
-  // Left wall
   const left = new THREE.Mesh(new THREE.PlaneGeometry(holeD, pitDepth), wallDarkMat);
   left.position.set(holeX - holeW / 2, -pitDepth / 2, 0);
   left.rotation.y = Math.PI / 2;
   scene.add(left);
-  // Right wall (slightly lighter — less shadow from this angle)
   const right = new THREE.Mesh(new THREE.PlaneGeometry(holeD, pitDepth), wallMedMat);
   right.position.set(holeX + holeW / 2, -pitDepth / 2, 0);
   right.rotation.y = -Math.PI / 2;
   scene.add(right);
-  // Front wall (slightly lighter)
   const front = new THREE.Mesh(new THREE.PlaneGeometry(holeW, pitDepth), wallMedMat);
   front.position.set(holeX, -pitDepth / 2, holeD / 2);
   front.rotation.y = Math.PI;
   scene.add(front);
-  // Pit bottom
   const bottom = new THREE.Mesh(new THREE.PlaneGeometry(holeW, holeD), pitBottomMat);
   bottom.rotation.x = -Math.PI / 2;
   bottom.position.set(holeX, -pitDepth, 0);
@@ -367,33 +378,6 @@ function createPit(holeX) {
 }
 createPit(ssHoleX);
 createPit(rsHoleX);
-
-// Floor reflections — colored planes ON the floor surface, fading away from the hole
-// Each reflection is a gradient quad that sits just above the floor
-function createReflection(holeX, color) {
-  const reflW = barWidth * 2.2;
-  const reflD = barDepth * 2.2;
-  const reflCanvas = document.createElement('canvas');
-  reflCanvas.width = 128; reflCanvas.height = 128;
-  const rCtx = reflCanvas.getContext('2d');
-  const rGrad = rCtx.createRadialGradient(64, 64, 0, 64, 64, 64);
-  rGrad.addColorStop(0, color + '40'); // center: 25% opacity
-  rGrad.addColorStop(0.4, color + '25'); // mid: 15%
-  rGrad.addColorStop(1.0, color + '00'); // edge: transparent
-  rCtx.fillStyle = rGrad;
-  rCtx.fillRect(0, 0, 128, 128);
-  const reflTex = new THREE.CanvasTexture(reflCanvas);
-  const reflMesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(reflW, reflD),
-    new THREE.MeshBasicMaterial({ map: reflTex, transparent: true, depthWrite: false })
-  );
-  reflMesh.rotation.x = -Math.PI / 2;
-  reflMesh.position.set(holeX, 0.005, 0);
-  scene.add(reflMesh);
-  return reflMesh;
-}
-const ssRefl = createReflection(ssHoleX, '#b0bcc8');
-const rsRefl = createReflection(rsHoleX, '#18C98D');
 
 
 
