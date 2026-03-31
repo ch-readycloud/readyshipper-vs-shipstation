@@ -98,7 +98,7 @@
 
 <!-- Hero Section -->
 <section class="relative overflow-hidden bg-white">
-<div class="max-w-7xl mx-auto px-8 pt-16 pb-16 grid lg:grid-cols-2 gap-8 items-center relative">
+<div class="max-w-7xl mx-auto px-8 pt-16 pb-16 grid lg:grid-cols-2 gap-8 items-end relative">
 <div class="space-y-8">
 <span class="inline-block text-secondary font-bold tracking-widest text-xs uppercase bg-secondary/10 px-4 py-1.5 rounded-full mb-2">Data as of 04/2026</span>
 <h1 class="font-headline font-black tracking-tight text-on-surface">
@@ -140,7 +140,7 @@
 </div>
 <!-- Right column: 3D viewer + slider, contained to match left column height -->
 <div class="hidden lg:flex flex-col">
-<div id="hero-3d-wrapper" class="relative overflow-hidden" style="height: 420px;">
+<div id="hero-3d-wrapper" class="relative" style="height: 380px;">
 <div id="hero-3d" class="absolute inset-0"></div>
 <!-- Card overlays — positioned absolutely within this container -->
 <div id="card-rs" class="absolute bg-white rounded-2xl shadow-lg border border-slate-100 px-4 py-3 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 140px;">
@@ -212,8 +212,9 @@ const camera = new THREE.OrthographicCamera(
   -frustumSize * aspect / 2, frustumSize * aspect / 2,
   frustumSize / 2, -frustumSize / 2, 0.1, 100
 );
-camera.position.set(0, 4, 10);
-camera.lookAt(0, 2.0, 0);
+// Angled orthographic view — same perspective as original but sized for column
+camera.position.set(1, 5, 8);
+camera.lookAt(-1, 1.5, 0);
 
 // Renderer — transparent, no shadows, no tone mapping
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -290,17 +291,12 @@ const VOLUME_TIERS = [
 let currentSSTier = VOLUME_TIERS[3]; // default 1,000
 let targetSSMaxH = ssMaxH;
 let targetRSMaxH = rsMaxH;   // RS bar target height (proportional to price ratio)
-let targetRSDropY = 0;       // how far RS bar sinks below ground
-let targetRSOpacity = 1.0;   // RS bar material opacity
 let showJokeText = false;
 
 const heroSlider = document.getElementById('hero-volume-slider');
 const sliderVolLabel = document.getElementById('slider-volume-label');
 const sliderSavings = document.getElementById('slider-savings');
 const noteSubtext = document.getElementById('note-subtext');
-
-// Make RS material transparent-capable
-rsMat.transparent = true;
 
 function updateSlider(idx) {
   const tier = VOLUME_TIERS[idx];
@@ -312,16 +308,7 @@ function updateSlider(idx) {
   // This makes the RS bar visually tiny next to the SS bar at high volumes
   targetSSMaxH = ssMaxH;
   const ratio = tier.rs / tier.ss; // e.g. 64/1499 = 0.04 at 20K
-  targetRSMaxH = ssMaxH * ratio;
-  // RS bar also sinks and fades at extreme volumes (15K+)
-  if (idx <= 7) {
-    targetRSDropY = 0;
-    targetRSOpacity = 1.0;
-  } else {
-    const fadePct = (idx - 7) / 2; // 0 at idx 7, 1 at idx 9
-    targetRSDropY = fadePct * -0.5;
-    targetRSOpacity = Math.max(0.15, 1.0 - fadePct * 0.7);
-  }
+  targetRSMaxH = Math.max(ssMaxH * ratio, 0.03); // floor so it doesn't vanish entirely
   // Update card counters
   ssTargetCost = tier.ss;
   rsTargetCost = tier.rs;
@@ -410,25 +397,12 @@ function tick(time) {
         ssBar.scale.y = newH;
         ssBar.position.y = newH * 0.5;
       }
-      // RS bar shrinks proportionally, sinks, and fades
+      // RS bar just gets flatter — no sinking, no fading
       const rsHDiff = targetRSMaxH - rsBar.scale.y;
-      if (Math.abs(rsHDiff) > 0.003) {
+      if (Math.abs(rsHDiff) > 0.002) {
         rsBar.scale.y += rsHDiff * 0.08;
       }
-      const rsBaseY = rsBar.scale.y * 0.5;
-      const rsTargetY = rsBaseY + targetRSDropY;
-      const rsYDiff = rsTargetY - rsBar.position.y;
-      if (Math.abs(rsYDiff) > 0.003) {
-        rsBar.position.y += rsYDiff * 0.08;
-      } else {
-        rsBar.position.y = rsTargetY;
-      }
-      const opDiff = targetRSOpacity - rsMat.opacity;
-      if (Math.abs(opDiff) > 0.005) {
-        rsMat.opacity += opDiff * 0.08;
-      }
-      // Hide/show RS card based on opacity
-      cardRS.style.opacity = rsMat.opacity > 0.15 ? '1' : '0';
+      rsBar.position.y = rsBar.scale.y * 0.5;
     }
   }
 
