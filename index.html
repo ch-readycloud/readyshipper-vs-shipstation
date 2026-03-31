@@ -370,16 +370,17 @@ createPit(rsHoleX);
 // Floor grid — canvas texture aligned with bar edges, radial fade
 const gridWorldSize = 8.4;
 const gridPx = 840;
-const cellWorld = barWidth / 4; // 0.35
+const cellWorld = barWidth / 4 * 1.1; // 0.385 (10% larger)
 const cellPx = (cellWorld / gridWorldSize) * gridPx;
-// Offset so grid lines hit bar edges at x = ±0.5, ±1.9
-// With offset 0.15: lines at ...-0.55, -0.2, 0.15, 0.5, 0.85, 1.2, 1.55, 1.9...
 const offsetWorld = 0.15;
 const offsetPx = (offsetWorld / gridWorldSize) * gridPx;
 
 const gridCanvas = document.createElement('canvas');
 gridCanvas.width = gridPx; gridCanvas.height = gridPx;
 const gCtx = gridCanvas.getContext('2d');
+
+// World→pixel helpers
+const w2p = (v) => (v / gridWorldSize + 0.5) * gridPx;
 
 // Draw grid lines
 gCtx.strokeStyle = 'rgba(180, 190, 200, 0.7)';
@@ -394,7 +395,18 @@ for (let y = startOffsetZ; y <= gridPx; y += cellPx) {
   gCtx.beginPath(); gCtx.moveTo(0, y); gCtx.lineTo(gridPx, y); gCtx.stroke();
 }
 
-// Radial fade — stronger toward back (-z) and sides
+// Clear grid over bar holes (world coords → pixel coords)
+gCtx.globalCompositeOperation = 'destination-out';
+[ssHoleX, rsHoleX].forEach(hx => {
+  const px = w2p(hx) - (barWidth / gridWorldSize * gridPx) / 2;
+  const py = w2p(0) - (barDepth / gridWorldSize * gridPx) / 2;
+  const pw = (barWidth / gridWorldSize) * gridPx;
+  const ph = (barDepth / gridWorldSize) * gridPx;
+  gCtx.fillStyle = 'rgba(0,0,0,1)';
+  gCtx.fillRect(px, py, pw, ph);
+});
+
+// Radial fade — stronger toward back and sides
 gCtx.globalCompositeOperation = 'destination-in';
 const radGrad = gCtx.createRadialGradient(halfPx, halfPx * 1.15, gridPx * 0.1, halfPx, halfPx * 1.15, halfPx * 0.9);
 radGrad.addColorStop(0, 'rgba(0,0,0,1)');
