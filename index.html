@@ -176,8 +176,8 @@
 <span>20K</span>
 </div>
 </div>
-<p id="slider-volume-label" class="text-xl font-black text-on-surface tracking-tight tabular-nums whitespace-nowrap flex-shrink-0" style="min-width: 55px; text-align: right;">1,000</p>
-<div class="flex-shrink-0 border-l border-slate-200 pl-5 text-center">
+<p id="slider-volume-label" class="text-xl font-black text-on-surface tracking-tight tabular-nums whitespace-nowrap flex-shrink-0" style="width: 75px; text-align: right;">1,000</p>
+<div class="flex-shrink-0 border-l border-slate-200 pl-5 text-center" style="width: 120px;">
 <span class="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 block mb-0.5">You save</span>
 <span id="slider-savings" class="text-xl font-black text-primary tracking-tight">$535/mo</span>
 </div>
@@ -248,7 +248,7 @@ scene.add(ssBar);
 
 // ReadyShipper bar — flat green
 const rsGeo = new RoundedBoxGeometry(barWidth, 1, barDepth, 4, barRadius);
-const rsMat = new THREE.MeshLambertMaterial({ color: 0x2ee8a5 });
+const rsMat = new THREE.MeshLambertMaterial({ color: 0x18C98D });
 const rsBar = new THREE.Mesh(rsGeo, rsMat);
 rsBar.position.set(-1.2, 0, 0);
 rsBar.scale.y = 0.001;
