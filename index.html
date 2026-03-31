@@ -208,6 +208,7 @@ For merchants shipping 100+ USPS packages/day
 <span class="text-xs font-bold text-slate-500 group-hover:text-slate-700 transition-colors">Paying with credit card?</span>
 </label>
 </div>
+<p class="text-[9px] text-slate-400 mt-2">*1.5% credit card processing fee based on avg. $12 per shipping label</p>
 </div>
 </div>
 <script type="importmap">
@@ -453,7 +454,7 @@ function updateSlider(idx) {
   }
   if (ssFeeCc) {
     ssFeeCc.style.display = ccFee ? 'block' : 'none';
-    ssFeeCc.textContent = '+ $' + ccFee.toLocaleString() + ' credit card fee';
+    ssFeeCc.textContent = '+ $' + ccFee.toLocaleString() + ' credit card fee*';
   }
 
   // Update card subtitles with shipment volume
