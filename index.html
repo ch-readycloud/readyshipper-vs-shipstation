@@ -267,17 +267,11 @@ const rsMaxH = 0.6;
 
 // Helper: rebuild bar geometry at a given height (preserves constant bevel radius)
 // baseY offsets the bar vertically (negative = recessed into pit)
-// reflMesh mirrors the bar below the floor for the reflection effect
-function setBarHeight(mesh, h, baseY, reflMesh) {
+function setBarHeight(mesh, h, baseY) {
   const safeH = Math.max(h, 0.01);
   if (mesh.geometry) mesh.geometry.dispose();
   mesh.geometry = new RoundedBoxGeometry(barWidth, safeH, barDepth, 4, barRadius);
   mesh.position.y = safeH * 0.5 + (baseY || 0);
-  if (reflMesh) {
-    if (reflMesh.geometry) reflMesh.geometry.dispose();
-    reflMesh.geometry = new RoundedBoxGeometry(barWidth, safeH, barDepth, 4, barRadius);
-    reflMesh.position.y = -safeH * 0.5;
-  }
 }
 // Track current rendered height
 let ssCurrentH = 0.01;
@@ -295,7 +289,7 @@ ssBar.position.set(1.2, pitStartY, 0);
 scene.add(ssBar);
 
 // ReadyShipper bar — flat green
-const rsMat = new THREE.MeshLambertMaterial({ color: 0x18C98D, emissive: 0x18C98D, emissiveIntensity: 0.25 });
+const rsMat = new THREE.MeshLambertMaterial({ color: 0x18C98D, emissive: 0x18C98D, emissiveIntensity: 0.1 });
 const rsBar = new THREE.Mesh(new RoundedBoxGeometry(barWidth, 0.01, barDepth, 4, barRadius), rsMat);
 rsBar.position.set(-1.2, pitStartY, 0);
 scene.add(rsBar);
@@ -374,66 +368,34 @@ function createPit(holeX) {
 createPit(ssHoleX);
 createPit(rsHoleX);
 
-// Floor reflection — mirrored bars below floor
-const ssReflMat = new THREE.MeshLambertMaterial({ color: 0xb0bcc8, transparent: true, opacity: 0.3 });
-const ssRefl = new THREE.Mesh(new RoundedBoxGeometry(barWidth, 0.01, barDepth, 4, barRadius), ssReflMat);
-ssRefl.position.set(ssHoleX, 0, 0);
-ssRefl.scale.y = -1;
-scene.add(ssRefl);
-
-const rsReflMat = new THREE.MeshLambertMaterial({ color: 0x18C98D, transparent: true, opacity: 0.3 });
-const rsRefl = new THREE.Mesh(new RoundedBoxGeometry(barWidth, 0.01, barDepth, 4, barRadius), rsReflMat);
-rsRefl.position.set(rsHoleX, 0, 0);
-rsRefl.scale.y = -1;
-scene.add(rsRefl);
-
-// Fade plane — uses same hole cutouts as the floor so it never covers the bar slots
-const fadeShape = new THREE.Shape();
-const fadeSz = 6;
-fadeShape.moveTo(-fadeSz, -fadeSz);
-fadeShape.lineTo(fadeSz, -fadeSz);
-fadeShape.lineTo(fadeSz, fadeSz);
-fadeShape.lineTo(-fadeSz, fadeSz);
-fadeShape.lineTo(-fadeSz, -fadeSz);
-// Reuse same hole positions
-[ssHoleX, rsHoleX].forEach(hx => {
-  const h = new THREE.Path();
-  h.moveTo(hx - holeW/2, -holeD/2);
-  h.lineTo(hx + holeW/2, -holeD/2);
-  h.lineTo(hx + holeW/2, holeD/2);
-  h.lineTo(hx - holeW/2, holeD/2);
-  h.lineTo(hx - holeW/2, -holeD/2);
-  fadeShape.holes.push(h);
-});
-const fadeCanvas = document.createElement('canvas');
-fadeCanvas.width = 256; fadeCanvas.height = 256;
-const fadeCtx = fadeCanvas.getContext('2d');
-const grad = fadeCtx.createLinearGradient(0, 0, 0, 256);
-grad.addColorStop(0, 'rgba(255,255,255,0.0)');
-grad.addColorStop(0.35, 'rgba(255,255,255,0.5)');
-grad.addColorStop(0.7, 'rgba(255,255,255,0.9)');
-grad.addColorStop(1.0, 'rgba(255,255,255,1.0)');
-fadeCtx.fillStyle = grad;
-fadeCtx.fillRect(0, 0, 256, 256);
-const fadeTex = new THREE.CanvasTexture(fadeCanvas);
-// Apply texture to the holed shape
-const fadeGeo = new THREE.ShapeGeometry(fadeShape);
-// Compute UV from world XZ so the gradient maps from center outward
-const fadePos = fadeGeo.attributes.position;
-const fadeUV = fadeGeo.attributes.uv;
-for (let i = 0; i < fadePos.count; i++) {
-  const x = fadePos.getX(i), y = fadePos.getY(i);
-  const dist = Math.sqrt(x*x + y*y) / fadeSz;
-  fadeUV.setXY(i, 0.5, dist);
+// Floor reflections — colored planes ON the floor surface, fading away from the hole
+// Each reflection is a gradient quad that sits just above the floor
+function createReflection(holeX, color) {
+  const reflW = barWidth * 2.2;
+  const reflD = barDepth * 2.2;
+  const reflCanvas = document.createElement('canvas');
+  reflCanvas.width = 128; reflCanvas.height = 128;
+  const rCtx = reflCanvas.getContext('2d');
+  const rGrad = rCtx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  rGrad.addColorStop(0, color + '40'); // center: 25% opacity
+  rGrad.addColorStop(0.4, color + '25'); // mid: 15%
+  rGrad.addColorStop(1.0, color + '00'); // edge: transparent
+  rCtx.fillStyle = rGrad;
+  rCtx.fillRect(0, 0, 128, 128);
+  const reflTex = new THREE.CanvasTexture(reflCanvas);
+  const reflMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(reflW, reflD),
+    new THREE.MeshBasicMaterial({ map: reflTex, transparent: true, depthWrite: false })
+  );
+  reflMesh.rotation.x = -Math.PI / 2;
+  reflMesh.position.set(holeX, 0.005, 0);
+  scene.add(reflMesh);
+  return reflMesh;
 }
-fadeUV.needsUpdate = true;
-const fadePlane = new THREE.Mesh(
-  fadeGeo,
-  new THREE.MeshBasicMaterial({ map: fadeTex, transparent: true, depthWrite: false, side: THREE.DoubleSide })
-);
-fadePlane.rotation.x = -Math.PI / 2;
-fadePlane.position.y = -0.01;
-scene.add(fadePlane);
+const ssRefl = createReflection(ssHoleX, '#b0bcc8');
+const rsRefl = createReflection(rsHoleX, '#18C98D');
+
+
 
 // Project 3D world point → screen pixel
 function toScreen(worldX, worldY, worldZ) {
@@ -580,7 +542,7 @@ function tick(time) {
     const rsE = easeOutCubic(rsP);
     rsCurrentH = 0.01 + rsE * targetRSMaxH;
     rsBaseY = pitStartY + (barRestY - pitStartY) * rsE;
-    setBarHeight(rsBar, rsCurrentH, rsBaseY, rsRefl);
+    setBarHeight(rsBar, rsCurrentH, rsBaseY);
     rsBar.position.x = -1.2;
     rsCounter.textContent = '$' + Math.round(rsE * rsTargetCost);
 
@@ -588,7 +550,7 @@ function tick(time) {
     const ssE = easeInOutCubic(ssP);
     ssCurrentH = 0.01 + ssE * targetSSMaxH;
     ssBaseY = pitStartY + (barRestY - pitStartY) * ssE;
-    setBarHeight(ssBar, ssCurrentH, ssBaseY, ssRefl);
+    setBarHeight(ssBar, ssCurrentH, ssBaseY);
     ssBar.position.x = 1.2;
     ssCounter.textContent = '$' + Math.round(ssE * ssTargetCost).toLocaleString();
 
@@ -619,7 +581,7 @@ function tick(time) {
     } else {
       ssCurrentH = targetSSMaxH;
     }
-    setBarHeight(ssBar, ssCurrentH, barRestY, ssRefl);
+    setBarHeight(ssBar, ssCurrentH, barRestY);
     ssBar.position.x = 1.2;
     // RS bar height
     const rsHDiff = targetRSMaxH - rsCurrentH;
@@ -628,7 +590,7 @@ function tick(time) {
     } else {
       rsCurrentH = targetRSMaxH;
     }
-    setBarHeight(rsBar, rsCurrentH, barRestY, rsRefl);
+    setBarHeight(rsBar, rsCurrentH, barRestY);
     rsBar.position.x = -1.2;
     // Price counters
     const ssCostDiff = ssTargetCost - displayedSSCost;
