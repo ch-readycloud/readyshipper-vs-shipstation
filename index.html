@@ -333,33 +333,40 @@ floor.rotation.x = -Math.PI / 2;
 floor.position.y = 0;
 scene.add(floor);
 
-// Floor reflections — stretched colored planes on the floor surface
-// Oriented along the isometric camera direction for a glassy look
+// Floor reflections — simple colored rectangles on the floor, hidden until bars rise
+// Each bar gets two reflection strips: one extending toward camera on X, one on Z
+const reflections = [];
 function createReflection(holeX, colorHex) {
-  // Reflection extends diagonally toward camera (isometric 45°: +x, +z direction)
-  const reflLen = 2.5;
-  const reflW = barWidth * 0.9;
   const canvas = document.createElement('canvas');
-  canvas.width = 64; canvas.height = 256;
+  canvas.width = 256; canvas.height = 64;
   const ctx = canvas.getContext('2d');
-  const g = ctx.createLinearGradient(0, 0, 0, 256);
-  g.addColorStop(0, colorHex + 'aa');   // near bar: ~67% opacity
-  g.addColorStop(0.3, colorHex + '55'); // fading
-  g.addColorStop(0.7, colorHex + '18'); // almost gone
-  g.addColorStop(1.0, colorHex + '00'); // transparent
+  const g = ctx.createLinearGradient(0, 0, 256, 0);
+  g.addColorStop(0, colorHex + '60');
+  g.addColorStop(0.4, colorHex + '30');
+  g.addColorStop(1.0, colorHex + '00');
   ctx.fillStyle = g;
-  ctx.fillRect(0, 0, 64, 256);
+  ctx.fillRect(0, 0, 256, 64);
   const tex = new THREE.CanvasTexture(canvas);
   const mat = new THREE.MeshBasicMaterial({
     map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide
   });
-  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(reflW, reflLen), mat);
-  mesh.rotation.x = -Math.PI / 2;
-  // Position: start at the bar hole, stretch toward the camera (+x, +z)
-  mesh.rotation.z = Math.PI / 4; // 45° to align with isometric view
-  mesh.position.set(holeX + reflLen * 0.3, 0.002, reflLen * 0.3);
-  scene.add(mesh);
-  return mesh;
+  // Strip extending in +X direction (right of bar from above)
+  const stripX = new THREE.Mesh(new THREE.PlaneGeometry(2.0, barDepth * 0.8), mat);
+  stripX.rotation.x = -Math.PI / 2;
+  stripX.position.set(holeX + barWidth/2 + 1.0, 0.002, 0);
+  stripX.visible = false;
+  scene.add(stripX);
+  // Strip extending in +Z direction (toward camera from above)
+  const stripZ = new THREE.Mesh(new THREE.PlaneGeometry(barWidth * 0.8, 2.0), mat.clone());
+  stripZ.material.map = tex.clone();
+  stripZ.material.map.rotation = Math.PI / 2;
+  stripZ.material.map.center.set(0.5, 0.5);
+  stripZ.material.map.needsUpdate = true;
+  stripZ.rotation.x = -Math.PI / 2;
+  stripZ.position.set(holeX, 0.002, barDepth/2 + 1.0);
+  stripZ.visible = false;
+  scene.add(stripZ);
+  reflections.push(stripX, stripZ);
 }
 createReflection(ssHoleX, '#8a9bab');
 createReflection(rsHoleX, '#18C98D');
@@ -567,6 +574,7 @@ function tick(time) {
       ssCounter.textContent = '$' + ssTargetCost.toLocaleString();
       sliderSavings.textContent = '$' + targetSavings.toLocaleString() + '/mo';
       setTimeout(showNote, 500);
+      reflections.forEach(r => r.visible = true);
     }
   }
 
