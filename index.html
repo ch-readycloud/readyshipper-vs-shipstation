@@ -428,7 +428,8 @@ const gridGeo = new THREE.BufferGeometry();
 gridGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
 gridGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 4));
 const gridMat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true });
-scene.add(new THREE.LineSegments(gridGeo, gridMat));
+const gridMesh = new THREE.LineSegments(gridGeo, gridMat);
+scene.add(gridMesh);
 
 // Project 3D world point → screen pixel
 function toScreen(worldX, worldY, worldZ) {
@@ -685,6 +686,11 @@ function tick(time) {
   cardRS.style.transform = 'translate(' + cardRSX.toFixed(1) + 'px,' + cardRSY.toFixed(1) + 'px)';
   cardSS.style.transform = 'translate(' + cardSSX.toFixed(1) + 'px,' + cardSSY.toFixed(1) + 'px)';
   noteEl.style.transform = 'translate(' + noteX.toFixed(1) + 'px,' + noteY.toFixed(1) + 'px)';
+
+  // Animate grid — drift along Z axis, loop every cellWorld (seamless)
+  // 40s full cycle to match the integrations banner speed
+  const gridSpeed = cellWorld / 40; // world units per second
+  gridMesh.position.z = ((time / 1000) * gridSpeed) % cellWorld;
 
   renderer.render(scene, camera);
 }
