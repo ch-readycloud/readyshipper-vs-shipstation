@@ -162,6 +162,7 @@ For merchants shipping 100+ USPS packages/day
 <p id="ss-counter" class="text-2xl font-black text-on-surface tracking-tight tabular-nums">$1,899</p>
 <div id="ss-fee-breakdown" class="flex flex-col gap-0.5 mt-1 mb-1">
 <p id="ss-fee-carrier" class="text-[9px] font-bold text-red-500 tabular-nums" style="display:none;">+ $800 carrier acct fee</p>
+<p id="ss-fee-cc" class="text-[9px] font-bold text-red-500 tabular-nums" style="display:none;">+ $120 credit card fee</p>
 </div>
 <p id="ss-subtitle" class="text-on-surface-variant text-[10px] font-bold mt-0.5">per 10,000 shipments/mo</p>
 </div>
@@ -201,6 +202,10 @@ For merchants shipping 100+ USPS packages/day
 <label class="flex items-center gap-2 cursor-pointer select-none group">
 <input type="checkbox" id="cb-carrier-account" checked class="w-4 h-4 rounded-sm border-2 border-slate-300 text-primary focus:ring-primary/30 focus:ring-offset-0"/>
 <span class="text-xs font-bold text-slate-500 group-hover:text-slate-700 transition-colors">Have a carrier account?</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer select-none group">
+<input type="checkbox" id="cb-credit-card" checked class="w-4 h-4 rounded-sm border-2 border-slate-300 text-primary focus:ring-primary/30 focus:ring-offset-0"/>
+<span class="text-xs font-bold text-slate-500 group-hover:text-slate-700 transition-colors">Paying with credit card?</span>
 </label>
 </div>
 </div>
@@ -411,7 +416,9 @@ const sliderVolLabel = document.getElementById('slider-volume-label');
 const sliderSavings = document.getElementById('slider-savings');
 const noteSubtext = document.getElementById('note-subtext');
 const cbCarrier = document.getElementById('cb-carrier-account');
+const cbCreditCard = document.getElementById('cb-credit-card');
 const ssFeeCarrier = document.getElementById('ss-fee-carrier');
+const ssFeeCc = document.getElementById('ss-fee-cc');
 
 function updateSlider(idx) {
   const tier = VOLUME_TIERS[idx];
@@ -422,6 +429,8 @@ function updateSlider(idx) {
   let ssEffective = tier.ss;
   const carrierFee = (cbCarrier && cbCarrier.checked) ? Math.round(tier.vol * 0.08) : 0;
   if (carrierFee) ssEffective += carrierFee;
+  const ccFee = (cbCreditCard && cbCreditCard.checked) ? Math.round(tier.vol * 0.12) : 0;
+  if (ccFee) ssEffective += ccFee;
   ssEffective = Math.round(ssEffective);
 
   targetSavings = ssEffective - tier.rs;
@@ -440,6 +449,10 @@ function updateSlider(idx) {
   if (ssFeeCarrier) {
     ssFeeCarrier.style.display = carrierFee ? 'block' : 'none';
     ssFeeCarrier.textContent = '+ $' + carrierFee.toLocaleString() + ' carrier acct fee';
+  }
+  if (ssFeeCc) {
+    ssFeeCc.style.display = ccFee ? 'block' : 'none';
+    ssFeeCc.textContent = '+ $' + ccFee.toLocaleString() + ' credit card fee';
   }
 
   // Update card subtitles with shipment volume
@@ -473,6 +486,7 @@ if (heroSlider) {
   updateSlider(3);
 }
 if (cbCarrier) cbCarrier.addEventListener('change', () => updateSlider(parseInt(heroSlider.value)));
+if (cbCreditCard) cbCreditCard.addEventListener('change', () => updateSlider(parseInt(heroSlider.value)));
 
 function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 function easeInOutCubic(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
