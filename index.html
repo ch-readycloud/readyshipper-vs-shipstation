@@ -288,17 +288,17 @@ let targetRSBaseY = barRestY; // target Y offset for RS bar (goes negative to re
 // ShipStation bar — flat matte, MeshLambertMaterial for no reflections
 const ssMat = new THREE.MeshLambertMaterial({ color: 0xd0d8e0 });
 const ssBar = new THREE.Mesh(new RoundedBoxGeometry(barWidth, 0.01, barDepth, 4, barRadius), ssMat);
-ssBar.position.set(1.2, pitStartY, 0);
+ssBar.position.set(1.225, pitStartY, 0);
 scene.add(ssBar);
 
 // ReadyShipper bar — flat green
 const rsMat = new THREE.MeshLambertMaterial({ color: 0x4BE8AE, emissive: 0x18C98D, emissiveIntensity: 0.15 });
 const rsBar = new THREE.Mesh(new RoundedBoxGeometry(barWidth, 0.01, barDepth, 4, barRadius), rsMat);
-rsBar.position.set(-1.2, pitStartY, 0);
+rsBar.position.set(-1.225, pitStartY, 0);
 scene.add(rsBar);
 
 // Floor with cutouts — bars rise through rectangular holes
-const ssHoleX = 1.2, rsHoleX = -1.2;
+const ssHoleX = 1.225, rsHoleX = -1.225;
 const holeW = barWidth;
 const holeD = barDepth;
 
@@ -381,12 +381,12 @@ const gCtx = gridCanvas.getContext('2d');
 gCtx.strokeStyle = 'rgba(180, 190, 200, 0.7)';
 gCtx.lineWidth = 1;
 
-// X lines: seeded from SS inner edge (0.5) so lines hit 0.5, 0.85, 1.2, 1.55, 1.9
-for (let wx = 0.5; wx <= gridWorldSize / 2; wx += cellWorld) {
+// X lines: seeded from SS inner edge (0.525) — hits 0.525, 0.875, 1.225, 1.575, 1.925
+for (let wx = 0.525; wx <= gridWorldSize / 2; wx += cellWorld) {
   const px = Math.round(xToCanvas(wx)) + 0.5;
   gCtx.beginPath(); gCtx.moveTo(px, 0); gCtx.lineTo(px, gridPx); gCtx.stroke();
 }
-for (let wx = 0.5 - cellWorld; wx >= -gridWorldSize / 2; wx -= cellWorld) {
+for (let wx = 0.525 - cellWorld; wx >= -gridWorldSize / 2; wx -= cellWorld) {
   const px = Math.round(xToCanvas(wx)) + 0.5;
   gCtx.beginPath(); gCtx.moveTo(px, 0); gCtx.lineTo(px, gridPx); gCtx.stroke();
 }
@@ -581,7 +581,7 @@ function tick(time) {
     rsCurrentH = 0.01 + rsE * targetRSMaxH;
     rsBaseY = pitStartY + (barRestY - pitStartY) * rsE;
     setBarHeight(rsBar, rsCurrentH, rsBaseY);
-    rsBar.position.x = -1.2;
+    rsBar.position.x = -1.225;
     rsCounter.textContent = '$' + Math.round(rsE * rsTargetCost);
 
     const ssP = Math.min(elapsed / ssDur, 1);
@@ -589,7 +589,7 @@ function tick(time) {
     ssCurrentH = 0.01 + ssE * targetSSMaxH;
     ssBaseY = pitStartY + (barRestY - pitStartY) * ssE;
     setBarHeight(ssBar, ssCurrentH, ssBaseY);
-    ssBar.position.x = 1.2;
+    ssBar.position.x = 1.225;
     ssCounter.textContent = '$' + Math.round(ssE * ssTargetCost).toLocaleString();
 
     if (elapsed > 50) {
@@ -620,7 +620,7 @@ function tick(time) {
       ssCurrentH = targetSSMaxH;
     }
     setBarHeight(ssBar, ssCurrentH, barRestY);
-    ssBar.position.x = 1.2;
+    ssBar.position.x = 1.225;
     // RS bar height + recess
     const rsHDiff = targetRSMaxH - rsCurrentH;
     if (Math.abs(rsHDiff) > 0.001) {
@@ -635,7 +635,7 @@ function tick(time) {
       rsBaseY = targetRSBaseY;
     }
     setBarHeight(rsBar, rsCurrentH, rsBaseY);
-    rsBar.position.x = -1.2;
+    rsBar.position.x = -1.225;
     // Price counters
     const ssCostDiff = ssTargetCost - displayedSSCost;
     if (Math.abs(ssCostDiff) > 0.5) {
