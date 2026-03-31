@@ -333,43 +333,30 @@ floor.rotation.x = -Math.PI / 2;
 floor.position.y = 0;
 scene.add(floor);
 
-// Floor reflections — simple colored rectangles on the floor, hidden until bars rise
-// Each bar gets two reflection strips: one extending toward camera on X, one on Z
-const reflections = [];
-function createReflection(holeX, colorHex) {
+// Floor reflections — soft radial glow around each bar's base
+function createGlow(holeX, r, g, b) {
+  const size = barWidth * 1.8;
   const canvas = document.createElement('canvas');
-  canvas.width = 256; canvas.height = 64;
+  canvas.width = 128; canvas.height = 128;
   const ctx = canvas.getContext('2d');
-  const g = ctx.createLinearGradient(0, 0, 256, 0);
-  g.addColorStop(0, colorHex + '60');
-  g.addColorStop(0.4, colorHex + '30');
-  g.addColorStop(1.0, colorHex + '00');
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, 256, 64);
+  const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  grad.addColorStop(0, 'rgba('+r+','+g+','+b+',0.35)');
+  grad.addColorStop(0.5, 'rgba('+r+','+g+','+b+',0.12)');
+  grad.addColorStop(1.0, 'rgba('+r+','+g+','+b+',0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 128, 128);
   const tex = new THREE.CanvasTexture(canvas);
-  const mat = new THREE.MeshBasicMaterial({
-    map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide
-  });
-  // Strip extending in +X direction (right of bar from above)
-  const stripX = new THREE.Mesh(new THREE.PlaneGeometry(2.0, barDepth * 0.8), mat);
-  stripX.rotation.x = -Math.PI / 2;
-  stripX.position.set(holeX + barWidth/2 + 1.0, 0.002, 0);
-  stripX.visible = false;
-  scene.add(stripX);
-  // Strip extending in +Z direction (toward camera from above)
-  const stripZ = new THREE.Mesh(new THREE.PlaneGeometry(barWidth * 0.8, 2.0), mat.clone());
-  stripZ.material.map = tex.clone();
-  stripZ.material.map.rotation = Math.PI / 2;
-  stripZ.material.map.center.set(0.5, 0.5);
-  stripZ.material.map.needsUpdate = true;
-  stripZ.rotation.x = -Math.PI / 2;
-  stripZ.position.set(holeX, 0.002, barDepth/2 + 1.0);
-  stripZ.visible = false;
-  scene.add(stripZ);
-  reflections.push(stripX, stripZ);
+  const mesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(size, size),
+    new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false })
+  );
+  mesh.rotation.x = -Math.PI / 2;
+  mesh.position.set(holeX, 0.003, 0);
+  scene.add(mesh);
+  return mesh;
 }
-createReflection(ssHoleX, '#8a9bab');
-createReflection(rsHoleX, '#18C98D');
+createGlow(ssHoleX, 176, 188, 200);
+createGlow(rsHoleX, 24, 201, 141);
 
 // Pit walls — visible sides of the recessed holes
 const pitDepth = 0.6;
@@ -574,7 +561,6 @@ function tick(time) {
       ssCounter.textContent = '$' + ssTargetCost.toLocaleString();
       sliderSavings.textContent = '$' + targetSavings.toLocaleString() + '/mo';
       setTimeout(showNote, 500);
-      reflections.forEach(r => r.visible = true);
     }
   }
 
