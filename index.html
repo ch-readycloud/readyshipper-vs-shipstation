@@ -367,51 +367,54 @@ function createPit(holeX) {
 createPit(ssHoleX);
 createPit(rsHoleX);
 
-// Floor grid — canvas texture aligned with bar edges, radial fade
+// Floor grid — lines start from bar edges to guarantee alignment
 const gridWorldSize = 8.4;
 const gridPx = 840;
-const cellWorld = barWidth / 4 * 1.1; // 0.385 (10% larger)
-const cellPx = (cellWorld / gridWorldSize) * gridPx;
-const offsetWorld = 0.15;
-const offsetPx = (offsetWorld / gridWorldSize) * gridPx;
+const cellWorld = 0.35; // barWidth / 4
+const w2px = (w) => (w / gridWorldSize + 0.5) * gridPx;
 
 const gridCanvas = document.createElement('canvas');
 gridCanvas.width = gridPx; gridCanvas.height = gridPx;
 const gCtx = gridCanvas.getContext('2d');
-
-// World→pixel helpers
-const w2p = (v) => (v / gridWorldSize + 0.5) * gridPx;
-
-// Draw grid lines
 gCtx.strokeStyle = 'rgba(180, 190, 200, 0.7)';
 gCtx.lineWidth = 1;
-const halfPx = gridPx / 2;
-const startOffsetX = halfPx % cellPx + offsetPx;
-for (let x = startOffsetX; x <= gridPx; x += cellPx) {
-  gCtx.beginPath(); gCtx.moveTo(x, 0); gCtx.lineTo(x, gridPx); gCtx.stroke();
+
+// X lines: seeded from SS inner edge (0.5) so lines hit 0.5, 0.85, 1.2, 1.55, 1.9
+for (let wx = 0.5; wx <= gridWorldSize / 2; wx += cellWorld) {
+  const px = Math.round(w2px(wx)) + 0.5;
+  gCtx.beginPath(); gCtx.moveTo(px, 0); gCtx.lineTo(px, gridPx); gCtx.stroke();
 }
-const startOffsetZ = halfPx % cellPx + offsetPx;
-for (let y = startOffsetZ; y <= gridPx; y += cellPx) {
-  gCtx.beginPath(); gCtx.moveTo(0, y); gCtx.lineTo(gridPx, y); gCtx.stroke();
+for (let wx = 0.5 - cellWorld; wx >= -gridWorldSize / 2; wx -= cellWorld) {
+  const px = Math.round(w2px(wx)) + 0.5;
+  gCtx.beginPath(); gCtx.moveTo(px, 0); gCtx.lineTo(px, gridPx); gCtx.stroke();
 }
 
-// Clear grid over bar holes (world coords → pixel coords)
+// Z lines: seeded from front bar edge (0.55)
+for (let wz = 0.55; wz <= gridWorldSize / 2; wz += cellWorld) {
+  const py = Math.round(w2px(wz)) + 0.5;
+  gCtx.beginPath(); gCtx.moveTo(0, py); gCtx.lineTo(gridPx, py); gCtx.stroke();
+}
+for (let wz = 0.55 - cellWorld; wz >= -gridWorldSize / 2; wz -= cellWorld) {
+  const py = Math.round(w2px(wz)) + 0.5;
+  gCtx.beginPath(); gCtx.moveTo(0, py); gCtx.lineTo(gridPx, py); gCtx.stroke();
+}
+
+// Clear grid over bar holes
 gCtx.globalCompositeOperation = 'destination-out';
+gCtx.fillStyle = 'rgba(0,0,0,1)';
 [ssHoleX, rsHoleX].forEach(hx => {
-  const px = w2p(hx) - (barWidth / gridWorldSize * gridPx) / 2;
-  const py = w2p(0) - (barDepth / gridWorldSize * gridPx) / 2;
-  const pw = (barWidth / gridWorldSize) * gridPx;
-  const ph = (barDepth / gridWorldSize) * gridPx;
-  gCtx.fillStyle = 'rgba(0,0,0,1)';
-  gCtx.fillRect(px, py, pw, ph);
+  const px = w2px(hx) - (barWidth / gridWorldSize * gridPx) / 2;
+  const py = w2px(0) - (barDepth / gridWorldSize * gridPx) / 2;
+  gCtx.fillRect(px, py, barWidth / gridWorldSize * gridPx, barDepth / gridWorldSize * gridPx);
 });
 
-// Radial fade — stronger toward back and sides
+// Radial fade
 gCtx.globalCompositeOperation = 'destination-in';
-const radGrad = gCtx.createRadialGradient(halfPx, halfPx * 1.15, gridPx * 0.1, halfPx, halfPx * 1.15, halfPx * 0.9);
+const halfPx = gridPx / 2;
+const radGrad = gCtx.createRadialGradient(halfPx, halfPx * 1.15, gridPx * 0.08, halfPx, halfPx * 1.15, halfPx * 0.85);
 radGrad.addColorStop(0, 'rgba(0,0,0,1)');
 radGrad.addColorStop(0.5, 'rgba(0,0,0,0.6)');
-radGrad.addColorStop(0.8, 'rgba(0,0,0,0.2)');
+radGrad.addColorStop(0.8, 'rgba(0,0,0,0.15)');
 radGrad.addColorStop(1.0, 'rgba(0,0,0,0)');
 gCtx.fillStyle = radGrad;
 gCtx.fillRect(0, 0, gridPx, gridPx);
