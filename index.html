@@ -429,7 +429,8 @@ function updateSlider(idx) {
   let ssEffective = tier.ss;
   const carrierFee = (cbCarrier && cbCarrier.checked) ? Math.round(tier.vol * 0.08) : 0;
   if (carrierFee) ssEffective += carrierFee;
-  const ccFee = (cbCreditCard && cbCreditCard.checked) ? Math.round(tier.vol * 0.12) : 0;
+  // 1.5% credit card fee on $12/label shipping spend
+  const ccFee = (cbCreditCard && cbCreditCard.checked) ? Math.round(tier.vol * 12 * 0.015) : 0;
   if (ccFee) ssEffective += ccFee;
   ssEffective = Math.round(ssEffective);
 
