@@ -291,7 +291,7 @@ ssBar.position.set(1.2, pitStartY, 0);
 scene.add(ssBar);
 
 // ReadyShipper bar — flat green
-const rsMat = new THREE.MeshLambertMaterial({ color: 0x5DDBB3 });
+const rsMat = new THREE.MeshLambertMaterial({ color: 0x2ED49A });
 const rsBar = new THREE.Mesh(new RoundedBoxGeometry(barWidth, 0.01, barDepth, 4, barRadius), rsMat);
 rsBar.position.set(-1.2, pitStartY, 0);
 scene.add(rsBar);
@@ -461,10 +461,10 @@ function updateSlider(idx) {
   if (ssSubtitle) ssSubtitle.textContent = 'per ' + tier.vol.toLocaleString() + ' shipments/mo';
   if (rsSubtitle) rsSubtitle.textContent = 'per ' + tier.vol.toLocaleString() + ' shipments/mo';
 
-  // RS bar recesses into pit past 15K (idx 4+), deeper at higher tiers
-  if (idx >= 4) {
-    // idx 4=15K, 5=20K, 6=25K → recess proportionally (0.15 to 0.45)
-    const recessAmt = (idx - 3) * 0.15;
+  // RS bar recesses into pit past 20K (idx 5+), deeper at higher tiers
+  if (idx >= 5) {
+    // idx 5=20K, 6=25K → recess proportionally (0.2 to 0.4)
+    const recessAmt = (idx - 4) * 0.2;
     targetRSBaseY = barRestY - recessAmt;
   } else {
     targetRSBaseY = barRestY;
