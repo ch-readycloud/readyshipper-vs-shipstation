@@ -212,9 +212,9 @@ const camera = new THREE.OrthographicCamera(
   -frustumSize * aspect / 2, frustumSize * aspect / 2,
   frustumSize / 2, -frustumSize / 2, 0.1, 100
 );
-// Angled orthographic view — centered for column
-camera.position.set(1, 5, 8);
-camera.lookAt(0, 0.8, 0);
+// 45° angle so the corner of each bar faces the camera directly
+camera.position.set(6, 4, 6);
+camera.lookAt(0, 1.5, 0);
 
 // Renderer — transparent, no shadows, no tone mapping
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
