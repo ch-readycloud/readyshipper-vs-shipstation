@@ -263,7 +263,7 @@ const barWidth = 1.4;
 const barDepth = 1.1;
 const barRadius = 0.05;
 const ssMaxH = 3.2;
-const rsFixedH = 0.8; // RS bar stays a fixed visible height — the price tells the story
+const rsMinH = 0.25; // minimum RS bar height so faces stay visible
 
 // Helper: rebuild bar geometry at a given height (preserves constant bevel radius)
 // baseY offsets the bar vertically (negative = recessed into pit)
@@ -406,7 +406,7 @@ const VOLUME_TIERS = [
 
 let currentSSTier = VOLUME_TIERS[3]; // default 10,000
 let targetSSMaxH = ssMaxH;
-let targetRSMaxH = rsFixedH;
+let targetRSMaxH = rsMinH;
 let showJokeText = false;
 
 const heroSlider = document.getElementById('hero-volume-slider');
@@ -433,17 +433,16 @@ function updateSlider(idx) {
 
   targetSavings = ssEffective - tier.rs;
 
-  // SS bar height: scale proportionally using effective price
-  const ssMinP = VOLUME_TIERS[0].ss;
-  // Compute max possible effective price for scaling
-  let ssMaxEffective = VOLUME_TIERS[VOLUME_TIERS.length - 1].ss;
-  if (cbCarrier && cbCarrier.checked) ssMaxEffective += VOLUME_TIERS[VOLUME_TIERS.length - 1].vol * 0.08;
-  if (cbCreditCard && cbCreditCard.checked) ssMaxEffective += Math.round(ssMaxEffective * 0.015);
-  const ssPct = Math.min((ssEffective - ssMinP) / (Math.max(ssMaxEffective, ssEffective) - ssMinP), 1);
-  targetSSMaxH = ssMaxH * (0.35 + ssPct * 0.65);
+  // SS bar height: proportional to price against a fixed maximum
+  // Fixed max = highest tier with all fees, so unchecking fees visibly shrinks the bar
+  const ssAbsMax = Math.round((VOLUME_TIERS[VOLUME_TIERS.length - 1].ss
+    + VOLUME_TIERS[VOLUME_TIERS.length - 1].vol * 0.08) * 1.015);
+  const ssPct = Math.min(ssEffective / ssAbsMax, 1);
+  targetSSMaxH = ssMaxH * (0.15 + ssPct * 0.85);
 
-  // RS bar: fixed height — always clearly visible, price label tells the story
-  targetRSMaxH = rsFixedH;
+  // RS bar: proportional to SS bar based on price ratio, with a minimum visible height
+  const ratio = tier.rs / ssEffective;
+  targetRSMaxH = Math.max(targetSSMaxH * ratio, rsMinH);
 
   // Update target costs (tick loop lerps the displayed values)
   ssTargetCost = ssEffective;
@@ -641,65 +640,65 @@ window.addEventListener('resize', () => {
 <div class="absolute right-0 top-0 bottom-0 w-10 sm:w-24 bg-gradient-to-l from-surface-container-low to-transparent z-10 pointer-events-none"></div>
 <div class="flex items-center ticker-strip">
 <!-- Set 1 -->
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/shopify.svg" alt="Shopify" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/amazon.svg" alt="Amazon" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/ebay.svg" alt="eBay" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/woocommerce.svg" alt="WooCommerce" class="w-auto object-contain max-w-[160px] h-10 sm:h-12"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/bigcommerce.svg" alt="BigCommerce" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/etsy.svg" alt="Etsy" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/walmart.svg" alt="Walmart" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/magento.svg" alt="Magento" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/tiktok.svg" alt="TikTok Shop" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/netsuite.svg" alt="NetSuite" class="w-auto object-contain max-w-[160px] h-10 sm:h-12"/>
 </div>
 <!-- Set 2 (duplicate for seamless loop) -->
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/shopify.svg" alt="Shopify" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/amazon.svg" alt="Amazon" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/ebay.svg" alt="eBay" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/woocommerce.svg" alt="WooCommerce" class="w-auto object-contain max-w-[160px] h-10 sm:h-12"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/bigcommerce.svg" alt="BigCommerce" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/etsy.svg" alt="Etsy" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/walmart.svg" alt="Walmart" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/magento.svg" alt="Magento" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/tiktok.svg" alt="TikTok Shop" class="w-auto object-contain max-w-[160px] h-7 sm:h-9"/>
 </div>
-<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0 opacity-60">
+<div class="px-6 sm:px-10 flex items-center justify-center flex-shrink-0">
 <img src="logos/netsuite.svg" alt="NetSuite" class="w-auto object-contain max-w-[160px] h-10 sm:h-12"/>
 </div>
 </div>
