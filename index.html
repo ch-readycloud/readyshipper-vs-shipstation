@@ -282,15 +282,16 @@ const pitStartY = -0.5;
 const barRestY = -barRadius; // final resting offset — bottom rounding hidden below floor
 let ssBaseY = pitStartY;
 let rsBaseY = pitStartY;
+let targetRSBaseY = barRestY; // target Y offset for RS bar (goes negative to recess)
 
 // ShipStation bar — flat matte, MeshLambertMaterial for no reflections
-const ssMat = new THREE.MeshLambertMaterial({ color: 0xb0bcc8 });
+const ssMat = new THREE.MeshLambertMaterial({ color: 0xd0d8e0 });
 const ssBar = new THREE.Mesh(new RoundedBoxGeometry(barWidth, 0.01, barDepth, 4, barRadius), ssMat);
 ssBar.position.set(1.2, pitStartY, 0);
 scene.add(ssBar);
 
 // ReadyShipper bar — flat green
-const rsMat = new THREE.MeshLambertMaterial({ color: 0x18C98D });
+const rsMat = new THREE.MeshLambertMaterial({ color: 0x5DDBB3 });
 const rsBar = new THREE.Mesh(new RoundedBoxGeometry(barWidth, 0.01, barDepth, 4, barRadius), rsMat);
 rsBar.position.set(-1.2, pitStartY, 0);
 scene.add(rsBar);
@@ -460,8 +461,17 @@ function updateSlider(idx) {
   if (ssSubtitle) ssSubtitle.textContent = 'per ' + tier.vol.toLocaleString() + ' shipments/mo';
   if (rsSubtitle) rsSubtitle.textContent = 'per ' + tier.vol.toLocaleString() + ' shipments/mo';
 
-  // Show "(we're down here)" joke for 15K+ tiers
-  showJokeText = idx >= 4;
+  // RS bar recesses into pit past 15K (idx 4+), deeper at higher tiers
+  if (idx >= 4) {
+    // idx 4=15K, 5=20K, 6=25K → recess proportionally (0.15 to 0.45)
+    const recessAmt = (idx - 3) * 0.15;
+    targetRSBaseY = barRestY - recessAmt;
+  } else {
+    targetRSBaseY = barRestY;
+  }
+
+  // Show "(we're down here)" joke for 20K+ tiers
+  showJokeText = idx >= 5;
   if (animDone) {
     if (noteSubtext) noteSubtext.style.opacity = showJokeText ? '1' : '0';
     if (noteText) noteText.style.transform = showJokeText ? 'rotate(-4deg) translateY(0px)' : 'rotate(-4deg) translateY(18px)';
@@ -546,14 +556,20 @@ function tick(time) {
     }
     setBarHeight(ssBar, ssCurrentH, barRestY);
     ssBar.position.x = 1.2;
-    // RS bar height
+    // RS bar height + recess
     const rsHDiff = targetRSMaxH - rsCurrentH;
     if (Math.abs(rsHDiff) > 0.001) {
       rsCurrentH += rsHDiff * lerpFactor;
     } else {
       rsCurrentH = targetRSMaxH;
     }
-    setBarHeight(rsBar, rsCurrentH, barRestY);
+    const rsYDiff = targetRSBaseY - rsBaseY;
+    if (Math.abs(rsYDiff) > 0.001) {
+      rsBaseY += rsYDiff * lerpFactor;
+    } else {
+      rsBaseY = targetRSBaseY;
+    }
+    setBarHeight(rsBar, rsCurrentH, rsBaseY);
     rsBar.position.x = -1.2;
     // Price counters
     const ssCostDiff = ssTargetCost - displayedSSCost;
@@ -577,7 +593,7 @@ function tick(time) {
   // Compute target card screen positions from bar 3D positions
   const rsLeftTarget = toScreen(rsBar.position.x - barWidth/2 - 0.2, rsBar.position.y, rsBar.position.z);
   const ssRightTarget = toScreen(ssBar.position.x + barWidth/2 + 0.2, ssBar.position.y, ssBar.position.z);
-  const rsTopWorld = rsCurrentH + (animDone ? barRestY : rsBaseY) + 0.3;
+  const rsTopWorld = rsCurrentH + rsBaseY + 0.3;
   const rsTopTarget = toScreen(rsBar.position.x, rsTopWorld, rsBar.position.z);
 
   const tRSX = rsLeftTarget.x - 145, tRSY = rsLeftTarget.y - 40;
