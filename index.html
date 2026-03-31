@@ -797,15 +797,19 @@ window.addEventListener('resize', () => {
 </div>
 <!-- Volume selector above both cards -->
 <div class="max-w-md mx-auto mb-12">
-<label for="volume-selector" class="block text-center text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Monthly Shipment Volume</label>
-<div class="relative">
-<select id="volume-selector" class="w-full bg-white border-2 border-slate-200 rounded-xl py-5 pl-6 pr-12 font-bold text-on-surface text-center focus:ring-primary focus:border-primary text-lg" style="-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:none;">
-<option value="2000">2,000 shipments / mo</option>
-<option value="4000" selected>4,000 shipments / mo</option>
-<option value="6000">6,000 shipments / mo</option>
-<option value="10000">10,000 shipments / mo</option>
-</select>
-<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+<p class="block text-center text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Monthly Shipment Volume</p>
+<div class="relative" id="custom-dropdown">
+<button id="dropdown-trigger" class="w-full bg-white border-2 border-slate-200 rounded-xl py-5 px-6 font-bold text-on-surface text-center text-lg cursor-pointer hover:border-primary/40 transition-colors flex items-center justify-center gap-2" type="button">
+<span id="dropdown-label">4,000 shipments / mo</span>
+<span class="material-symbols-outlined text-slate-400 transition-transform duration-200" id="dropdown-arrow">expand_more</span>
+</button>
+<div id="dropdown-menu" class="absolute left-0 right-0 top-full mt-2 bg-white border-2 border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden opacity-0 pointer-events-none transition-all duration-200 -translate-y-2" style="transform-origin: top;">
+<div class="dropdown-option py-4 px-6 font-bold text-on-surface text-center text-lg cursor-pointer hover:bg-primary/5 transition-colors" data-value="2000">2,000 shipments / mo</div>
+<div class="dropdown-option py-4 px-6 font-bold text-on-surface text-center text-lg cursor-pointer hover:bg-primary/5 transition-colors border-t border-slate-100 bg-primary/5" data-value="4000">4,000 shipments / mo</div>
+<div class="dropdown-option py-4 px-6 font-bold text-on-surface text-center text-lg cursor-pointer hover:bg-primary/5 transition-colors border-t border-slate-100" data-value="6000">6,000 shipments / mo</div>
+<div class="dropdown-option py-4 px-6 font-bold text-on-surface text-center text-lg cursor-pointer hover:bg-primary/5 transition-colors border-t border-slate-100" data-value="10000">10,000 shipments / mo</div>
+</div>
+<input type="hidden" id="volume-selector" value="4000"/>
 </div>
 </div>
 <div class="grid md:grid-cols-2 gap-12 items-stretch">
@@ -910,14 +914,55 @@ function fmt(n) {
   return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-document.getElementById('volume-selector').addEventListener('change', function() {
-  var d = volumeData[this.value];
-  var total = d.base + d.ccFees + d.uspsMarkup;
-  document.getElementById('ss-base').textContent = fmt(d.base);
-  document.getElementById('ss-cc-fees').textContent = fmt(d.ccFees);
-  document.getElementById('ss-usps-markup').textContent = fmt(d.uspsMarkup);
-  document.getElementById('ss-total').textContent = fmt(total);
-  document.getElementById('rs-savings').textContent = fmt((total - 64) * 12);
+// Custom dropdown logic
+const ddTrigger = document.getElementById('dropdown-trigger');
+const ddMenu = document.getElementById('dropdown-menu');
+const ddLabel = document.getElementById('dropdown-label');
+const ddArrow = document.getElementById('dropdown-arrow');
+const ddHidden = document.getElementById('volume-selector');
+const ddOptions = document.querySelectorAll('.dropdown-option');
+let ddOpen = false;
+
+function toggleDropdown(open) {
+  ddOpen = typeof open === 'boolean' ? open : !ddOpen;
+  if (ddOpen) {
+    ddMenu.style.opacity = '1';
+    ddMenu.style.pointerEvents = 'auto';
+    ddMenu.style.transform = 'translateY(0)';
+    ddArrow.style.transform = 'rotate(180deg)';
+  } else {
+    ddMenu.style.opacity = '0';
+    ddMenu.style.pointerEvents = 'none';
+    ddMenu.style.transform = 'translateY(-8px)';
+    ddArrow.style.transform = 'rotate(0deg)';
+  }
+}
+
+ddTrigger.addEventListener('click', () => toggleDropdown());
+
+ddOptions.forEach(opt => {
+  opt.addEventListener('click', () => {
+    const val = opt.dataset.value;
+    ddLabel.textContent = opt.textContent;
+    ddHidden.value = val;
+    // Highlight selected
+    ddOptions.forEach(o => o.classList.remove('bg-primary/5'));
+    opt.classList.add('bg-primary/5');
+    toggleDropdown(false);
+    // Update pricing
+    var d = volumeData[val];
+    var total = d.base + d.ccFees + d.uspsMarkup;
+    document.getElementById('ss-base').textContent = fmt(d.base);
+    document.getElementById('ss-cc-fees').textContent = fmt(d.ccFees);
+    document.getElementById('ss-usps-markup').textContent = fmt(d.uspsMarkup);
+    document.getElementById('ss-total').textContent = fmt(total);
+    document.getElementById('rs-savings').textContent = fmt((total - 64) * 12);
+  });
+});
+
+// Close on outside click
+document.addEventListener('click', (e) => {
+  if (!document.getElementById('custom-dropdown').contains(e.target)) toggleDropdown(false);
 });
 </script>
 
