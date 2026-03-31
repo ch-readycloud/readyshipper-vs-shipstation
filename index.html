@@ -150,7 +150,7 @@
 <p class="text-on-surface-variant text-[10px] font-bold mt-0.5">per 1,000 shipments</p>
 </div>
 <div id="handwritten-note" class="absolute z-30 opacity-0 pointer-events-none">
-<p id="note-text" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: #1d1a22; transform: rotate(-4deg);">No change.</p>
+<p id="note-text" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: #1d1a22; transform: rotate(-4deg) translateY(18px); transition: transform 0.5s ease, opacity 0.5s ease;">No change.</p>
 <p id="note-subtext" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 14px; font-weight: 700; color: #18C98D; transform: rotate(-4deg); margin-top: -2px; transition: opacity 0.5s ease;">(we're down here)</p>
 <svg width="100" height="70" viewBox="0 0 100 70" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-top: 0px; margin-left: 10px;">
 <path d="M50 2 C42 8, 25 22, 22 40 C20 50, 22 55, 23 60" stroke="#1d1a22" stroke-width="2" fill="none" stroke-linecap="round" style="stroke-dasharray: 200; stroke-dashoffset: 200;" id="arrow-path"/>
@@ -160,22 +160,29 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet"/>
 </div>
 <!-- Slider row -->
-<div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-100 px-5 py-4 flex items-center gap-4 flex-shrink-0">
-<label class="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 whitespace-nowrap flex-shrink-0">Shipments</label>
-<div class="flex-1 min-w-0">
+<div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-100 px-5 py-4 flex-shrink-0">
+<div class="flex items-center justify-between mb-3">
+<label class="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400">Monthly shipments</label>
+<div class="flex items-center gap-4">
+<p id="slider-volume-label" class="text-lg font-black text-on-surface tracking-tight tabular-nums" style="min-width: 60px; text-align: right;">1,000</p>
+<div class="border-l border-slate-200 pl-4 flex items-center gap-2">
+<span class="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400">Save</span>
+<span id="slider-savings" class="text-lg font-black text-primary tracking-tight" style="min-width: 85px;">$535/mo</span>
+</div>
+</div>
+</div>
 <input id="hero-volume-slider" type="range" min="0" max="9" value="3" step="1" class="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer"/>
-<div class="flex justify-between text-[10px] font-bold text-slate-400 mt-1">
+<div class="flex justify-between text-[8px] font-bold text-slate-400 mt-1.5 px-[2px]">
 <span>50</span>
+<span>100</span>
 <span>500</span>
+<span>1K</span>
 <span>2K</span>
+<span>5K</span>
 <span>7.5K</span>
+<span>10K</span>
+<span>15K</span>
 <span>20K</span>
-</div>
-</div>
-<p id="slider-volume-label" class="text-lg font-black text-on-surface tracking-tight tabular-nums whitespace-nowrap flex-shrink-0" style="width: 65px; text-align: right;">1,000</p>
-<div class="flex-shrink-0 border-l border-slate-200 pl-4 text-center" style="width: 105px;">
-<span class="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 block mb-0.5">You save</span>
-<span id="slider-savings" class="text-lg font-black text-primary tracking-tight">$535/mo</span>
 </div>
 </div>
 </div>
@@ -321,8 +328,10 @@ function updateSlider(idx) {
   // Show "(we're down here)" joke for 15K+ tiers
   const wasJoke = showJokeText;
   showJokeText = idx >= 8;
-  if (noteSubtext && animDone) {
-    noteSubtext.style.opacity = showJokeText ? '1' : '0';
+  if (animDone) {
+    if (noteSubtext) noteSubtext.style.opacity = showJokeText ? '1' : '0';
+    // "No change." starts low (translateY 18px), shifts up when joke text appears
+    if (noteText) noteText.style.transform = showJokeText ? 'rotate(-4deg) translateY(0px)' : 'rotate(-4deg) translateY(18px)';
   }
 }
 
