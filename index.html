@@ -303,12 +303,14 @@ function updateSlider(idx) {
   currentSSTier = tier;
   sliderVolLabel.textContent = tier.vol.toLocaleString();
   sliderSavings.textContent = '$' + (tier.ss - tier.rs).toLocaleString() + '/mo';
-  // SS bar height is always ssMaxH (full height) — it represents the competitor cost
-  // RS bar height scales proportionally: rs/ss ratio of the SS bar height
-  // This makes the RS bar visually tiny next to the SS bar at high volumes
-  targetSSMaxH = ssMaxH;
-  const ratio = tier.rs / tier.ss; // e.g. 64/1499 = 0.04 at 20K
-  targetRSMaxH = Math.max(ssMaxH * ratio, 0.03); // floor so it doesn't vanish entirely
+  // Both bars scale proportionally to their price
+  // SS bar: maps its price linearly across the full height range
+  const ssMinP = VOLUME_TIERS[0].ss, ssMaxP = VOLUME_TIERS[VOLUME_TIERS.length - 1].ss;
+  const ssPct = (tier.ss - ssMinP) / (ssMaxP - ssMinP);
+  targetSSMaxH = ssMaxH * (0.35 + ssPct * 0.65);
+  // RS bar: proportional to RS/SS price ratio of the SS bar height
+  const ratio = tier.rs / tier.ss;
+  targetRSMaxH = Math.max(targetSSMaxH * ratio, 0.03);
   // Update card counters
   ssTargetCost = tier.ss;
   rsTargetCost = tier.rs;
@@ -384,18 +386,18 @@ function tick(time) {
 
     // After initial animation, smoothly lerp SS bar to slider-controlled height
     if (animDone) {
-      // SS bar lerp
-      const currentSSH = ssBar.scale.y;
-      const ssDiff = targetSSMaxH - currentSSH;
-      if (Math.abs(ssDiff) > 0.005) {
-        const newH = currentSSH + ssDiff * 0.08;
-        ssBar.scale.y = newH;
-        ssBar.position.y = newH * 0.5;
+      // Smooth eased lerp for both bars
+      const lerpSpeed = 0.04;
+      // SS bar
+      const ssDiff = targetSSMaxH - ssBar.scale.y;
+      if (Math.abs(ssDiff) > 0.003) {
+        ssBar.scale.y += ssDiff * lerpSpeed;
       }
-      // RS bar just gets flatter — no sinking, no fading
+      ssBar.position.y = ssBar.scale.y * 0.5;
+      // RS bar
       const rsHDiff = targetRSMaxH - rsBar.scale.y;
-      if (Math.abs(rsHDiff) > 0.002) {
-        rsBar.scale.y += rsHDiff * 0.08;
+      if (Math.abs(rsHDiff) > 0.001) {
+        rsBar.scale.y += rsHDiff * lerpSpeed;
       }
       rsBar.position.y = rsBar.scale.y * 0.5;
     }
@@ -411,13 +413,11 @@ function tick(time) {
   cardSS.style.left = ssRight.x + 'px';
   cardSS.style.top = (ssRight.y - 40) + 'px';
 
-  // Note above RS bar top
+  // Note above RS bar top — constant offset, no jumping
   const rsTopWorld = rsBar.position.y + rsBar.scale.y * 0.5 + 0.3;
   const rsTop = toScreen(rsBar.position.x, rsTopWorld, rsBar.position.z);
-  // When joke text visible, note is taller so shift up more
-  const noteH = showJokeText ? 155 : 100;
   noteEl.style.left = (rsTop.x - 15) + 'px';
-  noteEl.style.top = (rsTop.y - noteH) + 'px';
+  noteEl.style.top = (rsTop.y - 120) + 'px';
 
   renderer.render(scene, camera);
 }
