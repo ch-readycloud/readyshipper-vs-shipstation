@@ -433,16 +433,12 @@ function updateSlider(idx) {
 
   targetSavings = ssEffective - tier.rs;
 
-  // SS bar height: proportional to price against a fixed maximum
-  // Fixed max = highest tier with all fees, so unchecking fees visibly shrinks the bar
-  const ssAbsMax = Math.round((VOLUME_TIERS[VOLUME_TIERS.length - 1].ss
+  // Both bars use same sqrt price→height scale (keeps RS visible while proportional)
+  const absMax = Math.round((VOLUME_TIERS[VOLUME_TIERS.length - 1].ss
     + VOLUME_TIERS[VOLUME_TIERS.length - 1].vol * 0.08) * 1.015);
-  const ssPct = Math.min(ssEffective / ssAbsMax, 1);
-  targetSSMaxH = ssMaxH * (0.15 + ssPct * 0.85);
-
-  // RS bar: proportional to SS bar based on price ratio, with a minimum visible height
-  const ratio = tier.rs / ssEffective;
-  targetRSMaxH = Math.max(targetSSMaxH * ratio, rsMinH);
+  const sqrtMax = Math.sqrt(absMax);
+  targetSSMaxH = ssMaxH * (Math.sqrt(ssEffective) / sqrtMax);
+  targetRSMaxH = ssMaxH * (Math.sqrt(tier.rs) / sqrtMax);
 
   // Update target costs (tick loop lerps the displayed values)
   ssTargetCost = ssEffective;
