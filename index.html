@@ -109,7 +109,7 @@
 <body class="bg-surface font-body text-on-surface antialiased">
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden bg-white">
+<section class="relative overflow-x-hidden bg-white">
 <div class="max-w-7xl mx-auto px-8 pt-16 pb-16 grid lg:grid-cols-2 gap-8 items-end relative">
 <div class="space-y-8">
 <span class="inline-block text-secondary font-bold tracking-widest text-xs uppercase bg-secondary/10 px-4 py-1.5 rounded-full mb-2">Data as of 04/2026</span>
@@ -148,8 +148,8 @@ For merchants shipping 100+ USPS packages/day
 </div>
 <!-- Right column: 3D viewer + slider, contained to match left column height -->
 <div class="hidden lg:flex flex-col">
-<div id="hero-3d-wrapper" class="relative" style="height: 460px;">
-<div id="hero-3d" class="absolute inset-0"></div>
+<div id="hero-3d-wrapper" class="relative" style="height: 460px; overflow: visible;">
+<div id="hero-3d" class="absolute left-0 right-0" style="bottom: 0; top: -200px;"></div>
 <!-- Card overlays — positioned absolutely within this container -->
 <div id="card-rs" class="absolute bg-white rounded-2xl shadow-lg border border-slate-100 px-4 py-3 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 140px; left: 0; top: 0; will-change: transform;">
 <p class="text-primary font-black text-[10px] uppercase tracking-widest mb-0.5">ReadyShipper</p>
@@ -262,8 +262,9 @@ scene.add(dirLight);
 const barWidth = 1.4;
 const barDepth = 1.1;
 const barRadius = 0.05;
-const ssMaxH = 11.5;
-const rsMinH = 0.25; // minimum RS bar height so faces stay visible
+// SS bar: base height + linear growth per dollar. Goes off screen ~20K.
+const ssBaseH = 2.5;
+const ssGrowthRate = 0.00102;
 
 // Helper: rebuild bar geometry at a given height (preserves constant bevel radius)
 // baseY offsets the bar vertically (negative = recessed into pit)
@@ -405,8 +406,8 @@ const VOLUME_TIERS = [
 ];
 
 let currentSSTier = VOLUME_TIERS[3]; // default 10,000
-let targetSSMaxH = ssMaxH;
-let targetRSMaxH = rsMinH;
+let targetSSMaxH = ssBaseH;
+let targetRSMaxH = 0.2;
 let showJokeText = false;
 
 const heroSlider = document.getElementById('hero-volume-slider');
@@ -433,11 +434,10 @@ function updateSlider(idx) {
 
   targetSavings = ssEffective - tier.rs;
 
-  // SS bar: scales linearly against fixed absolute max
-  const absMax = Math.round((VOLUME_TIERS[VOLUME_TIERS.length - 1].ss
-    + VOLUME_TIERS[VOLUME_TIERS.length - 1].vol * 0.08) * 1.015);
-  targetSSMaxH = ssMaxH * (ssEffective / absMax);
-  // RS bar: direct price ratio of SS bar height (e.g. $64/$1927 = ~3%)
+  // SS bar: base + growth (breaks math cancellation so RS visibly changes)
+  const lowestSS = VOLUME_TIERS[0].ss;
+  targetSSMaxH = ssBaseH + Math.max(ssEffective - lowestSS, 0) * ssGrowthRate;
+  // RS bar: direct price ratio of SS bar height
   targetRSMaxH = targetSSMaxH * (tier.rs / ssEffective);
 
   // Update target costs (tick loop lerps the displayed values)
@@ -581,7 +581,9 @@ function tick(time) {
   const rsTopTarget = toScreen(rsBar.position.x, rsTopWorld, rsBar.position.z);
 
   const tRSX = rsLeftTarget.x - 145, tRSY = rsLeftTarget.y - 40;
-  const tSSX = ssRightTarget.x, tSSY = ssRightTarget.y - 40;
+  // Anchor SS card at a minimum Y so it doesn't fly off screen with tall bars
+  const ssCardMinY = 20;
+  const tSSX = ssRightTarget.x, tSSY = Math.max(ssRightTarget.y - 40, ssCardMinY);
   const tNX = rsTopTarget.x - 15, tNY = rsTopTarget.y - 120;
 
   // Initialize or lerp card positions
