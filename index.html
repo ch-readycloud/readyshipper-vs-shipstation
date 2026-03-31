@@ -155,11 +155,11 @@
 </div>
 <div id="handwritten-note" class="absolute z-30 opacity-0 pointer-events-none">
 <p id="note-text" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: #1d1a22; transform: rotate(-4deg);">No change.</p>
-<svg width="100" height="70" viewBox="0 0 100 70" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-top: 2px; margin-left: 10px;">
+<p id="note-subtext" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 14px; font-weight: 700; color: #18C98D; transform: rotate(-4deg); margin-top: -2px; transition: opacity 0.5s ease;">(we're down here)</p>
+<svg width="100" height="70" viewBox="0 0 100 70" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-top: 0px; margin-left: 10px;">
 <path d="M50 2 C42 8, 25 22, 22 40 C20 50, 22 55, 23 60" stroke="#1d1a22" stroke-width="2" fill="none" stroke-linecap="round" style="stroke-dasharray: 200; stroke-dashoffset: 200;" id="arrow-path"/>
 <path d="M18 55 L23 64 L28 55" stroke="#1d1a22" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0" id="arrow-head"/>
 </svg>
-<p id="note-subtext" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 14px; font-weight: 700; color: #18C98D; transform: rotate(-4deg); margin-top: 2px; margin-left: 4px; transition: opacity 0.5s ease;">(we're down here)</p>
 </div>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet"/>
 </div>
@@ -214,7 +214,7 @@ const camera = new THREE.OrthographicCamera(
 );
 // Angled orthographic view — centered for column
 camera.position.set(1, 5, 8);
-camera.lookAt(0, 1.2, 0);
+camera.lookAt(0, 0.8, 0);
 
 // Renderer — transparent, no shadows, no tone mapping
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -234,8 +234,8 @@ scene.add(dirLight);
 // Bar dimensions — sized for column container
 const barWidth = 1.4;
 const barDepth = 1.1;
-const barRadius = 0.03;
-const ssMaxH = 4.0;
+const barRadius = 0.05;
+const ssMaxH = 3.2;
 const rsMaxH = 0.6;
 
 // ShipStation bar — flat matte, MeshLambertMaterial for no reflections
