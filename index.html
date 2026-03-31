@@ -367,15 +367,51 @@ function createPit(holeX) {
 createPit(ssHoleX);
 createPit(rsHoleX);
 
-// Floor grid — aligned with floor plane, cells = 1/4 bar width
-const gridCell = barWidth / 4;
-const gridSize = gridCell * 24; // 24 cells wide
-const gridDiv = 24;
-const grid = new THREE.GridHelper(gridSize, gridDiv, 0xd0d5db, 0xd0d5db);
-grid.position.y = 0.003;
-grid.material.transparent = true;
-grid.material.opacity = 0.4;
-scene.add(grid);
+// Floor grid — canvas texture aligned with bar edges, radial fade
+const gridWorldSize = 8.4;
+const gridPx = 840;
+const cellWorld = barWidth / 4; // 0.35
+const cellPx = (cellWorld / gridWorldSize) * gridPx;
+// Offset so grid lines hit bar edges at x = ±0.5, ±1.9
+// With offset 0.15: lines at ...-0.55, -0.2, 0.15, 0.5, 0.85, 1.2, 1.55, 1.9...
+const offsetWorld = 0.15;
+const offsetPx = (offsetWorld / gridWorldSize) * gridPx;
+
+const gridCanvas = document.createElement('canvas');
+gridCanvas.width = gridPx; gridCanvas.height = gridPx;
+const gCtx = gridCanvas.getContext('2d');
+
+// Draw grid lines
+gCtx.strokeStyle = 'rgba(180, 190, 200, 0.7)';
+gCtx.lineWidth = 1;
+const halfPx = gridPx / 2;
+const startOffsetX = halfPx % cellPx + offsetPx;
+for (let x = startOffsetX; x <= gridPx; x += cellPx) {
+  gCtx.beginPath(); gCtx.moveTo(x, 0); gCtx.lineTo(x, gridPx); gCtx.stroke();
+}
+const startOffsetZ = halfPx % cellPx + offsetPx;
+for (let y = startOffsetZ; y <= gridPx; y += cellPx) {
+  gCtx.beginPath(); gCtx.moveTo(0, y); gCtx.lineTo(gridPx, y); gCtx.stroke();
+}
+
+// Radial fade — stronger toward back (-z) and sides
+gCtx.globalCompositeOperation = 'destination-in';
+const radGrad = gCtx.createRadialGradient(halfPx, halfPx * 1.15, gridPx * 0.1, halfPx, halfPx * 1.15, halfPx * 0.9);
+radGrad.addColorStop(0, 'rgba(0,0,0,1)');
+radGrad.addColorStop(0.5, 'rgba(0,0,0,0.6)');
+radGrad.addColorStop(0.8, 'rgba(0,0,0,0.2)');
+radGrad.addColorStop(1.0, 'rgba(0,0,0,0)');
+gCtx.fillStyle = radGrad;
+gCtx.fillRect(0, 0, gridPx, gridPx);
+
+const gridTex = new THREE.CanvasTexture(gridCanvas);
+const gridPlane = new THREE.Mesh(
+  new THREE.PlaneGeometry(gridWorldSize, gridWorldSize),
+  new THREE.MeshBasicMaterial({ map: gridTex, transparent: true, depthWrite: false })
+);
+gridPlane.rotation.x = -Math.PI / 2;
+gridPlane.position.y = 0.003;
+scene.add(gridPlane);
 
 // Project 3D world point → screen pixel
 function toScreen(worldX, worldY, worldZ) {
