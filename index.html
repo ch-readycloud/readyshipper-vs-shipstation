@@ -371,7 +371,9 @@ createPit(rsHoleX);
 const gridWorldSize = 8.4;
 const gridPx = 840;
 const cellWorld = 0.35; // barWidth / 4
-const w2px = (w) => (w / gridWorldSize + 0.5) * gridPx;
+// World→canvas: X is direct, Z is inverted (plane rotation flips Y↔Z)
+const xToCanvas = (wx) => (wx / gridWorldSize + 0.5) * gridPx;
+const zToCanvas = (wz) => (0.5 - wz / gridWorldSize) * gridPx;
 
 const gridCanvas = document.createElement('canvas');
 gridCanvas.width = gridPx; gridCanvas.height = gridPx;
@@ -381,31 +383,33 @@ gCtx.lineWidth = 1;
 
 // X lines: seeded from SS inner edge (0.5) so lines hit 0.5, 0.85, 1.2, 1.55, 1.9
 for (let wx = 0.5; wx <= gridWorldSize / 2; wx += cellWorld) {
-  const px = Math.round(w2px(wx)) + 0.5;
+  const px = Math.round(xToCanvas(wx)) + 0.5;
   gCtx.beginPath(); gCtx.moveTo(px, 0); gCtx.lineTo(px, gridPx); gCtx.stroke();
 }
 for (let wx = 0.5 - cellWorld; wx >= -gridWorldSize / 2; wx -= cellWorld) {
-  const px = Math.round(w2px(wx)) + 0.5;
+  const px = Math.round(xToCanvas(wx)) + 0.5;
   gCtx.beginPath(); gCtx.moveTo(px, 0); gCtx.lineTo(px, gridPx); gCtx.stroke();
 }
 
 // Z lines: seeded from front bar edge (0.55)
 for (let wz = 0.55; wz <= gridWorldSize / 2; wz += cellWorld) {
-  const py = Math.round(w2px(wz)) + 0.5;
+  const py = Math.round(zToCanvas(wz)) + 0.5;
   gCtx.beginPath(); gCtx.moveTo(0, py); gCtx.lineTo(gridPx, py); gCtx.stroke();
 }
 for (let wz = 0.55 - cellWorld; wz >= -gridWorldSize / 2; wz -= cellWorld) {
-  const py = Math.round(w2px(wz)) + 0.5;
+  const py = Math.round(zToCanvas(wz)) + 0.5;
   gCtx.beginPath(); gCtx.moveTo(0, py); gCtx.lineTo(gridPx, py); gCtx.stroke();
 }
 
 // Clear grid over bar holes
 gCtx.globalCompositeOperation = 'destination-out';
 gCtx.fillStyle = 'rgba(0,0,0,1)';
+const holePxW = barWidth / gridWorldSize * gridPx;
+const holePxD = barDepth / gridWorldSize * gridPx;
 [ssHoleX, rsHoleX].forEach(hx => {
-  const px = w2px(hx) - (barWidth / gridWorldSize * gridPx) / 2;
-  const py = w2px(0) - (barDepth / gridWorldSize * gridPx) / 2;
-  gCtx.fillRect(px, py, barWidth / gridWorldSize * gridPx, barDepth / gridWorldSize * gridPx);
+  const px = xToCanvas(hx) - holePxW / 2;
+  const py = zToCanvas(0) - holePxD / 2;
+  gCtx.fillRect(px, py, holePxW, holePxD);
 });
 
 // Radial fade
