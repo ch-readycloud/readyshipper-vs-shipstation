@@ -689,7 +689,7 @@ function tick(time) {
 
   // Animate grid — drift along Z axis, loop every cellWorld (seamless)
   // 40s full cycle to match the integrations banner speed
-  const gridSpeed = cellWorld / 8; // world units per second
+  const gridSpeed = cellWorld / 1.6; // world units per second
   gridMesh.position.z = ((time / 1000) * gridSpeed) % cellWorld;
 
   renderer.render(scene, camera);
