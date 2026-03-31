@@ -123,15 +123,11 @@
                 </li>
 <li class="flex items-center gap-3 text-on-surface font-semibold">
 <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                    Flat rate software cost
-                </li>
-<li class="flex items-center gap-3 text-on-surface font-semibold">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
                     Hands-on setup &amp; onboarding
                 </li>
 <li class="flex items-center gap-3 text-on-surface font-semibold">
 <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                    The same features you already know and love
+                    The same features at half the cost
                 </li>
 </ul>
 <div class="flex flex-wrap gap-4 pt-4">
@@ -164,8 +160,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet"/>
 </div>
 <!-- Slider row -->
-<div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-100 px-6 py-4 flex items-center gap-6 flex-shrink-0">
-<label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 whitespace-nowrap flex-shrink-0">Shipments/mo</label>
+<div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-100 px-5 py-4 flex items-center gap-4 flex-shrink-0">
+<label class="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 whitespace-nowrap flex-shrink-0">Shipments</label>
 <div class="flex-1 min-w-0">
 <input id="hero-volume-slider" type="range" min="0" max="9" value="3" step="1" class="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer"/>
 <div class="flex justify-between text-[10px] font-bold text-slate-400 mt-1">
@@ -176,10 +172,10 @@
 <span>20K</span>
 </div>
 </div>
-<p id="slider-volume-label" class="text-xl font-black text-on-surface tracking-tight tabular-nums whitespace-nowrap flex-shrink-0" style="width: 75px; text-align: right;">1,000</p>
-<div class="flex-shrink-0 border-l border-slate-200 pl-5 text-center" style="width: 120px;">
+<p id="slider-volume-label" class="text-lg font-black text-on-surface tracking-tight tabular-nums whitespace-nowrap flex-shrink-0" style="width: 65px; text-align: right;">1,000</p>
+<div class="flex-shrink-0 border-l border-slate-200 pl-4 text-center" style="width: 105px;">
 <span class="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 block mb-0.5">You save</span>
-<span id="slider-savings" class="text-xl font-black text-primary tracking-tight">$535/mo</span>
+<span id="slider-savings" class="text-lg font-black text-primary tracking-tight">$535/mo</span>
 </div>
 </div>
 </div>
@@ -248,7 +244,7 @@ scene.add(ssBar);
 
 // ReadyShipper bar — flat green
 const rsGeo = new RoundedBoxGeometry(barWidth, 1, barDepth, 4, barRadius);
-const rsMat = new THREE.MeshLambertMaterial({ color: 0x18C98D });
+const rsMat = new THREE.MeshLambertMaterial({ color: 0x18C98D, emissive: 0x18C98D, emissiveIntensity: 0.25 });
 const rsBar = new THREE.Mesh(rsGeo, rsMat);
 rsBar.position.set(-1.2, 0, 0);
 rsBar.scale.y = 0.001;
@@ -732,21 +728,16 @@ document.getElementById('volume-selector').addEventListener('change', function()
 <td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
 </tr>
 <tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
-<td class="py-5 px-8 font-bold text-on-surface">Flat rate pricing</td>
+<td class="py-5 px-8 font-bold text-on-surface">Phone, Email and Live video call support w/ screen sharing</td>
 <td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
 <td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
 <tr class="bg-white hover:bg-slate-50 transition-colors border-b border-slate-100">
-<td class="py-5 px-8 font-bold text-on-surface">Live video call support w/ screen sharing</td>
+<td class="py-5 px-8 font-bold text-on-surface">No fees when using your own carrier account or negotiated rates</td>
 <td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
 <td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
 <tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
-<td class="py-5 px-8 font-bold text-on-surface">No credit card or per-label fees</td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
-</tr>
-<tr class="bg-white hover:bg-slate-50 transition-colors border-b border-slate-100">
 <td class="py-5 px-8 font-bold text-on-surface">Hybrid-cloud deployment</td>
 <td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
 <td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
@@ -771,8 +762,13 @@ document.getElementById('volume-selector').addEventListener('change', function()
 <td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
 <td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
-<tr class="bg-slate-50 hover:bg-slate-100 transition-colors">
+<tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
 <td class="py-5 px-8 font-bold text-on-surface">Automatic 2-way order sync</td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
+</tr>
+<tr class="bg-white hover:bg-slate-50 transition-colors">
+<td class="py-5 px-8 font-bold text-on-surface">On-premise capable</td>
 <td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
 <td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
@@ -878,7 +874,7 @@ document.getElementById('volume-selector').addEventListener('change', function()
 <div class="max-w-7xl mx-auto relative z-10">
 <div class="text-center mb-20 space-y-4">
 <h2 class="font-headline text-5xl font-black text-on-surface tracking-tight">Start Saving</h2>
-<p class="text-xl text-on-surface-variant max-w-xl mx-auto">Starting at $64 per month, per user, any volume. No fees, no surprises.</p>
+<p class="text-xl text-on-surface-variant max-w-xl mx-auto">Starting at $64 per month, per shipping user, any volume. No fees, no surprises.</p>
 </div>
 <div class="max-w-lg mx-auto">
 <!-- Single Pricing Card -->
@@ -985,7 +981,9 @@ document.getElementById('volume-selector').addEventListener('change', function()
                 <span class="material-symbols-outlined group-open:rotate-180 transition-transform text-primary">expand_more</span>
 </summary>
 <div class="px-8 pb-8 text-on-surface-variant font-medium leading-relaxed text-lg">
-                Yes. ReadyShipper supports multi-carrier shipping, automated rules, rate shopping, batch label printing, returns management, order syncing from all major marketplaces and carts, and much more. Most ShipStation users find that ReadyShipper matches or exceeds the functionality they relied on, with better performance and hands-on support.
+                Yes — and then some. ReadyShipper matches ShipStation's core shipping functionality while delivering significantly more speed and cost savings. With ReadyCloud, you also get a full ecommerce suite spanning shipping, fulfillment, returns, tracking, and post-purchase email/SMS, along with organization-wide permissions and rules.
+                <br/><br/>
+                Where ShipStation falls short is speed. Being browser-based limits how fast labels can be generated, which means you may need to hire more staff just to keep up with volume. ShipStation also charges per label when using your own negotiated carrier rates, bills for user seats whether they're actively used or not, and gates key features like API access and phone support behind higher-priced plans.
             </div>
 </details>
 <details class="group bg-white rounded-3xl border border-slate-100 transition-all duration-300">
@@ -994,7 +992,7 @@ document.getElementById('volume-selector').addEventListener('change', function()
                 <span class="material-symbols-outlined group-open:rotate-180 transition-transform text-primary">expand_more</span>
 </summary>
 <div class="px-8 pb-8 text-on-surface-variant font-medium leading-relaxed text-lg">
-                Absolutely. ReadyShipper can rate shop across multiple carriers and even across multiple accounts from the same carrier simultaneously. You can build custom rules that automatically select the cheapest or fastest option based on weight, destination, dimensions, and more.
+                Yes. ReadyShipper's Rate Genie automatically shops rates across multiple carriers on every shipment. You can optimize for the cheapest rate, the fastest delivery, or the best value based on cost relative to time in transit. Rate shopping decisions can also be fully automated through your shipping rules, so the right carrier is always selected without any manual intervention.
             </div>
 </details>
 <details class="group bg-white rounded-3xl border border-slate-100 transition-all duration-300">
@@ -1057,7 +1055,7 @@ document.getElementById('volume-selector').addEventListener('change', function()
                 <span class="material-symbols-outlined group-open:rotate-180 transition-transform text-primary">expand_more</span>
 </summary>
 <div class="px-8 pb-8 text-on-surface-variant font-medium leading-relaxed text-lg">
-                ReadyShipper uses flat-rate, per-user pricing starting at $64/month. There are no volume fees, no per-label fees, no credit card processing fees, and no transaction costs. You pay the same amount whether you ship 100 or 100,000 packages per month.
+                ReadyShipper is priced per user — that's it. There are no volume tiers, no per-label fees, no transaction fees, and no credit card surcharges. You can bring your own negotiated carrier rates at no additional cost, and you also get access to ReadyShipper's pre-negotiated discounted carrier rates right out of the box.
             </div>
 </details>
 <details class="group bg-white rounded-3xl border border-slate-100 transition-all duration-300">
@@ -1075,7 +1073,7 @@ document.getElementById('volume-selector').addEventListener('change', function()
                 <span class="material-symbols-outlined group-open:rotate-180 transition-transform text-primary">expand_more</span>
 </summary>
 <div class="px-8 pb-8 text-on-surface-variant font-medium leading-relaxed text-lg">
-                ReadyShipper provides live video calls with screen sharing, U.S.-based phone support, email support, and hands-on onboarding where our team actually sets up your account with you. ShipStation relies primarily on email-based ticket support and self-service documentation.
+                ReadyShipper offers live chat, email, phone, and live meeting support with screen share — so you always have a real person available when you need one. ShipStation limits phone support to Standard and Premium plans, and does not offer live meeting or screen share support at any tier.
             </div>
 </details>
 <details class="group bg-white rounded-3xl border border-slate-100 transition-all duration-300">
@@ -1093,7 +1091,7 @@ document.getElementById('volume-selector').addEventListener('change', function()
                 <span class="material-symbols-outlined group-open:rotate-180 transition-transform text-primary">expand_more</span>
 </summary>
 <div class="px-8 pb-8 text-on-surface-variant font-medium leading-relaxed text-lg">
-                ReadyShipper supports unlimited automations including automatic carrier and service selection, package type assignment, insurance rules, delivery confirmation settings, order splitting and combining, custom tagging, and more. Rules can be based on weight, dimensions, destination, order value, SKU, channel, and dozens of other criteria.
+                ReadyShipper supports a wide range of automations, including shipping rules, order importing, multi-carrier rate shopping, order splitting and combining, order routing, real-time order status sync, post-purchase email and SMS notifications, conveyor and machine integrations, hazmat and dangerous goods handling, and address validation.
             </div>
 </details>
 <details class="group bg-white rounded-3xl border border-slate-100 transition-all duration-300">
@@ -1111,7 +1109,7 @@ document.getElementById('volume-selector').addEventListener('change', function()
                 <span class="material-symbols-outlined group-open:rotate-180 transition-transform text-primary">expand_more</span>
 </summary>
 <div class="px-8 pb-8 text-on-surface-variant font-medium leading-relaxed text-lg">
-                ReadyShipper integrates with all major ecommerce platforms (Shopify, BigCommerce, WooCommerce, Magento), marketplaces (Amazon, eBay, Walmart, Etsy), ERP systems via ODBC, and 100+ carriers. A shipping API is also available for custom integrations.
+                ReadyShipper connects with ecommerce carts and sales channels, direct carrier integrations, ERPs, TMS platforms, and custom API setups. It also supports legacy data formats including ODBC and CSV, making it compatible with virtually any existing workflow or tech stack.
             </div>
 </details>
 <details class="group bg-white rounded-3xl border border-slate-100 transition-all duration-300">
@@ -1129,7 +1127,7 @@ document.getElementById('volume-selector').addEventListener('change', function()
                 <span class="material-symbols-outlined group-open:rotate-180 transition-transform text-primary">expand_more</span>
 </summary>
 <div class="px-8 pb-8 text-on-surface-variant font-medium leading-relaxed text-lg">
-                Yes. ReadyShipper's hybrid-cloud architecture lets you batch print up to 4 labels per second — roughly 400% faster than browser-based platforms like ShipStation. Combined with automated rule-based shipping decisions, your team spends less time on each order.
+                Yes. ReadyShipper is a hybrid-cloud application built for speed in high-volume environments. It batch prints up to 4 labels per second, scans to print in under 2 seconds, and syncs orders in real time with two-way updates. Shipping decisions and rate shopping are fully automated, so your team spends less time making manual choices and more time getting orders out the door. ShipStation's browser-based architecture simply can't match this output, often requiring additional staff to hit the same throughput.
             </div>
 </details>
 <details class="group bg-white rounded-3xl border border-slate-100 transition-all duration-300">
