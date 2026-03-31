@@ -371,9 +371,9 @@ createPit(rsHoleX);
 const gridWorldSize = 8.4;
 const gridPx = 840;
 const cellWorld = 0.35; // barWidth / 4
-// World→canvas: X is direct, Z is inverted (plane rotation flips Y↔Z)
+// World→canvas pixel converters
 const xToCanvas = (wx) => (wx / gridWorldSize + 0.5) * gridPx;
-const zToCanvas = (wz) => (0.5 - wz / gridWorldSize) * gridPx;
+const zToCanvas = (wz) => (wz / gridWorldSize + 0.5) * gridPx;
 
 const gridCanvas = document.createElement('canvas');
 gridCanvas.width = gridPx; gridCanvas.height = gridPx;
@@ -424,6 +424,7 @@ gCtx.fillStyle = radGrad;
 gCtx.fillRect(0, 0, gridPx, gridPx);
 
 const gridTex = new THREE.CanvasTexture(gridCanvas);
+gridTex.flipY = false;
 const gridPlane = new THREE.Mesh(
   new THREE.PlaneGeometry(gridWorldSize, gridWorldSize),
   new THREE.MeshBasicMaterial({ map: gridTex, transparent: true, depthWrite: false })
