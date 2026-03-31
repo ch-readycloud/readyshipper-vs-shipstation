@@ -367,71 +367,68 @@ function createPit(holeX) {
 createPit(ssHoleX);
 createPit(rsHoleX);
 
-// Floor grid — lines start from bar edges to guarantee alignment
-const gridWorldSize = 8.4;
-const gridPx = 840;
-const cellWorld = 0.35; // barWidth / 4
-// World→canvas pixel converters
-const xToCanvas = (wx) => (wx / gridWorldSize + 0.5) * gridPx;
-const zToCanvas = (wz) => (wz / gridWorldSize + 0.5) * gridPx;
+// Floor grid — 3D line segments in world space (no UV mapping issues)
+const cellWorld = 0.35;
+const gridExtent = 4.0;
+const gridY = 0.003;
+const fadeRadius = 3.5;
 
-const gridCanvas = document.createElement('canvas');
-gridCanvas.width = gridPx; gridCanvas.height = gridPx;
-const gCtx = gridCanvas.getContext('2d');
-gCtx.strokeStyle = 'rgba(180, 190, 200, 0.7)';
-gCtx.lineWidth = 1;
+// Collect X positions (seeded from bar inner edge 0.525)
+const xPositions = [];
+for (let x = 0.525; x <= gridExtent; x += cellWorld) xPositions.push(x);
+for (let x = 0.525 - cellWorld; x >= -gridExtent; x -= cellWorld) xPositions.push(x);
 
-// X lines: seeded from SS inner edge (0.525) — hits 0.525, 0.875, 1.225, 1.575, 1.925
-for (let wx = 0.525; wx <= gridWorldSize / 2; wx += cellWorld) {
-  const px = Math.round(xToCanvas(wx)) + 0.5;
-  gCtx.beginPath(); gCtx.moveTo(px, 0); gCtx.lineTo(px, gridPx); gCtx.stroke();
-}
-for (let wx = 0.525 - cellWorld; wx >= -gridWorldSize / 2; wx -= cellWorld) {
-  const px = Math.round(xToCanvas(wx)) + 0.5;
-  gCtx.beginPath(); gCtx.moveTo(px, 0); gCtx.lineTo(px, gridPx); gCtx.stroke();
-}
+// Collect Z positions (seeded from bar front edge 0.55)
+const zPositions = [];
+for (let z = 0.55; z <= gridExtent; z += cellWorld) zPositions.push(z);
+for (let z = 0.55 - cellWorld; z >= -gridExtent; z -= cellWorld) zPositions.push(z);
 
-// Z lines: seeded from front bar edge (0.55)
-for (let wz = 0.55; wz <= gridWorldSize / 2; wz += cellWorld) {
-  const py = Math.round(zToCanvas(wz)) + 0.5;
-  gCtx.beginPath(); gCtx.moveTo(0, py); gCtx.lineTo(gridPx, py); gCtx.stroke();
-}
-for (let wz = 0.55 - cellWorld; wz >= -gridWorldSize / 2; wz -= cellWorld) {
-  const py = Math.round(zToCanvas(wz)) + 0.5;
-  gCtx.beginPath(); gCtx.moveTo(0, py); gCtx.lineTo(gridPx, py); gCtx.stroke();
+// Check if a point is inside a bar hole
+function inHole(x, z) {
+  return [ssHoleX, rsHoleX].some(hx =>
+    x >= hx - barWidth/2 && x <= hx + barWidth/2 &&
+    z >= -barDepth/2 && z <= barDepth/2
+  );
 }
 
-// Clear grid over bar holes
-gCtx.globalCompositeOperation = 'destination-out';
-gCtx.fillStyle = 'rgba(0,0,0,1)';
-const holePxW = barWidth / gridWorldSize * gridPx;
-const holePxD = barDepth / gridWorldSize * gridPx;
-[ssHoleX, rsHoleX].forEach(hx => {
-  const px = xToCanvas(hx) - holePxW / 2;
-  const py = zToCanvas(0) - holePxD / 2;
-  gCtx.fillRect(px, py, holePxW, holePxD);
+// Build line segments with per-vertex alpha for radial fade
+const positions = [];
+const colors = [];
+function addLine(x1, z1, x2, z2) {
+  const d1 = Math.sqrt(x1*x1 + z1*z1) / fadeRadius;
+  const d2 = Math.sqrt(x2*x2 + z2*z2) / fadeRadius;
+  const a1 = Math.max(0, 1 - d1) * 0.45;
+  const a2 = Math.max(0, 1 - d2) * 0.45;
+  if (a1 < 0.01 && a2 < 0.01) return;
+  positions.push(x1, gridY, z1, x2, gridY, z2);
+  colors.push(0.7, 0.75, 0.8, a1, 0.7, 0.75, 0.8, a2);
+}
+
+// X-parallel lines (constant Z, varying X) — skip segments inside holes
+zPositions.forEach(z => {
+  const sorted = [...xPositions].sort((a,b) => a - b);
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const x1 = sorted[i], x2 = sorted[i+1];
+    const mx = (x1+x2)/2;
+    if (!inHole(mx, z)) addLine(x1, z, x2, z);
+  }
 });
 
-// Radial fade
-gCtx.globalCompositeOperation = 'destination-in';
-const halfPx = gridPx / 2;
-const radGrad = gCtx.createRadialGradient(halfPx, halfPx * 1.15, gridPx * 0.08, halfPx, halfPx * 1.15, halfPx * 0.85);
-radGrad.addColorStop(0, 'rgba(0,0,0,1)');
-radGrad.addColorStop(0.5, 'rgba(0,0,0,0.6)');
-radGrad.addColorStop(0.8, 'rgba(0,0,0,0.15)');
-radGrad.addColorStop(1.0, 'rgba(0,0,0,0)');
-gCtx.fillStyle = radGrad;
-gCtx.fillRect(0, 0, gridPx, gridPx);
+// Z-parallel lines (constant X, varying Z) — skip segments inside holes
+xPositions.forEach(x => {
+  const sorted = [...zPositions].sort((a,b) => a - b);
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const z1 = sorted[i], z2 = sorted[i+1];
+    const mz = (z1+z2)/2;
+    if (!inHole(x, mz)) addLine(x, z1, x, z2);
+  }
+});
 
-const gridTex = new THREE.CanvasTexture(gridCanvas);
-gridTex.flipY = false;
-const gridPlane = new THREE.Mesh(
-  new THREE.PlaneGeometry(gridWorldSize, gridWorldSize),
-  new THREE.MeshBasicMaterial({ map: gridTex, transparent: true, depthWrite: false })
-);
-gridPlane.rotation.x = -Math.PI / 2;
-gridPlane.position.y = 0.003;
-scene.add(gridPlane);
+const gridGeo = new THREE.BufferGeometry();
+gridGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+gridGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 4));
+const gridMat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true });
+scene.add(new THREE.LineSegments(gridGeo, gridMat));
 
 // Project 3D world point → screen pixel
 function toScreen(worldX, worldY, worldZ) {
