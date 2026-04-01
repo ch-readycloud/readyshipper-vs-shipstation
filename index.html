@@ -736,15 +736,6 @@ function tick(time) {
     }
     setBarHeight(rsBar, rsCurrentH, rsBaseY);
     rsBar.position.x = -1.225;
-    // Scale floor shadows with bar height
-    var ssShadowW = 0.3 + Math.min(ssCurrentH, 4) * 0.25;
-    ssShadow.scale.x = ssShadowW;
-    ssShadow.position.x = ssHoleX + barWidth / 2 + ssShadowW * 0.5;
-    floorShadowMat.opacity = Math.min(0.8, ssCurrentH * 0.3);
-    var rsShadowW = 0.3 + Math.min(rsCurrentH, 4) * 0.25;
-    rsShadow.scale.x = rsShadowW;
-    rsShadow.position.x = rsHoleX + barWidth / 2 + rsShadowW * 0.5;
-    rsShadowMat.opacity = Math.min(0.8, rsCurrentH * 0.3);
     // Price counters
     const ssCostDiff = ssTargetCost - displayedSSCost;
     if (Math.abs(ssCostDiff) > 0.5) {
@@ -762,6 +753,20 @@ function tick(time) {
       displayedSavings += savDiff * lerpFactor;
       sliderSavings.textContent = '$' + Math.round(displayedSavings).toLocaleString() + '/mo';
     }
+  }
+
+  // Scale floor shadows with visible bar height above floor
+  {
+    var ssVisH = Math.max(0, ssCurrentH + Math.min(ssBaseY, 0));
+    var ssShadowW = 0.3 + Math.min(ssVisH, 4) * 0.3;
+    ssShadow.scale.set(ssShadowW, 1 + ssVisH * 0.15, 1);
+    ssShadow.position.x = ssHoleX + barWidth / 2 + ssShadowW * 0.5;
+    floorShadowMat.opacity = Math.min(0.8, ssVisH * 0.25);
+    var rsVisH = Math.max(0, rsCurrentH + Math.min(rsBaseY, 0));
+    var rsShadowW = 0.3 + Math.min(rsVisH, 4) * 0.3;
+    rsShadow.scale.set(rsShadowW, 1 + rsVisH * 0.15, 1);
+    rsShadow.position.x = rsHoleX + barWidth / 2 + rsShadowW * 0.5;
+    rsShadowMat.opacity = Math.min(0.8, rsVisH * 0.25);
   }
 
   // Position 3D face labels on front face of each SS layer
