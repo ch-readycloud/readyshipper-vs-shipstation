@@ -297,9 +297,9 @@ let rsBaseY = pitStartY;
 let targetRSBaseY = barRestY; // target Y offset for RS bar (goes negative to recess)
 
 // ShipStation bar — 3 stacked layers (base, carrier, CC)
-const ssBaseMat = new THREE.MeshLambertMaterial({ color: 0xd8dde4 });
-const ssCarrierMat = new THREE.MeshLambertMaterial({ color: 0xc4cad4, transparent: true });
-const ssCcMat = new THREE.MeshLambertMaterial({ color: 0xb0b8c6, transparent: true });
+const ssBaseMat = new THREE.MeshLambertMaterial({ color: 0xe8ebf0 });
+const ssCarrierMat = new THREE.MeshLambertMaterial({ color: 0xdce0e8, transparent: true });
+const ssCcMat = new THREE.MeshLambertMaterial({ color: 0xd0d6e0, transparent: true });
 const ssLayerBase = new THREE.Mesh(new THREE.BoxGeometry(barWidth, 0.01, barDepth), ssBaseMat);
 const ssLayerCarrier = new THREE.Mesh(new THREE.BoxGeometry(barWidth, 0.01, barDepth), ssCarrierMat);
 const ssLayerCc = new THREE.Mesh(new THREE.BoxGeometry(barWidth, 0.01, barDepth), ssCcMat);
