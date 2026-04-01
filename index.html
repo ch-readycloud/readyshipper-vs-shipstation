@@ -382,9 +382,10 @@ scene.add(floor);
 
 // Pit walls — visible sides of the recessed holes
 const pitDepth = 0.6;
-const wallDarkMat = new THREE.MeshBasicMaterial({ color: 0xe8eaed, side: THREE.DoubleSide });
-const wallMedMat = new THREE.MeshBasicMaterial({ color: 0xf0f1f3, side: THREE.DoubleSide });
-const pitBottomMat = new THREE.MeshBasicMaterial({ color: 0xf5f5f5, side: THREE.DoubleSide });
+const wallDarkMat = new THREE.MeshBasicMaterial({ color: 0xe0e2e6, side: THREE.DoubleSide }); // left wall (darkest, faces away from light)
+const wallMedMat = new THREE.MeshBasicMaterial({ color: 0xe6e8ec, side: THREE.DoubleSide });  // front/back walls (medium, near/far camera)
+const wallLightMat = new THREE.MeshBasicMaterial({ color: 0xf2f3f5, side: THREE.DoubleSide }); // right wall (lightest, faces light)
+const pitBottomMat = new THREE.MeshBasicMaterial({ color: 0xf0f0f2, side: THREE.DoubleSide });
 
 // Interior shadow gradient for left pit wall
 const pitShadowCanvas = document.createElement('canvas');
@@ -399,22 +400,18 @@ const pitShadowTex = new THREE.CanvasTexture(pitShadowCanvas);
 const pitShadowMat = new THREE.MeshBasicMaterial({ map: pitShadowTex, transparent: true, depthWrite: false, side: THREE.DoubleSide });
 
 function createPit(holeX) {
-  const back = new THREE.Mesh(new THREE.PlaneGeometry(holeW, pitDepth), wallDarkMat);
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(holeW, pitDepth), wallMedMat); // far from camera
   back.position.set(holeX, -pitDepth / 2, -holeD / 2);
   scene.add(back);
-  const left = new THREE.Mesh(new THREE.PlaneGeometry(holeD, pitDepth), wallDarkMat);
+  const left = new THREE.Mesh(new THREE.PlaneGeometry(holeD, pitDepth), wallDarkMat); // darkest, faces away from light
   left.position.set(holeX - holeW / 2, -pitDepth / 2, 0);
   left.rotation.y = Math.PI / 2;
   scene.add(left);
-  // Interior shadow on left wall — gradient fading from left edge inward
-  const leftShadow = new THREE.Mesh(new THREE.PlaneGeometry(holeW * 0.35, pitDepth), pitShadowMat);
-  leftShadow.position.set(holeX - holeW / 2 + holeW * 0.175, -pitDepth / 2, -holeD / 2 + 0.001);
-  scene.add(leftShadow);
-  const right = new THREE.Mesh(new THREE.PlaneGeometry(holeD, pitDepth), wallMedMat);
+  const right = new THREE.Mesh(new THREE.PlaneGeometry(holeD, pitDepth), wallLightMat); // lightest, faces light
   right.position.set(holeX + holeW / 2, -pitDepth / 2, 0);
   right.rotation.y = -Math.PI / 2;
   scene.add(right);
-  const front = new THREE.Mesh(new THREE.PlaneGeometry(holeW, pitDepth), wallMedMat);
+  const front = new THREE.Mesh(new THREE.PlaneGeometry(holeW, pitDepth), wallMedMat); // near camera
   front.position.set(holeX, -pitDepth / 2, holeD / 2);
   front.rotation.y = Math.PI;
   scene.add(front);
