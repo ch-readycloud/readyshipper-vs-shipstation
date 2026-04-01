@@ -745,8 +745,8 @@ function tick(time) {
   const rsTopTarget = toScreen(rsBar.position.x, rsTopWorld, rsBar.position.z);
 
   const isMobile = cw < 768;
-  const cardOffset = isMobile ? 65 : 175;
-  const tRSX = Math.max(5, rsLeftTarget.x - cardOffset), tRSY = rsLeftTarget.y - (isMobile ? 10 : 40);
+  const cardOffset = isMobile ? 95 : 175;
+  const tRSX = Math.max(0, rsLeftTarget.x - cardOffset), tRSY = rsLeftTarget.y - (isMobile ? 10 : 40);
   // Anchor SS card at a minimum Y so it doesn't fly off screen with tall bars
   const ssCardMinY = isMobile ? 5 : 20;
   const ssShift = isMobile ? -30 : 0;
@@ -1130,7 +1130,7 @@ document.addEventListener('click', (e) => {
 </div>
 <!-- Mobile: stacked feature cards -->
 <!-- Mobile: compact comparison table -->
-<div class="md:hidden overflow-hidden rounded-lg shadow-lg">
+<div class="md:hidden overflow-hidden rounded-md shadow-lg">
 <table class="w-full text-left border-collapse text-sm">
 <thead>
 <tr class="bg-slate-900 text-white">
