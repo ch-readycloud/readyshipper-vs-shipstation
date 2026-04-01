@@ -430,16 +430,20 @@ createPit(rsHoleX);
 // Matches reference: extends right with slight forward skew, dark at base
 function createBarShadow(holeX) {
   var geo = new THREE.BufferGeometry();
-  // Shadow centered on bar's front-right corner, extending right and forward
-  // v0-v1: near edge centered on corner, v2-v3: mid, v4-v5: far tip
-  var hw = barDepth * 0.6; // half-width of shadow near edge
+  // Shadow cast from front-right corner and back-left corner (furthest from camera),
+  // centered on rightmost corner, extending to cardinal screen-right (+X, -Z)
+  // Screen-right direction from camera at (6,4,6): normalize(+1, 0, -1) ≈ (0.707, 0, -0.707)
+  var dx = 0.707, dz = -0.707; // shadow cast direction
+  // Near edge: two bar corners that cast the shadow
+  var frX = barWidth/2, frZ = barDepth/2;    // front-right corner
+  var blX = -barWidth/2, blZ = -barDepth/2;  // back-left corner (furthest from camera)
   var positions = new Float32Array([
-    -barDepth * 0.2, 0.002, -hw,   // v0 near back (slightly behind bar edge)
-    -barDepth * 0.2, 0.002,  hw,   // v1 near front
-    1, 0.002, -hw + 0.15,          // v2 mid back
-    1, 0.002,  hw + 0.15,          // v3 mid front
-    2, 0.002, -hw * 0.5 + 0.3,     // v4 far back (tapers)
-    2, 0.002,  hw * 0.5 + 0.3,     // v5 far front (tapers)
+    frX, 0.002, frZ,       // v0 front-right corner
+    blX, 0.002, blZ,       // v1 back-left corner
+    frX + dx, 0.002, frZ + dz,   // v2 mid from front-right
+    blX + dx, 0.002, blZ + dz,   // v3 mid from back-left
+    frX + dx*2, 0.002, frZ + dz*2, // v4 far from front-right
+    blX + dx*2, 0.002, blZ + dz*2, // v5 far from back-left
   ]);
   var alphas = new Float32Array([0.35, 0.35, 0.12, 0.12, 0, 0]);
   geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -465,10 +469,9 @@ function createBarShadow(holeX) {
     `
   });
   var mesh = new THREE.Mesh(geo, mat);
-  // Position at bar's back-right corner (rightmost in isometric view)
-  mesh.position.set(holeX + barWidth / 2, 0, -barDepth / 2);
+  mesh.position.set(holeX, 0, 0);
   scene.add(mesh);
-  return { mesh: mesh, mat: mat, positions: positions, hw: hw };
+  return { mesh: mesh, mat: mat, positions: positions, dx: dx, dz: dz };
 }
 const ssShadow = createBarShadow(ssHoleX);
 const rsShadow = createBarShadow(rsHoleX);
@@ -783,17 +786,18 @@ function tick(time) {
   // Update floor shadow parallelograms based on bar height
   {
     function updateShadow(s, visH) {
-      var len = 0.3 + Math.min(visH, 6) * 0.6;
-      var skew = len * 0.12;
-      var hw = s.hw;
+      var len = 0.3 + Math.min(visH, 6) * 0.55;
+      var dx = s.dx, dz = s.dz;
+      var frX = barWidth/2, frZ = barDepth/2;
+      var blX = -barWidth/2, blZ = -barDepth/2;
       var p = s.positions;
+      var midL = len * 0.45;
       // v2-v3: midpoint
-      var midX = len * 0.45;
-      p[6] = midX;  p[8]  = -hw + skew * 0.45;
-      p[9] = midX;  p[11] =  hw + skew * 0.45;
-      // v4-v5: far tip (tapers to ~50% width)
-      p[12] = len;  p[14] = -hw * 0.5 + skew;
-      p[15] = len;  p[17] =  hw * 0.5 + skew;
+      p[6]  = frX + dx*midL; p[8]  = frZ + dz*midL;
+      p[9]  = blX + dx*midL; p[11] = blZ + dz*midL;
+      // v4-v5: far tip
+      p[12] = frX + dx*len;  p[14] = frZ + dz*len;
+      p[15] = blX + dx*len;  p[17] = blZ + dz*len;
       s.mesh.geometry.attributes.position.needsUpdate = true;
       s.mat.uniforms.uOpacity.value = Math.min(1.0, visH * 0.25);
     }
