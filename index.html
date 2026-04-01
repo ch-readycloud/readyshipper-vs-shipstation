@@ -427,17 +427,20 @@ createPit(ssHoleX);
 createPit(rsHoleX);
 
 // Floor shadow planes — cast to the right of each bar
+// Gradient: darkest at left (bar base), fading to transparent at right
 const floorShadowCanvas = document.createElement('canvas');
-floorShadowCanvas.width = 128; floorShadowCanvas.height = 1;
+floorShadowCanvas.width = 256; floorShadowCanvas.height = 1;
 const floorShadowCtx = floorShadowCanvas.getContext('2d');
-const floorGrad = floorShadowCtx.createLinearGradient(0, 0, 128, 0);
-floorGrad.addColorStop(0, 'rgba(0,0,0,0.12)');
-floorGrad.addColorStop(0.6, 'rgba(0,0,0,0.04)');
+const floorGrad = floorShadowCtx.createLinearGradient(0, 0, 256, 0);
+floorGrad.addColorStop(0, 'rgba(0,0,0,0.35)');
+floorGrad.addColorStop(0.3, 'rgba(0,0,0,0.12)');
+floorGrad.addColorStop(0.7, 'rgba(0,0,0,0.03)');
 floorGrad.addColorStop(1, 'rgba(0,0,0,0)');
 floorShadowCtx.fillStyle = floorGrad;
-floorShadowCtx.fillRect(0, 0, 128, 1);
+floorShadowCtx.fillRect(0, 0, 256, 1);
 const floorShadowTex = new THREE.CanvasTexture(floorShadowCanvas);
-const floorShadowMat = new THREE.MeshBasicMaterial({ map: floorShadowTex, transparent: true, depthWrite: false });
+// Shadow plane: 1 unit long (scales in X), barDepth wide (matches bar Z)
+const floorShadowMat = new THREE.MeshBasicMaterial({ map: floorShadowTex, transparent: true, opacity: 0, depthWrite: false });
 const ssShadow = new THREE.Mesh(new THREE.PlaneGeometry(1.0, barDepth), floorShadowMat);
 ssShadow.rotation.x = -Math.PI / 2;
 ssShadow.position.set(ssHoleX + barWidth / 2 + 0.5, 0.002, 0);
@@ -755,18 +758,18 @@ function tick(time) {
     }
   }
 
-  // Scale floor shadows with visible bar height above floor
+  // Scale floor shadows — length grows with bar height, width matches bar
   {
     var ssVisH = Math.max(0, ssCurrentH + Math.min(ssBaseY, 0));
-    var ssShadowW = 0.3 + Math.min(ssVisH, 4) * 0.3;
-    ssShadow.scale.set(ssShadowW, 1 + ssVisH * 0.15, 1);
-    ssShadow.position.x = ssHoleX + barWidth / 2 + ssShadowW * 0.5;
-    floorShadowMat.opacity = Math.min(0.8, ssVisH * 0.25);
+    var ssLen = 0.2 + Math.min(ssVisH, 5) * 0.5;
+    ssShadow.scale.x = ssLen;
+    ssShadow.position.x = ssHoleX + barWidth / 2 + ssLen * 0.5;
+    floorShadowMat.opacity = Math.min(0.5, ssVisH * 0.12);
     var rsVisH = Math.max(0, rsCurrentH + Math.min(rsBaseY, 0));
-    var rsShadowW = 0.3 + Math.min(rsVisH, 4) * 0.3;
-    rsShadow.scale.set(rsShadowW, 1 + rsVisH * 0.15, 1);
-    rsShadow.position.x = rsHoleX + barWidth / 2 + rsShadowW * 0.5;
-    rsShadowMat.opacity = Math.min(0.8, rsVisH * 0.25);
+    var rsLen = 0.2 + Math.min(rsVisH, 5) * 0.5;
+    rsShadow.scale.x = rsLen;
+    rsShadow.position.x = rsHoleX + barWidth / 2 + rsLen * 0.5;
+    rsShadowMat.opacity = Math.min(0.5, rsVisH * 0.12);
   }
 
   // Position 3D face labels on front face of each SS layer
