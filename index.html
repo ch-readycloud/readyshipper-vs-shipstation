@@ -112,7 +112,7 @@
 <section class="relative overflow-hidden lg:overflow-visible bg-white">
 <div class="max-w-7xl mx-auto px-8 pt-16 pb-16 grid lg:grid-cols-2 gap-8 items-end relative lg:overflow-visible">
 <div class="space-y-8">
-<div class="usps-qualified inline-flex items-start gap-2 bg-primary/10 text-primary font-black px-4 py-2 rounded-xl mb-4 relative overflow-hidden">
+<div class="usps-qualified inline-flex items-start gap-2 bg-secondary/10 text-secondary font-black px-4 py-2 rounded-xl mb-4 relative overflow-hidden ring-2 ring-secondary/30">
 <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">verified</span>
 <div class="text-left">
 <span class="block text-sm uppercase tracking-[0.15em]">Exclusive Offer</span>
@@ -866,8 +866,10 @@ function tick(time) {
   }
 
   // Apply lerped positions via transform (avoids layout thrash)
-  cardRS.style.transform = 'translate(' + cardRSX.toFixed(1) + 'px,' + cardRSY.toFixed(1) + 'px)';
-  cardSS.style.transform = 'translate(' + cardSSX.toFixed(1) + 'px,' + cardSSY.toFixed(1) + 'px)';
+  var rsFloat = Math.sin(time / 1000 * 0.8) * 3;
+  var ssFloat = Math.sin(time / 1000 * 0.6 + 1.5) * 2.5;
+  cardRS.style.transform = 'translate(' + cardRSX.toFixed(1) + 'px,' + (cardRSY + rsFloat).toFixed(1) + 'px)';
+  cardSS.style.transform = 'translate(' + cardSSX.toFixed(1) + 'px,' + (cardSSY + ssFloat).toFixed(1) + 'px)';
   noteEl.style.transform = 'translate(' + noteX.toFixed(1) + 'px,' + noteY.toFixed(1) + 'px)';
 
   // Animate grid — drift along Z axis, loop every cellWorld (seamless)
