@@ -422,6 +422,16 @@ function createPit(holeX) {
 }
 createPit(ssHoleX);
 createPit(rsHoleX);
+// White masks above grid to prevent animated grid lines from showing over holes
+[ssHoleX, rsHoleX].forEach(hx => {
+  const mask = new THREE.Mesh(
+    new THREE.PlaneGeometry(holeW + 0.02, holeD + 0.02),
+    new THREE.MeshBasicMaterial({ color: 0xffffff })
+  );
+  mask.rotation.x = -Math.PI / 2;
+  mask.position.set(hx, gridY + 0.001, 0);
+  scene.add(mask);
+});
 
 // Floor shadow — parallelogram cast to the right from bar base
 // Matches reference: extends right with slight forward skew, dark at base
@@ -513,19 +523,12 @@ function addLine(x1, z1, x2, z2) {
 }
 
 // X-parallel lines (constant Z, varying X) — skip segments inside holes
-// Grid drifts 0 to cellWorld in +Z, so exclude if line could enter hole at any drift
-function wouldDriftIntoHole(x, z) {
-  return [ssHoleX, rsHoleX].some(hx =>
-    x >= hx - barWidth/2 && x <= hx + barWidth/2 &&
-    z + cellWorld >= -barDepth/2 && z <= barDepth/2
-  );
-}
 zPositions.forEach(z => {
   const sorted = [...xPositions].sort((a,b) => a - b);
   for (let i = 0; i < sorted.length - 1; i++) {
     const x1 = sorted[i], x2 = sorted[i+1];
     const mx = (x1+x2)/2;
-    if (!wouldDriftIntoHole(mx, z)) addLine(x1, z, x2, z);
+    if (!inHole(mx, z)) addLine(x1, z, x2, z);
   }
 });
 
