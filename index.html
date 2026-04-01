@@ -745,7 +745,7 @@ function tick(time) {
   const rsTopTarget = toScreen(rsBar.position.x, rsTopWorld, rsBar.position.z);
 
   const isMobile = cw < 768;
-  const tRSX = isMobile ? Math.max(0, rsLeftTarget.x - 95) : rsLeftTarget.x - 200, tRSY = rsLeftTarget.y - (isMobile ? 10 : 60);
+  const tRSX = isMobile ? Math.max(0, rsLeftTarget.x - 95) : Math.max(0, rsLeftTarget.x - 250), tRSY = rsLeftTarget.y - (isMobile ? 10 : 80);
   // Anchor SS card at a minimum Y so it doesn't fly off screen with tall bars
   const ssCardMinY = isMobile ? 5 : 20;
   const ssShift = isMobile ? -30 : 0;
