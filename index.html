@@ -38,20 +38,6 @@
             animation: scroll 40s linear infinite;
           }
         }
-        /* Background isometric grid */
-        @keyframes grid-drift {
-          0% { background-position: 0 0, 0 0; }
-          100% { background-position: -40px -23px, -40px -23px; }
-        }
-        .hero-bg-grid {
-          background-image:
-            linear-gradient(to right, rgba(0,0,0,0.10) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(0,0,0,0.10) 1px, transparent 1px);
-          background-size: 40px 23px;
-          transform: skewY(-10deg) scaleX(1.4);
-          filter: blur(1.5px);
-          animation: grid-drift 1.6s linear infinite;
-        }
         /* Custom range slider */
         input[type="range"]#hero-volume-slider {
           -webkit-appearance: none;
@@ -124,8 +110,6 @@
 
 <!-- Hero Section -->
 <section class="relative overflow-hidden bg-white">
-<!-- Blurred isometric background grid -->
-<div class="hero-bg-grid absolute inset-0 -inset-x-[20%] -inset-y-[20%] opacity-50 pointer-events-none" style="mask-image: radial-gradient(ellipse 60% 50% at 70% 60%, black 20%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse 60% 50% at 70% 60%, black 20%, transparent 70%);"></div>
 <div class="max-w-7xl mx-auto px-8 pt-16 pb-16 grid lg:grid-cols-2 gap-8 items-end relative">
 <div class="space-y-8">
 <span class="inline-block text-secondary font-bold tracking-widest text-xs uppercase bg-secondary/10 px-4 py-1.5 rounded-full mb-2">Data as of 04/2026</span>
