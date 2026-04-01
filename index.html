@@ -386,6 +386,18 @@ const wallDarkMat = new THREE.MeshBasicMaterial({ color: 0xe8eaed, side: THREE.D
 const wallMedMat = new THREE.MeshBasicMaterial({ color: 0xf0f1f3, side: THREE.DoubleSide });
 const pitBottomMat = new THREE.MeshBasicMaterial({ color: 0xf5f5f5, side: THREE.DoubleSide });
 
+// Interior shadow gradient for left pit wall
+const pitShadowCanvas = document.createElement('canvas');
+pitShadowCanvas.width = 64; pitShadowCanvas.height = 1;
+const pitShadowCtx = pitShadowCanvas.getContext('2d');
+const pitGrad = pitShadowCtx.createLinearGradient(0, 0, 64, 0);
+pitGrad.addColorStop(0, 'rgba(0,0,0,0.18)');
+pitGrad.addColorStop(1, 'rgba(0,0,0,0)');
+pitShadowCtx.fillStyle = pitGrad;
+pitShadowCtx.fillRect(0, 0, 64, 1);
+const pitShadowTex = new THREE.CanvasTexture(pitShadowCanvas);
+const pitShadowMat = new THREE.MeshBasicMaterial({ map: pitShadowTex, transparent: true, depthWrite: false, side: THREE.DoubleSide });
+
 function createPit(holeX) {
   const back = new THREE.Mesh(new THREE.PlaneGeometry(holeW, pitDepth), wallDarkMat);
   back.position.set(holeX, -pitDepth / 2, -holeD / 2);
@@ -394,6 +406,10 @@ function createPit(holeX) {
   left.position.set(holeX - holeW / 2, -pitDepth / 2, 0);
   left.rotation.y = Math.PI / 2;
   scene.add(left);
+  // Interior shadow on left wall — gradient fading from left edge inward
+  const leftShadow = new THREE.Mesh(new THREE.PlaneGeometry(holeW * 0.35, pitDepth), pitShadowMat);
+  leftShadow.position.set(holeX - holeW / 2 + holeW * 0.175, -pitDepth / 2, -holeD / 2 + 0.001);
+  scene.add(leftShadow);
   const right = new THREE.Mesh(new THREE.PlaneGeometry(holeD, pitDepth), wallMedMat);
   right.position.set(holeX + holeW / 2, -pitDepth / 2, 0);
   right.rotation.y = -Math.PI / 2;
@@ -409,6 +425,28 @@ function createPit(holeX) {
 }
 createPit(ssHoleX);
 createPit(rsHoleX);
+
+// Floor shadow planes — cast to the right of each bar
+const floorShadowCanvas = document.createElement('canvas');
+floorShadowCanvas.width = 128; floorShadowCanvas.height = 1;
+const floorShadowCtx = floorShadowCanvas.getContext('2d');
+const floorGrad = floorShadowCtx.createLinearGradient(0, 0, 128, 0);
+floorGrad.addColorStop(0, 'rgba(0,0,0,0.12)');
+floorGrad.addColorStop(0.6, 'rgba(0,0,0,0.04)');
+floorGrad.addColorStop(1, 'rgba(0,0,0,0)');
+floorShadowCtx.fillStyle = floorGrad;
+floorShadowCtx.fillRect(0, 0, 128, 1);
+const floorShadowTex = new THREE.CanvasTexture(floorShadowCanvas);
+const floorShadowMat = new THREE.MeshBasicMaterial({ map: floorShadowTex, transparent: true, depthWrite: false });
+const ssShadow = new THREE.Mesh(new THREE.PlaneGeometry(1.0, barDepth), floorShadowMat);
+ssShadow.rotation.x = -Math.PI / 2;
+ssShadow.position.set(ssHoleX + barWidth / 2 + 0.5, 0.002, 0);
+scene.add(ssShadow);
+const rsShadowMat = floorShadowMat.clone();
+const rsShadow = new THREE.Mesh(new THREE.PlaneGeometry(1.0, barDepth), rsShadowMat);
+rsShadow.rotation.x = -Math.PI / 2;
+rsShadow.position.set(rsHoleX + barWidth / 2 + 0.5, 0.002, 0);
+scene.add(rsShadow);
 
 // Floor grid — 3D line segments in world space (no UV mapping issues)
 const cellWorld = 0.35;
@@ -698,6 +736,15 @@ function tick(time) {
     }
     setBarHeight(rsBar, rsCurrentH, rsBaseY);
     rsBar.position.x = -1.225;
+    // Scale floor shadows with bar height
+    var ssShadowW = 0.3 + Math.min(ssCurrentH, 4) * 0.25;
+    ssShadow.scale.x = ssShadowW;
+    ssShadow.position.x = ssHoleX + barWidth / 2 + ssShadowW * 0.5;
+    floorShadowMat.opacity = Math.min(0.8, ssCurrentH * 0.3);
+    var rsShadowW = 0.3 + Math.min(rsCurrentH, 4) * 0.25;
+    rsShadow.scale.x = rsShadowW;
+    rsShadow.position.x = rsHoleX + barWidth / 2 + rsShadowW * 0.5;
+    rsShadowMat.opacity = Math.min(0.8, rsCurrentH * 0.3);
     // Price counters
     const ssCostDiff = ssTargetCost - displayedSSCost;
     if (Math.abs(ssCostDiff) > 0.5) {
