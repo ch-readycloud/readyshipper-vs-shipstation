@@ -315,16 +315,16 @@ function createFaceLabel(text) {
   canvas.width = 256; canvas.height = 64;
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, 256, 64);
-  ctx.font = '600 26px Inter, system-ui, sans-serif';
+  ctx.font = '700 36px Inter, system-ui, sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.fillStyle = 'white';
   ctx.fillText(text, 128, 32);
   const tex = new THREE.CanvasTexture(canvas);
-  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthTest: false });
-  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(barWidth * 0.85, 0.18), mat);
+  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthTest: false, opacity: 0 });
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(barWidth * 0.85, 0.22), mat);
   mesh.renderOrder = 999;
-  mesh.visible = false;
+  mesh._targetOpacity = 0;
   return mesh;
 }
 const faceLabelBase = createFaceLabel('Base plan');
@@ -725,9 +725,13 @@ function tick(time) {
     faceLabelBase.position.set(ssX, bMidY, frontZ);
     faceLabelCarrier.position.set(ssX, cMidY, frontZ);
     faceLabelCc.position.set(ssX, ccMidY, frontZ);
-    faceLabelBase.visible = animDone && ssBaseCurrentH > 0.15;
-    faceLabelCarrier.visible = animDone && ssCarrierCurrentH > 0.15;
-    faceLabelCc.visible = animDone && ssCcCurrentH > 0.15;
+    faceLabelBase._targetOpacity = (animDone && ssBaseCurrentH > 0.15) ? 0.9 : 0;
+    faceLabelCarrier._targetOpacity = (animDone && ssCarrierCurrentH > 0.15) ? 0.9 : 0;
+    faceLabelCc._targetOpacity = (animDone && ssCcCurrentH > 0.15) ? 0.9 : 0;
+    [faceLabelBase, faceLabelCarrier, faceLabelCc].forEach(m => {
+      m.material.opacity += (m._targetOpacity - m.material.opacity) * 0.08;
+      m.visible = m.material.opacity > 0.01;
+    });
   }
 
   // Compute target card screen positions from bar 3D positions
