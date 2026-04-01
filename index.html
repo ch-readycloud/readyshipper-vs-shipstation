@@ -1181,6 +1181,7 @@ document.addEventListener('click', (e) => {
 
 <!-- Switching Timeline -->
 <section class="bg-slate-950 text-white py-16 sm:py-24 lg:py-32 px-8 overflow-hidden relative">
+<div id="orb-container" class="absolute inset-0 pointer-events-none hidden lg:block"></div>
 <div class="absolute inset-0 opacity-[0.07] bg-[radial-gradient(ellipse_at_top_left,_#18C98D_0%,_transparent_50%),radial-gradient(ellipse_at_bottom_right,_#3b82f6_0%,_transparent_50%)] pointer-events-none"></div>
 <!-- Animated grid lines background -->
 <div class="absolute inset-0 opacity-[0.04] pointer-events-none" style="background-image: linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px); background-size: 60px 60px;"></div>
@@ -1188,8 +1189,6 @@ document.addEventListener('click', (e) => {
 <p class="text-primary text-xs font-black uppercase tracking-[0.3em] text-center mb-4">3 Steps. 1 Day. Zero Downtime.</p>
 <h2 class="font-headline text-3xl sm:text-4xl lg:text-5xl font-black mb-6 text-center tracking-tight">Switching to ReadyShipper is Easy</h2>
 <p class="text-slate-400 text-lg text-center max-w-2xl mx-auto mb-20">We handle everything — from data migration to rule building to going live. Most merchants are shipping the same day they start.</p>
-<div class="relative">
-<div id="orb-container" class="absolute inset-0 pointer-events-none overflow-hidden hidden lg:block"></div>
 <div class="grid md:grid-cols-3 gap-8 relative z-10">
 <!-- Step 1 -->
 <div class="relative bg-white/[0.04] backdrop-blur-sm border border-white/10 rounded-[2rem] p-10 group hover:bg-white/[0.08] transition-all duration-300">
@@ -1237,7 +1236,6 @@ document.addEventListener('click', (e) => {
 <p class="text-slate-400 font-medium leading-relaxed">Return to normal operations the same day with ongoing support via phone, email, and live meetings whenever you need it.</p>
 </div>
 </div>
-</div>
 <div class="text-center mt-16">
 <button class="bg-primary text-white px-10 py-4 rounded-full font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20">Start the Conversation</button>
 </div>
@@ -1245,18 +1243,16 @@ document.addEventListener('click', (e) => {
 (function(){
   var c = document.getElementById('orb-container');
   if (!c) return;
-  for (var i = 0; i < 60; i++) {
+  for (var i = 0; i < 80; i++) {
     var d = document.createElement('div');
-    // Bias toward bottom: use squared random for top position
-    var topPct = (1 - Math.pow(Math.random(), 0.5)) * 100;
-    var bottomness = topPct / 100; // 0=top, 1=bottom
-    var size = 3 + bottomness * 12 + Math.random() * 4;
-    var opacity = (0.05 + bottomness * 0.25 + Math.random() * 0.05).toFixed(2);
-    var dur = (3 + Math.random() * 4).toFixed(1);
-    var delay = (Math.random() * 5).toFixed(1);
+    var topPct = Math.random() * 100;
+    var size = 4 + Math.random() * 10;
+    var opacity = (0.06 + Math.random() * 0.14).toFixed(2);
+    var dur = (3 + Math.random() * 5).toFixed(1);
+    var delay = (Math.random() * 6).toFixed(1);
     d.style.cssText = 'position:absolute;border-radius:50%;filter:blur(1px);' +
       'width:' + size.toFixed(0) + 'px;height:' + size.toFixed(0) + 'px;' +
-      'left:' + (Math.random() * 96 + 2).toFixed(1) + '%;' +
+      'left:' + (Math.random() * 100).toFixed(1) + '%;' +
       'top:' + topPct.toFixed(1) + '%;' +
       'background:rgba(24,201,141,' + opacity + ');' +
       'animation:orb-float ' + dur + 's ease-in-out ' + delay + 's infinite;';
