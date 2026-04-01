@@ -151,20 +151,20 @@ For merchants shipping 100+ USPS packages/day
 <div id="hero-3d-wrapper" class="relative h-[320px] sm:h-[380px] lg:h-[460px]">
 <div id="hero-3d" class="absolute inset-0"></div>
 <!-- Card overlays — positioned absolutely within this container -->
-<div id="card-rs" class="absolute bg-white rounded-lg lg:rounded-2xl shadow-lg border border-slate-100 px-2.5 py-2 lg:px-5 lg:py-4 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 100px; left: 0; top: 0; will-change: transform;">
-<p class="text-primary font-black text-[9px] lg:text-xs uppercase tracking-widest mb-0.5">ReadyShipper</p>
-<p id="rs-counter" class="text-xl lg:text-3xl font-black text-on-surface tracking-tight tabular-nums">$64</p>
-<p class="text-primary text-[9px] lg:text-[11px] font-bold mt-1">No additional fees</p>
-<p id="rs-subtitle" class="text-on-surface-variant text-[9px] lg:text-xs font-bold mt-0.5">per 10,000 shipments/mo</p>
+<div id="card-rs" class="absolute bg-white rounded-md lg:rounded-2xl shadow-md lg:shadow-lg border border-slate-100 px-2 py-1.5 lg:px-5 lg:py-4 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 80px; left: 0; top: 0; will-change: transform;">
+<p class="text-primary font-black text-[8px] lg:text-xs uppercase tracking-widest mb-0.5">ReadyShipper</p>
+<p id="rs-counter" class="text-base lg:text-3xl font-black text-on-surface tracking-tight tabular-nums">$64</p>
+<p class="text-primary text-[8px] lg:text-[11px] font-bold mt-0.5">No additional fees</p>
+<p id="rs-subtitle" class="text-on-surface-variant text-[8px] lg:text-xs font-bold hidden lg:block mt-0.5">per 10,000 shipments/mo</p>
 </div>
-<div id="card-ss" class="absolute bg-white rounded-lg lg:rounded-2xl shadow-lg border border-slate-100 px-2.5 py-2 lg:px-5 lg:py-4 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 110px; left: 0; top: 0; will-change: transform;">
-<p class="text-slate-400 font-black text-[9px] lg:text-xs uppercase tracking-widest mb-0.5">ShipStation</p>
-<p id="ss-counter" class="text-xl lg:text-3xl font-black text-on-surface tracking-tight tabular-nums">$1,899</p>
+<div id="card-ss" class="absolute bg-white rounded-md lg:rounded-2xl shadow-md lg:shadow-lg border border-slate-100 px-2 py-1.5 lg:px-5 lg:py-4 pointer-events-none opacity-0 transition-opacity duration-500 z-20" style="min-width: 90px; left: 0; top: 0; will-change: transform;">
+<p class="text-slate-400 font-black text-[8px] lg:text-xs uppercase tracking-widest mb-0.5">ShipStation</p>
+<p id="ss-counter" class="text-base lg:text-3xl font-black text-on-surface tracking-tight tabular-nums">$1,899</p>
 <div id="ss-fee-breakdown" class="flex flex-col gap-0.5 mt-1 mb-1">
 <p id="ss-fee-carrier" class="text-[9px] lg:text-[11px] font-bold text-red-500 tabular-nums" style="display:none;">+ $800 carrier acct fee</p>
 <p id="ss-fee-cc" class="text-[9px] lg:text-[11px] font-bold text-red-500 tabular-nums" style="display:none;">+ $120 credit card fee</p>
 </div>
-<p id="ss-subtitle" class="text-on-surface-variant text-[9px] lg:text-xs font-bold mt-0.5">per 10,000 shipments/mo</p>
+<p id="ss-subtitle" class="text-on-surface-variant text-[8px] lg:text-xs font-bold hidden lg:block mt-0.5">per 10,000 shipments/mo</p>
 </div>
 <div id="handwritten-note" class="absolute z-30 opacity-0 pointer-events-none hidden lg:block" style="left: 0; top: 0; will-change: transform;">
 <p id="note-text" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: #1d1a22; transform: rotate(-4deg) translateY(18px); transition: transform 0.5s ease, opacity 0.5s ease;">No change.</p>
@@ -745,11 +745,11 @@ function tick(time) {
   const rsTopTarget = toScreen(rsBar.position.x, rsTopWorld, rsBar.position.z);
 
   const isMobile = cw < 768;
-  const cardOffset = isMobile ? 90 : 175;
-  const tRSX = Math.max(5, rsLeftTarget.x - cardOffset), tRSY = rsLeftTarget.y - (isMobile ? 20 : 40);
+  const cardOffset = isMobile ? 65 : 175;
+  const tRSX = Math.max(5, rsLeftTarget.x - cardOffset), tRSY = rsLeftTarget.y - (isMobile ? 10 : 40);
   // Anchor SS card at a minimum Y so it doesn't fly off screen with tall bars
-  const ssCardMinY = isMobile ? 10 : 20;
-  const tSSX = Math.min(cw - (isMobile ? 145 : 185), ssRightTarget.x), tSSY = Math.max(ssRightTarget.y - (isMobile ? 20 : 40), ssCardMinY);
+  const ssCardMinY = isMobile ? 5 : 20;
+  const tSSX = Math.min(cw - (isMobile ? 100 : 185), ssRightTarget.x), tSSY = Math.max(ssRightTarget.y - (isMobile ? 10 : 40), ssCardMinY);
   const tNX = rsTopTarget.x - 15, tNY = rsTopTarget.y - 120;
 
   // Initialize or lerp card positions
@@ -1128,26 +1128,30 @@ document.addEventListener('click', (e) => {
 <p class="text-xl text-on-surface-variant max-w-4xl mx-auto leading-relaxed">ShipStation was built for SMB teams. ReadyShipper was designed for high-volume mid-market and enterprise operations that need to process thousands of daily shipments without adding headcount, keep costs predictable, and get real support from a real person when it matters.</p>
 </div>
 <!-- Mobile: stacked feature cards -->
-<div class="md:hidden space-y-1.5">
-<div class="grid grid-cols-2 gap-2 mb-3">
-<div class="bg-primary/5 rounded-lg px-3 py-2 text-center ring-1 ring-primary/20">
-<p class="text-[10px] font-black uppercase tracking-widest text-primary">ReadyShipper</p>
-</div>
-<div class="bg-slate-100 rounded-lg px-3 py-2 text-center">
-<p class="text-[10px] font-black uppercase tracking-widest text-slate-400">ShipStation</p>
-</div>
-</div>
-<div class="bg-white rounded-lg px-3 py-2.5 border border-slate-100"><p class="font-bold text-xs text-on-surface mb-1">Discounted carrier rates</p><div class="flex gap-3"><span class="inline-flex items-center gap-1 text-xs font-bold text-primary"><span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span> RS</span><span class="inline-flex items-center gap-1 text-xs font-bold text-primary"><span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span> SS</span></div></div>
-<div class="bg-white rounded-lg px-3 py-2.5 border border-slate-100"><p class="font-bold text-xs text-on-surface mb-1">No credit card fees</p><div class="flex gap-3"><span class="inline-flex items-center gap-1 text-xs font-bold text-primary"><span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span> RS</span><span class="inline-flex items-center gap-1 text-xs font-bold text-red-400"><span class="material-symbols-outlined text-lg">close</span> SS</span></div></div>
-<div class="bg-white rounded-lg px-3 py-2.5 border border-slate-100"><p class="font-bold text-xs text-on-surface mb-1">Phone, Email &amp; Live video call support w/ screen sharing</p><div class="flex gap-3"><span class="inline-flex items-center gap-1 text-xs font-bold text-primary"><span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span> RS</span><span class="inline-flex items-center gap-1 text-xs font-bold text-red-400"><span class="material-symbols-outlined text-lg">close</span> SS</span></div></div>
-<div class="bg-white rounded-lg px-3 py-2.5 border border-slate-100"><p class="font-bold text-xs text-on-surface mb-1">No fees when using your own carrier account</p><div class="flex gap-3"><span class="inline-flex items-center gap-1 text-xs font-bold text-primary"><span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span> RS</span><span class="inline-flex items-center gap-1 text-xs font-bold text-red-400"><span class="material-symbols-outlined text-lg">close</span> SS</span></div></div>
-<div class="bg-white rounded-lg px-3 py-2.5 border border-slate-100"><p class="font-bold text-xs text-on-surface mb-1">Hybrid-cloud deployment</p><div class="flex gap-3"><span class="inline-flex items-center gap-1 text-xs font-bold text-primary"><span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span> RS</span><span class="inline-flex items-center gap-1 text-xs font-bold text-red-400"><span class="material-symbols-outlined text-lg">close</span> SS</span></div></div>
-<div class="bg-white rounded-lg px-3 py-2.5 border border-slate-100"><p class="font-bold text-xs text-on-surface mb-1">Hands-on setup and onboarding</p><div class="flex gap-3"><span class="inline-flex items-center gap-1 text-xs font-bold text-primary"><span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span> RS</span><span class="inline-flex items-center gap-1 text-xs font-bold text-red-400"><span class="material-symbols-outlined text-lg">close</span> SS</span></div></div>
-<div class="bg-white rounded-lg px-3 py-2.5 border border-slate-100"><p class="font-bold text-xs text-on-surface mb-1">Batch print 4 labels per second</p><div class="flex gap-3"><span class="inline-flex items-center gap-1 text-xs font-bold text-primary"><span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span> RS</span><span class="inline-flex items-center gap-1 text-xs font-bold text-red-400"><span class="material-symbols-outlined text-lg">close</span> SS</span></div></div>
-<div class="bg-white rounded-lg px-3 py-2.5 border border-slate-100"><p class="font-bold text-xs text-on-surface mb-1">Automated rate shopping based on your rules</p><div class="flex gap-3"><span class="inline-flex items-center gap-1 text-xs font-bold text-primary"><span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span> RS</span><span class="inline-flex items-center gap-1 text-xs font-bold text-amber-500">Limited SS</span></div></div>
-<div class="bg-white rounded-lg px-3 py-2.5 border border-slate-100"><p class="font-bold text-xs text-on-surface mb-1">Rate shop multiple accounts from the same carrier</p><div class="flex gap-3"><span class="inline-flex items-center gap-1 text-xs font-bold text-primary"><span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span> RS</span><span class="inline-flex items-center gap-1 text-xs font-bold text-red-400"><span class="material-symbols-outlined text-lg">close</span> SS</span></div></div>
-<div class="bg-white rounded-lg px-3 py-2.5 border border-slate-100"><p class="font-bold text-xs text-on-surface mb-1">One platform for shipping, returns, and post-purchase marketing</p><div class="flex gap-3"><span class="inline-flex items-center gap-1 text-xs font-bold text-primary"><span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span> RS</span><span class="inline-flex items-center gap-1 text-xs font-bold text-red-400"><span class="material-symbols-outlined text-lg">close</span> SS</span></div></div>
-<div class="bg-white rounded-lg px-3 py-2.5 border border-slate-100"><p class="font-bold text-xs text-on-surface mb-1">Order-based CRM, collaboration &amp; task management</p><div class="flex gap-3"><span class="inline-flex items-center gap-1 text-xs font-bold text-primary"><span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span> RS</span><span class="inline-flex items-center gap-1 text-xs font-bold text-red-400"><span class="material-symbols-outlined text-lg">close</span> SS</span></div></div>
+<!-- Mobile: compact comparison table -->
+<div class="md:hidden overflow-hidden rounded-xl shadow-lg">
+<table class="w-full text-left border-collapse text-sm">
+<thead>
+<tr class="bg-slate-900 text-white">
+<th class="py-3 px-4 font-bold text-[10px] uppercase tracking-[0.15em] text-slate-300">Feature</th>
+<th class="py-3 px-3 text-center text-[10px] font-black uppercase tracking-wider text-primary w-16">RS</th>
+<th class="py-3 px-3 text-center text-[10px] font-black uppercase tracking-wider text-slate-400 w-16">SS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="bg-white border-b border-slate-100"><td class="py-2.5 px-4 font-semibold text-on-surface">Discounted carrier rates</td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span></td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span></td></tr>
+<tr class="bg-slate-50 border-b border-slate-100"><td class="py-2.5 px-4 font-semibold text-on-surface">No credit card fees</td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span></td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-red-400 text-lg">close</span></td></tr>
+<tr class="bg-white border-b border-slate-100"><td class="py-2.5 px-4 font-semibold text-on-surface">Phone, Email &amp; Live video support</td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span></td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-red-400 text-lg">close</span></td></tr>
+<tr class="bg-slate-50 border-b border-slate-100"><td class="py-2.5 px-4 font-semibold text-on-surface">No fees w/ your own carrier account</td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span></td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-red-400 text-lg">close</span></td></tr>
+<tr class="bg-white border-b border-slate-100"><td class="py-2.5 px-4 font-semibold text-on-surface">Hybrid-cloud deployment</td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span></td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-red-400 text-lg">close</span></td></tr>
+<tr class="bg-slate-50 border-b border-slate-100"><td class="py-2.5 px-4 font-semibold text-on-surface">Hands-on setup &amp; onboarding</td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span></td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-red-400 text-lg">close</span></td></tr>
+<tr class="bg-white border-b border-slate-100"><td class="py-2.5 px-4 font-semibold text-on-surface">Batch print 4 labels/sec</td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span></td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-red-400 text-lg">close</span></td></tr>
+<tr class="bg-slate-50 border-b border-slate-100"><td class="py-2.5 px-4 font-semibold text-on-surface">Automated rate shopping</td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span></td><td class="py-2.5 px-3 text-center"><span class="text-amber-500 font-bold text-[10px]">Ltd</span></td></tr>
+<tr class="bg-white border-b border-slate-100"><td class="py-2.5 px-4 font-semibold text-on-surface">Rate shop multiple carrier accounts</td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span></td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-red-400 text-lg">close</span></td></tr>
+<tr class="bg-slate-50 border-b border-slate-100"><td class="py-2.5 px-4 font-semibold text-on-surface">Shipping, returns &amp; post-purchase</td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span></td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-red-400 text-lg">close</span></td></tr>
+<tr class="bg-white"><td class="py-2.5 px-4 font-semibold text-on-surface">CRM, collaboration &amp; task mgmt</td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span></td><td class="py-2.5 px-3 text-center"><span class="material-symbols-outlined text-red-400 text-lg">close</span></td></tr>
+</tbody>
+</table>
 </div>
 <!-- Desktop: comparison table -->
 <div class="hidden md:block overflow-hidden rounded-[2rem] shadow-xl">
