@@ -749,7 +749,8 @@ function tick(time) {
   const tRSX = Math.max(5, rsLeftTarget.x - cardOffset), tRSY = rsLeftTarget.y - (isMobile ? 10 : 40);
   // Anchor SS card at a minimum Y so it doesn't fly off screen with tall bars
   const ssCardMinY = isMobile ? 5 : 20;
-  const tSSX = Math.min(cw - (isMobile ? 100 : 185), ssRightTarget.x), tSSY = Math.max(ssRightTarget.y - (isMobile ? 10 : 40), ssCardMinY);
+  const ssShift = isMobile ? -30 : 0;
+  const tSSX = Math.min(cw - (isMobile ? 100 : 185), ssRightTarget.x + ssShift), tSSY = Math.max(ssRightTarget.y - (isMobile ? 10 : 40), ssCardMinY);
   const tNX = rsTopTarget.x - 15, tNY = rsTopTarget.y - 120;
 
   // Initialize or lerp card positions
@@ -1129,7 +1130,7 @@ document.addEventListener('click', (e) => {
 </div>
 <!-- Mobile: stacked feature cards -->
 <!-- Mobile: compact comparison table -->
-<div class="md:hidden overflow-hidden rounded-xl shadow-lg">
+<div class="md:hidden overflow-hidden rounded-lg shadow-lg">
 <table class="w-full text-left border-collapse text-sm">
 <thead>
 <tr class="bg-slate-900 text-white">
