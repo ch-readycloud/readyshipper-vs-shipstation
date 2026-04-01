@@ -493,10 +493,9 @@ for (let z = 0.55 - cellWorld; z >= -gridExtent; z -= cellWorld) zPositions.push
 
 // Check if a point is inside a bar hole
 function inHole(x, z) {
-  // Extend Z check by one cell to account for grid Z animation drift
   return [ssHoleX, rsHoleX].some(hx =>
     x >= hx - barWidth/2 && x <= hx + barWidth/2 &&
-    z >= -barDepth/2 - cellWorld && z <= barDepth/2 + cellWorld
+    z >= -barDepth/2 && z <= barDepth/2
   );
 }
 
@@ -514,12 +513,13 @@ function addLine(x1, z1, x2, z2) {
 }
 
 // X-parallel lines (constant Z, varying X) — skip segments inside holes
+// Check at both z and z+cellWorld since grid animates in +Z by up to one cell
 zPositions.forEach(z => {
   const sorted = [...xPositions].sort((a,b) => a - b);
   for (let i = 0; i < sorted.length - 1; i++) {
     const x1 = sorted[i], x2 = sorted[i+1];
     const mx = (x1+x2)/2;
-    if (!inHole(mx, z)) addLine(x1, z, x2, z);
+    if (!inHole(mx, z) && !inHole(mx, z + cellWorld)) addLine(x1, z, x2, z);
   }
 });
 
