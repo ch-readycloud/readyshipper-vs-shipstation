@@ -297,9 +297,9 @@ let rsBaseY = pitStartY;
 let targetRSBaseY = barRestY; // target Y offset for RS bar (goes negative to recess)
 
 // ShipStation bar — 3 stacked layers (base, carrier, CC)
-const ssBaseMat = new THREE.MeshLambertMaterial({ color: 0xc8d0d8 });
-const ssCarrierMat = new THREE.MeshLambertMaterial({ color: 0xb0b8c4, transparent: true });
-const ssCcMat = new THREE.MeshLambertMaterial({ color: 0x98a0b0, transparent: true });
+const ssBaseMat = new THREE.MeshLambertMaterial({ color: 0xd8dde4 });
+const ssCarrierMat = new THREE.MeshLambertMaterial({ color: 0xc4cad4, transparent: true });
+const ssCcMat = new THREE.MeshLambertMaterial({ color: 0xb0b8c6, transparent: true });
 const ssLayerBase = new THREE.Mesh(new THREE.BoxGeometry(barWidth, 0.01, barDepth), ssBaseMat);
 const ssLayerCarrier = new THREE.Mesh(new THREE.BoxGeometry(barWidth, 0.01, barDepth), ssCarrierMat);
 const ssLayerCc = new THREE.Mesh(new THREE.BoxGeometry(barWidth, 0.01, barDepth), ssCcMat);
@@ -913,12 +913,12 @@ window.addEventListener('resize', () => {
 </div>
 <div>
 <div class="flex justify-between text-on-surface-variant font-medium">
-<span>Shipping labels x <span id="ss-label-vol" class="font-black text-on-surface tabular-nums">4,000</span> <span class="text-xs text-slate-400">($12/label avg.)</span></span>
-<span id="ss-label-cost" class="font-bold text-slate-400">$48,000.00</span>
+<span>Credit card fee (1.5%)</span>
+<span id="ss-cc-fees" class="font-bold text-on-surface">$720.00</span>
 </div>
-<div class="flex justify-between ml-4 mt-1 text-red-500 text-xs font-medium">
-<span>+1.5% credit card processing fee</span>
-<span id="ss-cc-fees" class="font-bold">$720.00</span>
+<div class="flex justify-between ml-4 mt-1 text-slate-400 text-xs font-medium">
+<span>Assumes <span id="ss-label-vol" class="font-bold tabular-nums">4,000</span> shipments @ $12/label avg.</span>
+<span id="ss-label-cost" class="font-bold">$48,000.00</span>
 </div>
 </div>
 <div class="flex justify-between text-on-surface-variant font-medium">
@@ -941,13 +941,15 @@ window.addEventListener('resize', () => {
 <span>Software</span>
 <span class="font-bold text-on-surface">$64.00</span>
 </div>
-<div class="flex justify-between text-on-surface-variant font-medium">
-<span>Shipping labels x <span id="rs-label-vol" class="font-black text-on-surface tabular-nums">4,000</span> <span class="text-xs text-slate-400">($12/label avg.)</span></span>
-<span id="rs-label-cost" class="font-bold text-slate-400">$48,000.00</span>
-</div>
+<div>
 <div class="flex justify-between text-on-surface-variant font-medium">
 <span>Credit card &amp; carrier account fees</span>
 <span class="font-black text-primary">$0</span>
+</div>
+<div class="flex justify-between ml-4 mt-1 text-slate-400 text-xs font-medium">
+<span>Assumes <span id="rs-label-vol" class="font-bold tabular-nums">4,000</span> shipments @ $12/label avg.</span>
+<span id="rs-label-cost" class="font-bold">$48,000.00</span>
+</div>
 </div>
 <div class="border-t border-slate-100 pt-8 flex justify-between items-baseline">
 <span class="text-lg font-bold text-on-surface-variant uppercase tracking-wider">Paid to ReadyShipper</span>
