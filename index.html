@@ -419,22 +419,9 @@ function createPit(holeX) {
   bottom.rotation.x = -Math.PI / 2;
   bottom.position.set(holeX, -pitDepth, 0);
   scene.add(bottom);
-  // Interior shadow overlay — gradient darkening the left side of the hole opening
-  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(holeW, holeD), pitShadowMat);
-  shadow.rotation.x = -Math.PI / 2;
-  shadow.position.set(holeX, 0.005, 0); // above hole mask (0.004)
-  scene.add(shadow);
 }
 createPit(ssHoleX);
 createPit(rsHoleX);
-// Opaque masks above grid to hide any grid lines drifting over holes
-const holeMaskMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-[ssHoleX, rsHoleX].forEach(hx => {
-  const mask = new THREE.Mesh(new THREE.PlaneGeometry(holeW, holeD), holeMaskMat);
-  mask.rotation.x = -Math.PI / 2;
-  mask.position.set(hx, 0.004, 0);
-  scene.add(mask);
-});
 
 // Floor shadow — parallelogram cast to the right from bar base
 // Matches reference: extends right with slight forward skew, dark at base
