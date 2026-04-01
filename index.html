@@ -465,8 +465,8 @@ function createBarShadow(holeX) {
     `
   });
   var mesh = new THREE.Mesh(geo, mat);
-  // Position at bar's front-right corner
-  mesh.position.set(holeX + barWidth / 2, 0, barDepth / 2);
+  // Position at bar's back-right corner (rightmost in isometric view)
+  mesh.position.set(holeX + barWidth / 2, 0, -barDepth / 2);
   scene.add(mesh);
   return { mesh: mesh, mat: mat, positions: positions, hw: hw };
 }
