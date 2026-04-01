@@ -868,11 +868,9 @@ function tick(time) {
 
   // Apply lerped positions via transform (avoids layout thrash)
   var rsFloatY = Math.sin(time / 1000 * 1.2) * 6;
-  var rsFloatX = Math.cos(time / 1000 * 0.7) * 4;
   var ssFloatY = Math.sin(time / 1000 * 0.9 + 1.5) * 5;
-  var ssFloatX = Math.cos(time / 1000 * 0.6 + 2) * 3.5;
-  cardRS.style.transform = 'translate(' + (cardRSX + rsFloatX).toFixed(1) + 'px,' + (cardRSY + rsFloatY).toFixed(1) + 'px)';
-  cardSS.style.transform = 'translate(' + (cardSSX + ssFloatX).toFixed(1) + 'px,' + (cardSSY + ssFloatY).toFixed(1) + 'px)';
+  cardRS.style.transform = 'translate(' + cardRSX.toFixed(1) + 'px,' + (cardRSY + rsFloatY).toFixed(1) + 'px)';
+  cardSS.style.transform = 'translate(' + cardSSX.toFixed(1) + 'px,' + (cardSSY + ssFloatY).toFixed(1) + 'px)';
   noteEl.style.transform = 'translate(' + noteX.toFixed(1) + 'px,' + noteY.toFixed(1) + 'px)';
 
   // Animate grid — drift along Z axis, loop every cellWorld (seamless)
