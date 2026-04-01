@@ -493,9 +493,10 @@ for (let z = 0.55 - cellWorld; z >= -gridExtent; z -= cellWorld) zPositions.push
 
 // Check if a point is inside a bar hole
 function inHole(x, z) {
+  // Extend Z check by one cell to account for grid Z animation drift
   return [ssHoleX, rsHoleX].some(hx =>
     x >= hx - barWidth/2 && x <= hx + barWidth/2 &&
-    z >= -barDepth/2 && z <= barDepth/2
+    z >= -barDepth/2 - cellWorld && z <= barDepth/2 + cellWorld
   );
 }
 
