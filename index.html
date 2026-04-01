@@ -422,16 +422,6 @@ function createPit(holeX) {
 }
 createPit(ssHoleX);
 createPit(rsHoleX);
-// White masks above grid to prevent animated grid lines from showing over holes
-[ssHoleX, rsHoleX].forEach(hx => {
-  const mask = new THREE.Mesh(
-    new THREE.PlaneGeometry(holeW + 0.02, holeD + 0.02),
-    new THREE.MeshBasicMaterial({ color: 0xffffff })
-  );
-  mask.rotation.x = -Math.PI / 2;
-  mask.position.set(hx, 0.004, 0);
-  scene.add(mask);
-});
 
 // Floor shadow — parallelogram cast to the right from bar base
 // Matches reference: extends right with slight forward skew, dark at base
