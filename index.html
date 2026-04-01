@@ -426,39 +426,50 @@ function createPit(holeX) {
 createPit(ssHoleX);
 createPit(rsHoleX);
 
-// Floor shadow planes — light from left, shadows cast on right side of bars
-// Two shadow strips per bar: near-camera (+Z) and far-camera (-Z)
-const shadowGradCanvas = document.createElement('canvas');
-shadowGradCanvas.width = 256; shadowGradCanvas.height = 1;
-const shadowGradCtx = shadowGradCanvas.getContext('2d');
-const shadowGrad = shadowGradCtx.createLinearGradient(0, 0, 256, 0);
-shadowGrad.addColorStop(0, 'rgba(0,0,0,0.3)');
-shadowGrad.addColorStop(0.25, 'rgba(0,0,0,0.1)');
-shadowGrad.addColorStop(0.6, 'rgba(0,0,0,0.02)');
-shadowGrad.addColorStop(1, 'rgba(0,0,0,0)');
-shadowGradCtx.fillStyle = shadowGrad;
-shadowGradCtx.fillRect(0, 0, 256, 1);
-const shadowGradTex = new THREE.CanvasTexture(shadowGradCanvas);
-
-function createBarShadows(holeX) {
-  // Near shadow: extends in +Z from bar's right-front corner
-  var nearMat = new THREE.MeshBasicMaterial({ map: shadowGradTex, transparent: true, opacity: 0, depthWrite: false });
-  var near = new THREE.Mesh(new THREE.PlaneGeometry(1.0, barWidth), nearMat);
-  near.rotation.x = -Math.PI / 2;
-  near.rotation.z = -Math.PI / 2; // gradient extends in +Z
-  near.position.set(holeX + barWidth / 2 - barWidth * 0.1, 0.002, barDepth / 2 + 0.5);
-  scene.add(near);
-  // Far shadow: extends in -Z from bar's right-back corner
-  var farMat = nearMat.clone();
-  var far = new THREE.Mesh(new THREE.PlaneGeometry(1.0, barWidth), farMat);
-  far.rotation.x = -Math.PI / 2;
-  far.rotation.z = Math.PI / 2; // gradient extends in -Z
-  far.position.set(holeX + barWidth / 2 - barWidth * 0.1, 0.002, -barDepth / 2 - 0.5);
-  scene.add(far);
-  return { near: near, far: far, nearMat: nearMat, farMat: farMat };
+// Floor shadow — parallelogram cast to the right+forward from bar base
+// Uses custom geometry with per-vertex alpha for gradient fade
+function createBarShadow(holeX) {
+  var geo = new THREE.BufferGeometry();
+  // 4 corners of parallelogram on the floor (y=0.002):
+  // v0: bar right-back corner, v1: bar right-front corner
+  // v2: far tip front, v3: far tip back
+  // These get updated each frame based on shadow length
+  var positions = new Float32Array([
+    0, 0.002, -barDepth/2,  // v0 back-right of bar
+    0, 0.002,  barDepth/2,  // v1 front-right of bar
+    1, 0.002,  barDepth/2 + 0.3,  // v2 far tip front (shifted +Z)
+    1, 0.002, -barDepth/2 + 0.3,  // v3 far tip back (shifted +Z)
+  ]);
+  var alphas = new Float32Array([0.25, 0.25, 0, 0]);
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
+  geo.setIndex([0, 1, 2, 0, 2, 3]);
+  var mat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false,
+    uniforms: { uOpacity: { value: 0 } },
+    vertexShader: `
+      attribute float alpha;
+      varying float vAlpha;
+      void main() {
+        vAlpha = alpha;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float uOpacity;
+      varying float vAlpha;
+      void main() {
+        gl_FragColor = vec4(0.0, 0.0, 0.0, vAlpha * uOpacity);
+      }
+    `
+  });
+  var mesh = new THREE.Mesh(geo, mat);
+  mesh.position.x = holeX + barWidth / 2;
+  scene.add(mesh);
+  return { mesh: mesh, mat: mat, positions: positions };
 }
-const ssShadows = createBarShadows(ssHoleX);
-const rsShadows = createBarShadows(rsHoleX);
+const ssShadow = createBarShadow(ssHoleX);
+const rsShadow = createBarShadow(rsHoleX);
 
 // Floor grid — 3D line segments in world space (no UV mapping issues)
 const cellWorld = 0.35;
@@ -767,22 +778,23 @@ function tick(time) {
     }
   }
 
-  // Scale floor shadows — length grows with bar height, cast from right side
+  // Update floor shadow parallelograms based on bar height
   {
-    function updateShadowPair(shadows, visH, holeX) {
-      var len = 0.15 + Math.min(visH, 5) * 0.4;
-      var op = Math.min(0.45, visH * 0.1);
-      shadows.near.scale.x = len;
-      shadows.near.position.z = barDepth / 2 + len * 0.5;
-      shadows.nearMat.opacity = op;
-      shadows.far.scale.x = len;
-      shadows.far.position.z = -(barDepth / 2 + len * 0.5);
-      shadows.farMat.opacity = op;
+    function updateShadow(s, visH) {
+      var len = 0.2 + Math.min(visH, 5) * 0.45;
+      var zShift = len * 0.3; // shadow skews toward camera
+      var p = s.positions;
+      // v2: far tip front
+      p[6] = len; p[8] = barDepth/2 + zShift;
+      // v3: far tip back
+      p[9] = len; p[11] = -barDepth/2 + zShift;
+      s.mesh.geometry.attributes.position.needsUpdate = true;
+      s.mat.uniforms.uOpacity.value = Math.min(0.7, visH * 0.15);
     }
     var ssVisH = Math.max(0, ssCurrentH + Math.min(ssBaseY, 0));
-    updateShadowPair(ssShadows, ssVisH, ssHoleX);
+    updateShadow(ssShadow, ssVisH);
     var rsVisH = Math.max(0, rsCurrentH + Math.min(rsBaseY, 0));
-    updateShadowPair(rsShadows, rsVisH, rsHoleX);
+    updateShadow(rsShadow, rsVisH);
   }
 
   // Position 3D face labels on front face of each SS layer
