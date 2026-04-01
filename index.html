@@ -1062,19 +1062,10 @@ window.addEventListener('resize', () => {
 <span id="rs-total" class="text-6xl font-black text-on-surface tracking-tight">$64.00</span>
 </div>
 </div>
-<div class="mt-12 relative hidden lg:block">
-<div class="absolute -inset-4 rounded-3xl pointer-events-none" style="background: radial-gradient(ellipse at center, rgba(24,201,141,0.25) 0%, transparent 70%); animation: savings-glow 3s ease-in-out infinite;"></div>
-<div id="savings-block" class="bg-primary p-8 rounded-2xl text-center relative overflow-hidden">
+<div class="mt-12 bg-primary p-8 rounded-2xl text-center relative overflow-hidden">
 <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/20 to-transparent"></div>
 <p class="text-white text-xs font-black mb-1 tracking-[0.2em] opacity-80">YOUR ESTIMATED ANNUAL SAVINGS</p>
 <p id="rs-savings" class="text-5xl font-black text-white tracking-tightest">~$20,100.00</p>
-</div>
-</div>
-<div class="mt-12 lg:hidden">
-<div class="bg-primary p-8 rounded-2xl text-center relative overflow-hidden">
-<div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/20 to-transparent"></div>
-<p class="text-white text-xs font-black mb-1 tracking-[0.2em] opacity-80">YOUR ESTIMATED ANNUAL SAVINGS</p>
-<p id="rs-savings-mobile" class="text-5xl font-black text-white tracking-tightest">~$20,100.00</p>
 </div>
 </div>
 </div>
@@ -1178,9 +1169,7 @@ ddOptions.forEach(opt => {
     document.getElementById('rs-label-vol').textContent = vol.toLocaleString();
     document.getElementById('rs-label-cost').textContent = fmt(labelCost);
     document.getElementById('rs-total').textContent = fmt(64);
-    var savingsText = '~' + fmt((total - 64) * 12);
-    document.getElementById('rs-savings').textContent = savingsText;
-    document.getElementById('rs-savings-mobile').textContent = savingsText;
+    document.getElementById('rs-savings').textContent = '~' + fmt((total - 64) * 12);
   });
 });
 
@@ -1199,7 +1188,9 @@ document.addEventListener('click', (e) => {
 <p class="text-primary text-xs font-black uppercase tracking-[0.3em] text-center mb-4">3 Steps. 1 Day. Zero Downtime.</p>
 <h2 class="font-headline text-3xl sm:text-4xl lg:text-5xl font-black mb-6 text-center tracking-tight">Switching to ReadyShipper is Easy</h2>
 <p class="text-slate-400 text-lg text-center max-w-2xl mx-auto mb-20">We handle everything — from data migration to rule building to going live. Most merchants are shipping the same day they start.</p>
-<div class="grid md:grid-cols-3 gap-8">
+<div class="relative">
+<div id="orb-container" class="absolute inset-0 pointer-events-none overflow-hidden hidden lg:block"></div>
+<div class="grid md:grid-cols-3 gap-8 relative z-10">
 <!-- Step 1 -->
 <div class="relative bg-white/[0.04] backdrop-blur-sm border border-white/10 rounded-[2rem] p-10 group hover:bg-white/[0.08] transition-all duration-300">
 <div class="absolute -top-px left-10 right-10 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
@@ -1246,11 +1237,10 @@ document.addEventListener('click', (e) => {
 <p class="text-slate-400 font-medium leading-relaxed">Return to normal operations the same day with ongoing support via phone, email, and live meetings whenever you need it.</p>
 </div>
 </div>
+</div>
 <div class="text-center mt-16">
 <button class="bg-primary text-white px-10 py-4 rounded-full font-bold text-lg hover:opacity-90 transition-all shadow-xl shadow-primary/20">Start the Conversation</button>
 </div>
-<!-- Floating green orbs — generated via JS, hidden on mobile -->
-<div id="orb-container" class="relative h-64 mt-8 pointer-events-none overflow-hidden hidden lg:block"></div>
 <script>
 (function(){
   var c = document.getElementById('orb-container');
@@ -1696,76 +1686,11 @@ document.addEventListener('click', (e) => {
 </section>
 
 <style>
-@keyframes savings-glow {
-  0%, 100% { opacity: 0.3; transform: scale(0.9); }
-  50% { opacity: 0.8; transform: scale(1.1); }
-}
 @keyframes orb-float {
   0%, 100% { transform: translateY(0); opacity: 0.6; }
   50% { transform: translateY(-20px); opacity: 1; }
 }
 </style>
 <script>
-if (window.innerWidth >= 1024) {
-// Sweeping checkmark scale in RS column of desktop comparison table
-(function() {
-  const table = document.querySelector('.hidden.md\\:block table tbody');
-  if (!table) return;
-  const rows = table.querySelectorAll('tr');
-  const rsChecks = [];
-  rows.forEach(row => {
-    const cells = row.querySelectorAll('td');
-    if (cells.length >= 2) {
-      const icon = cells[1].querySelector('.material-symbols-outlined');
-      if (icon) rsChecks.push(icon);
-    }
-  });
-  if (!rsChecks.length) return;
-  let activeIdx = 0;
-  let sweeping = false;
-  function doSweep() {
-    sweeping = true;
-    activeIdx = 0;
-    var iv = setInterval(function() {
-      rsChecks.forEach((c, i) => {
-        c.style.transition = 'transform 0.1s ease';
-        c.style.transform = i === activeIdx ? 'scale(1.3)' : 'scale(1)';
-      });
-      activeIdx++;
-      if (activeIdx >= rsChecks.length) {
-        clearInterval(iv);
-        setTimeout(() => { rsChecks.forEach(c => { c.style.transform = 'scale(1)'; }); }, 150);
-        sweeping = false;
-      }
-    }, 50);
-  }
-  doSweep();
-  setInterval(doSweep, 5000);
-})();
-
-// Why Choose card glow cycle
-(function() {
-  const cards = document.querySelectorAll('section:has(h2) .grid.md\\:grid-cols-2.lg\\:grid-cols-3 > div');
-  if (!cards.length) return;
-  let order = [...Array(cards.length).keys()];
-  for (let i = order.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [order[i], order[j]] = [order[j], order[i]];
-  }
-  let idx = 0;
-  function glowCard() {
-    const card = cards[order[idx]];
-    card.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
-    card.style.transform = 'scale(1.02)';
-    card.style.boxShadow = '0 0 40px rgba(24, 201, 141, 0.3), 0 0 80px rgba(24, 201, 141, 0.1)';
-    setTimeout(() => {
-      card.style.transform = 'scale(1)';
-      card.style.boxShadow = '';
-    }, 1200);
-    idx = (idx + 1) % order.length;
-  }
-  setInterval(glowCard, 2200);
-})();
-} // end desktop-only animations
 </script>
 </body></html>
