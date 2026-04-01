@@ -913,8 +913,12 @@ window.addEventListener('resize', () => {
 <span id="ss-base" class="font-bold text-on-surface">$699.00</span>
 </div>
 <div class="flex justify-between text-on-surface-variant font-medium">
-<span>Est. Credit Card Fees</span>
-<span id="ss-cc-fees" class="font-bold text-on-surface">$720.00</span>
+<span id="ss-label-desc">Shipping labels x 4,000 ($12/label avg.)</span>
+<span id="ss-label-cost" class="font-bold text-on-surface">$48,000.00</span>
+</div>
+<div class="flex justify-between ml-4 text-red-500 text-sm font-medium">
+<span id="ss-cc-desc">+1.5% credit card processing fee</span>
+<span id="ss-cc-fees" class="font-bold">$720.00</span>
 </div>
 <div class="flex justify-between text-on-surface-variant font-medium">
 <span>Est. USPS/EasyPost Markup (~8%)</span>
@@ -933,7 +937,7 @@ window.addEventListener('resize', () => {
 </div>
 <div class="mt-auto space-y-6">
 <div class="flex justify-between text-on-surface-variant font-medium">
-<span>Flat Subscription</span>
+<span>Software Cost</span>
 <span class="font-bold text-on-surface">$64.00</span>
 </div>
 <div class="flex justify-between text-on-surface-variant font-medium">
@@ -1044,7 +1048,10 @@ ddOptions.forEach(opt => {
     // Update pricing
     var d = volumeData[val];
     var total = d.base + d.ccFees + d.uspsMarkup;
+    var labelCost = parseInt(val) * 12;
     document.getElementById('ss-base').textContent = fmt(d.base);
+    document.getElementById('ss-label-desc').textContent = 'Shipping labels x ' + parseInt(val).toLocaleString() + ' ($12/label avg.)';
+    document.getElementById('ss-label-cost').textContent = fmt(labelCost);
     document.getElementById('ss-cc-fees').textContent = fmt(d.ccFees);
     document.getElementById('ss-usps-markup').textContent = fmt(d.uspsMarkup);
     document.getElementById('ss-total').textContent = fmt(total);
