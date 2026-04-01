@@ -166,6 +166,16 @@ For merchants shipping 100+ USPS packages/day
 </div>
 <p id="ss-subtitle" class="text-on-surface-variant text-xs font-bold mt-0.5">per 10,000 shipments/mo</p>
 </div>
+<!-- SS bar layer labels -->
+<div id="label-base" class="absolute pointer-events-none z-10 opacity-0 transition-opacity duration-300" style="left:0;top:0;will-change:transform;">
+<p class="text-[9px] font-black text-white/90 whitespace-nowrap drop-shadow-sm">Base plan</p>
+</div>
+<div id="label-carrier" class="absolute pointer-events-none z-10 opacity-0 transition-opacity duration-300" style="left:0;top:0;will-change:transform;">
+<p class="text-[9px] font-black text-white/90 whitespace-nowrap drop-shadow-sm">Carrier fee</p>
+</div>
+<div id="label-cc" class="absolute pointer-events-none z-10 opacity-0 transition-opacity duration-300" style="left:0;top:0;will-change:transform;">
+<p class="text-[9px] font-black text-white/90 whitespace-nowrap drop-shadow-sm">CC fee</p>
+</div>
 <div id="handwritten-note" class="absolute z-30 opacity-0 pointer-events-none" style="left: 0; top: 0; will-change: transform;">
 <p id="note-text" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: #1d1a22; transform: rotate(-4deg) translateY(18px); transition: transform 0.5s ease, opacity 0.5s ease;">No change.</p>
 <p id="note-subtext" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 14px; font-weight: 700; color: #18C98D; transform: rotate(-4deg); margin-top: -2px; transition: opacity 0.5s ease;">(we're down here)</p>
@@ -275,9 +285,21 @@ function setBarHeight(mesh, h, baseY) {
   mesh.geometry = new RoundedBoxGeometry(barWidth, safeH, barDepth, 4, barRadius);
   mesh.position.y = safeH * 0.5 + (baseY || 0);
 }
-// Track current rendered height
+// Set layer height and position (BoxGeometry, no rounding for stacked layers)
+function setLayerHeight(mesh, h, bottomY) {
+  const safeH = Math.max(h, 0.001);
+  if (mesh.geometry) mesh.geometry.dispose();
+  mesh.geometry = new THREE.BoxGeometry(barWidth, safeH, barDepth);
+  mesh.position.y = bottomY + safeH * 0.5;
+  mesh.visible = h > 0.005;
+}
+// Track current rendered heights
 let ssCurrentH = 0.01;
 let rsCurrentH = 0.01;
+// SS layer current heights (lerped)
+let ssBaseCurrentH = 0.01, ssCarrierCurrentH = 0, ssCcCurrentH = 0;
+// SS layer target heights
+let ssBaseTargetH = 0.01, ssCarrierTargetH = 0, ssCcTargetH = 0;
 // Bars start recessed in the pit, animate to baseY=-barRadius (hides bottom rounding)
 const pitStartY = -0.5;
 const barRestY = -barRadius; // final resting offset — bottom rounding hidden below floor
@@ -285,11 +307,19 @@ let ssBaseY = pitStartY;
 let rsBaseY = pitStartY;
 let targetRSBaseY = barRestY; // target Y offset for RS bar (goes negative to recess)
 
-// ShipStation bar — flat matte, MeshLambertMaterial for no reflections
-const ssMat = new THREE.MeshLambertMaterial({ color: 0xd0d8e0 });
-const ssBar = new THREE.Mesh(new RoundedBoxGeometry(barWidth, 0.01, barDepth, 4, barRadius), ssMat);
-ssBar.position.set(1.225, pitStartY, 0);
-scene.add(ssBar);
+// ShipStation bar — 3 stacked layers (base, carrier, CC)
+const ssBaseMat = new THREE.MeshLambertMaterial({ color: 0xc8d0d8 });
+const ssCarrierMat = new THREE.MeshLambertMaterial({ color: 0xb0b8c4 });
+const ssCcMat = new THREE.MeshLambertMaterial({ color: 0x98a0b0 });
+const ssLayerBase = new THREE.Mesh(new THREE.BoxGeometry(barWidth, 0.01, barDepth), ssBaseMat);
+const ssLayerCarrier = new THREE.Mesh(new THREE.BoxGeometry(barWidth, 0.01, barDepth), ssCarrierMat);
+const ssLayerCc = new THREE.Mesh(new THREE.BoxGeometry(barWidth, 0.01, barDepth), ssCcMat);
+ssLayerBase.position.set(1.225, pitStartY, 0);
+ssLayerCarrier.position.set(1.225, pitStartY, 0);
+ssLayerCc.position.set(1.225, pitStartY, 0);
+scene.add(ssLayerBase, ssLayerCarrier, ssLayerCc);
+// Wrapper reference for card positioning (tracks top of stack)
+const ssBar = { position: { x: 1.225, y: 0 } };
 
 // ReadyShipper bar — flat green
 const rsMat = new THREE.MeshLambertMaterial({ color: 0x4BE8AE, emissive: 0x18C98D, emissiveIntensity: 0.15 });
@@ -482,6 +512,9 @@ const cbCarrier = document.getElementById('cb-carrier-account');
 const cbCreditCard = document.getElementById('cb-credit-card');
 const ssFeeCarrier = document.getElementById('ss-fee-carrier');
 const ssFeeCc = document.getElementById('ss-fee-cc');
+const labelBase = document.getElementById('label-base');
+const labelCarrier = document.getElementById('label-carrier');
+const labelCc = document.getElementById('label-cc');
 
 function updateSlider(idx) {
   const tier = VOLUME_TIERS[idx];
@@ -504,6 +537,11 @@ function updateSlider(idx) {
   targetSSMaxH = ssBaseH + Math.max(ssEffective - lowestSS, 0) * ssGrowthRate;
   // RS bar: direct price ratio of SS bar height
   targetRSMaxH = targetSSMaxH * (tier.rs / ssEffective);
+
+  // SS layer heights (proportional to each fee's contribution)
+  ssBaseTargetH = targetSSMaxH * (tier.ss / ssEffective);
+  ssCarrierTargetH = carrierFee ? targetSSMaxH * (carrierFee / ssEffective) : 0;
+  ssCcTargetH = ccFee ? targetSSMaxH * (ccFee / ssEffective) : 0;
 
   // Update target costs (tick loop lerps the displayed values)
   ssTargetCost = ssEffective;
@@ -588,8 +626,16 @@ function tick(time) {
     const ssE = easeInOutCubic(ssP);
     ssCurrentH = 0.01 + ssE * targetSSMaxH;
     ssBaseY = pitStartY + (barRestY - pitStartY) * ssE;
-    setBarHeight(ssBar, ssCurrentH, ssBaseY);
-    ssBar.position.x = 1.225;
+    // Animate SS layers proportionally during entrance
+    ssBaseCurrentH = 0.01 + ssE * ssBaseTargetH;
+    ssCarrierCurrentH = ssE * ssCarrierTargetH;
+    ssCcCurrentH = ssE * ssCcTargetH;
+    const ssLayerBottomY = ssBaseY;
+    setLayerHeight(ssLayerBase, ssBaseCurrentH, ssLayerBottomY);
+    setLayerHeight(ssLayerCarrier, ssCarrierCurrentH, ssLayerBottomY + ssBaseCurrentH);
+    setLayerHeight(ssLayerCc, ssCcCurrentH, ssLayerBottomY + ssBaseCurrentH + ssCarrierCurrentH);
+    ssLayerBase.position.x = ssLayerCarrier.position.x = ssLayerCc.position.x = 1.225;
+    ssBar.position.y = ssLayerBottomY + ssBaseCurrentH + ssCarrierCurrentH + ssCcCurrentH;
     ssCounter.textContent = '$' + Math.round(ssE * ssTargetCost).toLocaleString();
 
     if (elapsed > 50) {
@@ -612,15 +658,17 @@ function tick(time) {
   // --- Post-animation: smoothly lerp everything (frame-rate independent) ---
   if (animDone) {
     const lerpFactor = 1 - Math.pow(1 - 0.1, dt * 60);
-    // SS bar height
-    const ssDiff = targetSSMaxH - ssCurrentH;
-    if (Math.abs(ssDiff) > 0.001) {
-      ssCurrentH += ssDiff * lerpFactor;
-    } else {
-      ssCurrentH = targetSSMaxH;
-    }
-    setBarHeight(ssBar, ssCurrentH, barRestY);
-    ssBar.position.x = 1.225;
+    // SS layer heights — lerp each independently then stack
+    ssBaseCurrentH += (ssBaseTargetH - ssBaseCurrentH) * lerpFactor;
+    ssCarrierCurrentH += (ssCarrierTargetH - ssCarrierCurrentH) * lerpFactor;
+    ssCcCurrentH += (ssCcTargetH - ssCcCurrentH) * lerpFactor;
+    ssCurrentH = ssBaseCurrentH + ssCarrierCurrentH + ssCcCurrentH;
+    const ssStackY = barRestY;
+    setLayerHeight(ssLayerBase, ssBaseCurrentH, ssStackY);
+    setLayerHeight(ssLayerCarrier, ssCarrierCurrentH, ssStackY + ssBaseCurrentH);
+    setLayerHeight(ssLayerCc, ssCcCurrentH, ssStackY + ssBaseCurrentH + ssCarrierCurrentH);
+    ssLayerBase.position.x = ssLayerCarrier.position.x = ssLayerCc.position.x = 1.225;
+    ssBar.position.y = ssStackY + ssCurrentH; // track top for card positioning
     // RS bar height + recess
     const rsHDiff = targetRSMaxH - rsCurrentH;
     if (Math.abs(rsHDiff) > 0.001) {
@@ -655,9 +703,26 @@ function tick(time) {
     }
   }
 
+  // Position SS layer labels on the front face of each layer
+  if (animDone) {
+    const ssX = 1.225;
+    const bMid = (barRestY + ssBaseCurrentH * 0.5);
+    const cMid = (barRestY + ssBaseCurrentH + ssCarrierCurrentH * 0.5);
+    const ccMid = (barRestY + ssBaseCurrentH + ssCarrierCurrentH + ssCcCurrentH * 0.5);
+    const bScreen = toScreen(ssX, bMid, barDepth / 2 + 0.1);
+    const cScreen = toScreen(ssX, cMid, barDepth / 2 + 0.1);
+    const ccScreen = toScreen(ssX, ccMid, barDepth / 2 + 0.1);
+    labelBase.style.transform = 'translate(' + bScreen.x.toFixed(1) + 'px,' + bScreen.y.toFixed(1) + 'px) translate(-50%,-50%)';
+    labelBase.style.opacity = ssBaseCurrentH > 0.15 ? '1' : '0';
+    labelCarrier.style.transform = 'translate(' + cScreen.x.toFixed(1) + 'px,' + cScreen.y.toFixed(1) + 'px) translate(-50%,-50%)';
+    labelCarrier.style.opacity = ssCarrierCurrentH > 0.15 ? '1' : '0';
+    labelCc.style.transform = 'translate(' + ccScreen.x.toFixed(1) + 'px,' + ccScreen.y.toFixed(1) + 'px) translate(-50%,-50%)';
+    labelCc.style.opacity = ssCcCurrentH > 0.15 ? '1' : '0';
+  }
+
   // Compute target card screen positions from bar 3D positions
   const rsLeftTarget = toScreen(rsBar.position.x - barWidth/2 - 0.2, rsBar.position.y, rsBar.position.z);
-  const ssRightTarget = toScreen(ssBar.position.x + barWidth/2 + 0.2, ssBar.position.y, ssBar.position.z);
+  const ssRightTarget = toScreen(ssBar.position.x + barWidth/2 + 0.2, ssBar.position.y, 0);
   const rsTopWorld = rsCurrentH + rsBaseY + 0.3;
   const rsTopTarget = toScreen(rsBar.position.x, rsTopWorld, rsBar.position.z);
 
