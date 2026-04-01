@@ -912,13 +912,15 @@ window.addEventListener('resize', () => {
 <span>Base Subscription</span>
 <span id="ss-base" class="font-bold text-on-surface">$699.00</span>
 </div>
+<div>
 <div class="flex justify-between text-on-surface-variant font-medium">
-<span id="ss-label-desc">Shipping labels x 4,000 ($12/label avg.)</span>
+<span>Shipping labels x <span id="ss-label-vol" class="font-black text-on-surface">4,000</span> ($12/label avg.)</span>
 <span id="ss-label-cost" class="font-bold text-on-surface">$48,000.00</span>
 </div>
-<div class="flex justify-between ml-4 text-red-500 text-sm font-medium">
-<span id="ss-cc-desc">+1.5% credit card processing fee</span>
+<div class="flex justify-between ml-4 mt-1 text-red-500 text-xs font-medium">
+<span>+1.5% credit card processing fee</span>
 <span id="ss-cc-fees" class="font-bold">$720.00</span>
+</div>
 </div>
 <div class="flex justify-between text-on-surface-variant font-medium">
 <span>Est. USPS/EasyPost Markup (~8%)</span>
@@ -941,16 +943,16 @@ window.addEventListener('resize', () => {
 <span class="font-bold text-on-surface">$64.00</span>
 </div>
 <div class="flex justify-between text-on-surface-variant font-medium">
-<span>Credit Card Fees</span>
-<span class="font-black text-primary uppercase tracking-wider">$0</span>
+<span>Shipping labels x <span id="rs-label-vol" class="font-black text-on-surface">4,000</span> ($12/label avg.)</span>
+<span id="rs-label-cost" class="font-bold text-on-surface">$48,000.00</span>
 </div>
 <div class="flex justify-between text-on-surface-variant font-medium">
-<span>USPS Markup</span>
+<span>Credit Card Fees</span>
 <span class="font-black text-primary uppercase tracking-wider">$0</span>
 </div>
 <div class="border-t border-slate-100 pt-8 flex justify-between items-baseline">
 <span class="text-lg font-bold text-on-surface-variant uppercase tracking-wider">Total Monthly</span>
-<span class="text-6xl font-black text-on-surface tracking-tight">$64.00</span>
+<span id="rs-total" class="text-6xl font-black text-on-surface tracking-tight">$48,064.00</span>
 </div>
 </div>
 <div class="mt-12 bg-primary p-8 rounded-2xl text-center relative">
@@ -1048,14 +1050,19 @@ ddOptions.forEach(opt => {
     // Update pricing
     var d = volumeData[val];
     var total = d.base + d.ccFees + d.uspsMarkup;
-    var labelCost = parseInt(val) * 12;
+    var vol = parseInt(val);
+    var labelCost = vol * 12;
+    var rsTotal = 64 + labelCost;
     document.getElementById('ss-base').textContent = fmt(d.base);
-    document.getElementById('ss-label-desc').textContent = 'Shipping labels x ' + parseInt(val).toLocaleString() + ' ($12/label avg.)';
+    document.getElementById('ss-label-vol').textContent = vol.toLocaleString();
     document.getElementById('ss-label-cost').textContent = fmt(labelCost);
     document.getElementById('ss-cc-fees').textContent = fmt(d.ccFees);
     document.getElementById('ss-usps-markup').textContent = fmt(d.uspsMarkup);
     document.getElementById('ss-total').textContent = fmt(total);
-    document.getElementById('rs-savings').textContent = fmt((total - 64) * 12);
+    document.getElementById('rs-label-vol').textContent = vol.toLocaleString();
+    document.getElementById('rs-label-cost').textContent = fmt(labelCost);
+    document.getElementById('rs-total').textContent = fmt(rsTotal);
+    document.getElementById('rs-savings').textContent = fmt((total - rsTotal) * 12);
   });
 });
 
