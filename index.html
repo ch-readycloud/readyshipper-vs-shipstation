@@ -745,7 +745,7 @@ function tick(time) {
   const rsTopTarget = toScreen(rsBar.position.x, rsTopWorld, rsBar.position.z);
 
   const isMobile = cw < 768;
-  const tRSX = isMobile ? Math.max(0, rsLeftTarget.x - 95) : rsLeftTarget.x - 175, tRSY = rsLeftTarget.y - (isMobile ? 10 : 40);
+  const tRSX = isMobile ? Math.max(0, rsLeftTarget.x - 95) : rsLeftTarget.x - 200, tRSY = rsLeftTarget.y - (isMobile ? 10 : 60);
   // Anchor SS card at a minimum Y so it doesn't fly off screen with tall bars
   const ssCardMinY = isMobile ? 5 : 20;
   const ssShift = isMobile ? -30 : 0;
@@ -960,7 +960,7 @@ window.addEventListener('resize', () => {
 <!-- Fees highlight -->
 <div class="mt-16 max-w-4xl mx-auto">
 <h3 class="font-headline text-3xl font-black text-on-surface text-center mb-2">No Hidden Fees</h3>
-<p class="text-on-surface-variant text-center text-sm font-medium mb-8">Just flat-rate software pricing. That's it.</p>
+<p class="text-on-surface-variant text-center text-sm font-medium mb-8">One flat monthly rate per user. No surprises.</p>
 <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
 <div class="flex items-center gap-3 bg-primary/5 border border-primary/15 rounded-2xl px-5 py-4">
 <span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
@@ -1238,9 +1238,7 @@ document.addEventListener('click', (e) => {
             &ldquo;Since moving to ReadyShipper, we've been able to ship out more orders with fewer employees.&rdquo;
         </blockquote>
 <div class="flex items-center gap-4">
-<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center ring-4 ring-primary/20">
-<span class="text-primary font-black text-xl">BS</span>
-</div>
+<img src="images/brian-s.png" alt="Brian S." class="w-16 h-16 rounded-full object-cover ring-4 ring-primary/20"/>
 <div>
 <p class="font-black text-xl text-on-surface tracking-tight">Brian S.</p>
 <p class="text-on-surface-variant font-bold text-sm">Warehouse Operations Supervisor at AdaptHealth</p>
@@ -1269,6 +1267,7 @@ document.addEventListener('click', (e) => {
 <section class="py-16 sm:py-24 lg:py-32 px-8 max-w-7xl mx-auto">
 <div class="text-center mb-20 space-y-4">
 <h2 class="font-headline text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-on-surface">Why Choose ReadyShipper</h2>
+<p class="text-xl text-on-surface-variant max-w-3xl mx-auto leading-relaxed">See why high-volume shippers switch to ReadyShipper.</p>
 </div>
 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
 <!-- Item 1 -->
@@ -1276,7 +1275,7 @@ document.addEventListener('click', (e) => {
 <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center">
 <span class="material-symbols-outlined text-primary text-3xl">savings</span>
 </div>
-<h3 class="font-headline text-2xl font-black text-on-surface tracking-tight">Lower Costs. More Control.</h3>
+<h3 class="font-headline text-2xl font-black text-on-surface tracking-tight">Save on Every Shipment</h3>
 <p class="text-on-surface-variant font-medium leading-relaxed">Automate rate shopping based on your rules, bring your own rates, and scale without volume fees, per-label fees, or credit card fees.</p>
 </div>
 <!-- Item 2 -->
@@ -1285,15 +1284,15 @@ document.addEventListener('click', (e) => {
 <span class="material-symbols-outlined text-primary text-3xl">compare_arrows</span>
 </div>
 <h3 class="font-headline text-2xl font-black text-on-surface tracking-tight">Built for Mid-Market &amp; Enterprise Operations</h3>
-<p class="text-on-surface-variant font-medium leading-relaxed">The speed, cost controls, and flexibility that high volume shippers need without the limitations of browser-based solutions and hidden fees.</p>
+<p class="text-on-surface-variant font-medium leading-relaxed">ReadyShipper gives mid-market and enterprise operations the speed, cost controls, and flexibility to scale without compromise.</p>
 </div>
 <!-- Item 3 -->
 <div class="bg-white rounded-[2rem] p-10 border border-slate-100 shadow-lg space-y-4">
 <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center">
 <span class="material-symbols-outlined text-primary text-3xl">smart_toy</span>
 </div>
-<h3 class="font-headline text-2xl font-black text-on-surface tracking-tight">Automate Shipping Decision-Making</h3>
-<p class="text-on-surface-variant font-medium leading-relaxed">Build unlimited automations and custom rules that select the best carrier, service, and package for every order automatically.</p>
+<h3 class="font-headline text-2xl font-black text-on-surface tracking-tight">Automate Shipping Decision Making</h3>
+<p class="text-on-surface-variant font-medium leading-relaxed">Make the right shipping decision on every order. Carrier selection, service level, packaging, and more are all handled automatically.</p>
 </div>
 <!-- Item 4 -->
 <div class="bg-white rounded-[2rem] p-10 border border-slate-100 shadow-lg space-y-4">
@@ -1301,7 +1300,7 @@ document.addEventListener('click', (e) => {
 <span class="material-symbols-outlined text-primary text-3xl">speed</span>
 </div>
 <h3 class="font-headline text-2xl font-black text-on-surface tracking-tight">Faster Shipping Operations</h3>
-<p class="text-on-surface-variant font-medium leading-relaxed">Batch print up to 4 labels per second with ReadyShipper's hybrid-cloud engine — outpacing browser-based platforms by 400%.</p>
+<p class="text-on-surface-variant font-medium leading-relaxed">Process up to 4 labels per second with ReadyShipper's hybrid-cloud platform, outpacing browser-based shipping platforms by 400%.</p>
 </div>
 <!-- Item 5 -->
 <div class="bg-white rounded-[2rem] p-10 border border-slate-100 shadow-lg space-y-4">
@@ -1309,7 +1308,7 @@ document.addEventListener('click', (e) => {
 <span class="material-symbols-outlined text-primary text-3xl">package_2</span>
 </div>
 <h3 class="font-headline text-2xl font-black text-on-surface tracking-tight">Manage Your Entire Post-Purchase Operation</h3>
-<p class="text-on-surface-variant font-medium leading-relaxed">Shipping, returns, tracking, and analytics in one platform. Connect all your sales channels and carriers in a single place.</p>
+<p class="text-on-surface-variant font-medium leading-relaxed">Manage shipping, returns, and post-purchase email/SMS from a single platform. No disconnected tools, no jumping between systems.</p>
 </div>
 <!-- Item 6 -->
 <div class="bg-white rounded-[2rem] p-10 border border-slate-100 shadow-lg space-y-4">
@@ -1317,7 +1316,7 @@ document.addEventListener('click', (e) => {
 <span class="material-symbols-outlined text-primary text-3xl">support_agent</span>
 </div>
 <h3 class="font-headline text-2xl font-black text-on-surface tracking-tight">Real People, Real Support, Ready to Help</h3>
-<p class="text-on-surface-variant font-medium leading-relaxed">Live video calls with screen sharing, phone support, email, and hands-on onboarding. No chatbots, no ticket queues.</p>
+<p class="text-on-surface-variant font-medium leading-relaxed">Get support via live video calls with screen sharing, phone and email. Plus, a dedicated account manager who knows your operation.</p>
 </div>
 </div>
 </section>
