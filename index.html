@@ -166,16 +166,6 @@ For merchants shipping 100+ USPS packages/day
 </div>
 <p id="ss-subtitle" class="text-on-surface-variant text-xs font-bold mt-0.5">per 10,000 shipments/mo</p>
 </div>
-<!-- SS bar layer labels -->
-<div id="label-base" class="absolute pointer-events-none z-10 opacity-0 transition-opacity duration-300" style="left:0;top:0;will-change:transform;">
-<p class="text-[9px] font-black text-white/90 whitespace-nowrap drop-shadow-sm">Base plan</p>
-</div>
-<div id="label-carrier" class="absolute pointer-events-none z-10 opacity-0 transition-opacity duration-300" style="left:0;top:0;will-change:transform;">
-<p class="text-[9px] font-black text-white/90 whitespace-nowrap drop-shadow-sm">Carrier fee</p>
-</div>
-<div id="label-cc" class="absolute pointer-events-none z-10 opacity-0 transition-opacity duration-300" style="left:0;top:0;will-change:transform;">
-<p class="text-[9px] font-black text-white/90 whitespace-nowrap drop-shadow-sm">CC fee</p>
-</div>
 <div id="handwritten-note" class="absolute z-30 opacity-0 pointer-events-none" style="left: 0; top: 0; will-change: transform;">
 <p id="note-text" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: #1d1a22; transform: rotate(-4deg) translateY(18px); transition: transform 0.5s ease, opacity 0.5s ease;">No change.</p>
 <p id="note-subtext" class="whitespace-nowrap opacity-0" style="font-family: 'Caveat', cursive; font-size: 14px; font-weight: 700; color: #18C98D; transform: rotate(-4deg); margin-top: -2px; transition: opacity 0.5s ease;">(we're down here)</p>
@@ -318,6 +308,30 @@ ssLayerBase.position.set(1.225, pitStartY, 0);
 ssLayerCarrier.position.set(1.225, pitStartY, 0);
 ssLayerCc.position.set(1.225, pitStartY, 0);
 scene.add(ssLayerBase, ssLayerCarrier, ssLayerCc);
+
+// 3D face labels for SS layers — canvas texture on planes
+function createFaceLabel(text) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 256; canvas.height = 64;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 256, 64);
+  ctx.font = '600 26px Inter, system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.fillText(text, 128, 32);
+  const tex = new THREE.CanvasTexture(canvas);
+  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthTest: false });
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(barWidth * 0.85, 0.18), mat);
+  mesh.renderOrder = 999;
+  mesh.visible = false;
+  return mesh;
+}
+const faceLabelBase = createFaceLabel('Base plan');
+const faceLabelCarrier = createFaceLabel('Carrier fee');
+const faceLabelCc = createFaceLabel('CC fee');
+scene.add(faceLabelBase, faceLabelCarrier, faceLabelCc);
+
 // Wrapper reference for card positioning (tracks top of stack)
 const ssBar = { position: { x: 1.225, y: 0 } };
 
@@ -512,9 +526,6 @@ const cbCarrier = document.getElementById('cb-carrier-account');
 const cbCreditCard = document.getElementById('cb-credit-card');
 const ssFeeCarrier = document.getElementById('ss-fee-carrier');
 const ssFeeCc = document.getElementById('ss-fee-cc');
-const labelBase = document.getElementById('label-base');
-const labelCarrier = document.getElementById('label-carrier');
-const labelCc = document.getElementById('label-cc');
 
 function updateSlider(idx) {
   const tier = VOLUME_TIERS[idx];
@@ -703,21 +714,20 @@ function tick(time) {
     }
   }
 
-  // Position SS layer labels on the front face of each layer
-  if (animDone) {
+  // Position 3D face labels on front face of each SS layer
+  {
     const ssX = 1.225;
-    const bMid = (barRestY + ssBaseCurrentH * 0.5);
-    const cMid = (barRestY + ssBaseCurrentH + ssCarrierCurrentH * 0.5);
-    const ccMid = (barRestY + ssBaseCurrentH + ssCarrierCurrentH + ssCcCurrentH * 0.5);
-    const bScreen = toScreen(ssX, bMid, barDepth / 2 + 0.1);
-    const cScreen = toScreen(ssX, cMid, barDepth / 2 + 0.1);
-    const ccScreen = toScreen(ssX, ccMid, barDepth / 2 + 0.1);
-    labelBase.style.transform = 'translate(' + bScreen.x.toFixed(1) + 'px,' + bScreen.y.toFixed(1) + 'px) translate(-50%,-50%)';
-    labelBase.style.opacity = ssBaseCurrentH > 0.15 ? '1' : '0';
-    labelCarrier.style.transform = 'translate(' + cScreen.x.toFixed(1) + 'px,' + cScreen.y.toFixed(1) + 'px) translate(-50%,-50%)';
-    labelCarrier.style.opacity = ssCarrierCurrentH > 0.15 ? '1' : '0';
-    labelCc.style.transform = 'translate(' + ccScreen.x.toFixed(1) + 'px,' + ccScreen.y.toFixed(1) + 'px) translate(-50%,-50%)';
-    labelCc.style.opacity = ssCcCurrentH > 0.15 ? '1' : '0';
+    const frontZ = barDepth / 2 + 0.001;
+    const stackBase = animDone ? barRestY : ssBaseY;
+    const bMidY = stackBase + ssBaseCurrentH * 0.5;
+    const cMidY = stackBase + ssBaseCurrentH + ssCarrierCurrentH * 0.5;
+    const ccMidY = stackBase + ssBaseCurrentH + ssCarrierCurrentH + ssCcCurrentH * 0.5;
+    faceLabelBase.position.set(ssX, bMidY, frontZ);
+    faceLabelCarrier.position.set(ssX, cMidY, frontZ);
+    faceLabelCc.position.set(ssX, ccMidY, frontZ);
+    faceLabelBase.visible = animDone && ssBaseCurrentH > 0.15;
+    faceLabelCarrier.visible = animDone && ssCarrierCurrentH > 0.15;
+    faceLabelCc.visible = animDone && ssCcCurrentH > 0.15;
   }
 
   // Compute target card screen positions from bar 3D positions
