@@ -299,8 +299,8 @@ let targetRSBaseY = barRestY; // target Y offset for RS bar (goes negative to re
 
 // ShipStation bar — 3 stacked layers (base, carrier, CC)
 const ssBaseMat = new THREE.MeshLambertMaterial({ color: 0xc8d0d8 });
-const ssCarrierMat = new THREE.MeshLambertMaterial({ color: 0xb0b8c4 });
-const ssCcMat = new THREE.MeshLambertMaterial({ color: 0x98a0b0 });
+const ssCarrierMat = new THREE.MeshLambertMaterial({ color: 0xb0b8c4, transparent: true });
+const ssCcMat = new THREE.MeshLambertMaterial({ color: 0x98a0b0, transparent: true });
 const ssLayerBase = new THREE.Mesh(new THREE.BoxGeometry(barWidth, 0.01, barDepth), ssBaseMat);
 const ssLayerCarrier = new THREE.Mesh(new THREE.BoxGeometry(barWidth, 0.01, barDepth), ssCarrierMat);
 const ssLayerCc = new THREE.Mesh(new THREE.BoxGeometry(barWidth, 0.01, barDepth), ssCcMat);
@@ -679,6 +679,10 @@ function tick(time) {
     setLayerHeight(ssLayerCarrier, ssCarrierCurrentH, ssStackY + ssBaseCurrentH);
     setLayerHeight(ssLayerCc, ssCcCurrentH, ssStackY + ssBaseCurrentH + ssCarrierCurrentH);
     ssLayerBase.position.x = ssLayerCarrier.position.x = ssLayerCc.position.x = 1.225;
+    // Fade out carrier/CC layers as they shrink to avoid hard clip
+    const fadeThr = 0.08;
+    ssCarrierMat.opacity = ssCarrierCurrentH < fadeThr ? Math.max(0, ssCarrierCurrentH / fadeThr) : 1;
+    ssCcMat.opacity = ssCcCurrentH < fadeThr ? Math.max(0, ssCcCurrentH / fadeThr) : 1;
     ssBar.position.y = ssStackY + ssCurrentH; // track top for card positioning
     // RS bar height + recess
     const rsHDiff = targetRSMaxH - rsCurrentH;
