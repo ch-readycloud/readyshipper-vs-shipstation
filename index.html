@@ -745,8 +745,7 @@ function tick(time) {
   const rsTopTarget = toScreen(rsBar.position.x, rsTopWorld, rsBar.position.z);
 
   const isMobile = cw < 768;
-  const cardOffset = isMobile ? 95 : 175;
-  const tRSX = Math.max(0, rsLeftTarget.x - cardOffset), tRSY = rsLeftTarget.y - (isMobile ? 10 : 40);
+  const tRSX = isMobile ? Math.max(0, rsLeftTarget.x - 95) : rsLeftTarget.x - 175, tRSY = rsLeftTarget.y - (isMobile ? 10 : 40);
   // Anchor SS card at a minimum Y so it doesn't fly off screen with tall bars
   const ssCardMinY = isMobile ? 5 : 20;
   const ssShift = isMobile ? -30 : 0;
@@ -1160,65 +1159,65 @@ document.addEventListener('click', (e) => {
 <thead>
 <tr class="bg-slate-900 text-white">
 <th class="py-8 px-8 font-bold text-sm uppercase tracking-[0.15em] text-slate-300 w-1/2">Feature</th>
-<th class="py-8 px-8 w-1/4"><img src="logos/readyshipper-logo-white.svg" alt="ReadyShipper" class="h-7 w-auto" onerror="this.outerHTML='<span class=\'font-black text-2xl tracking-tight\'><span class=\'text-white\'>Ready</span><span class=\'text-primary\'>Shipper</span></span>'"/></th>
-<th class="py-8 px-8 font-black text-xl tracking-tight text-slate-400 w-1/4">ShipStation</th>
+<th class="py-8 px-8 w-1/4 text-center"><img src="logos/readyshipper-logo-white.svg" alt="ReadyShipper" class="h-7 w-auto mx-auto" onerror="this.outerHTML='<span class=\'font-black text-2xl tracking-tight\'><span class=\'text-white\'>Ready</span><span class=\'text-primary\'>Shipper</span></span>'"/></th>
+<th class="py-8 px-8 font-black text-xl tracking-tight text-slate-400 w-1/4 text-center">ShipStation</th>
 </tr>
 </thead>
 <tbody>
 <tr class="bg-white hover:bg-slate-50 transition-colors border-b border-slate-100">
 <td class="py-5 px-8 font-bold text-on-surface">Discounted carrier rates</td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
 </tr>
 <tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
 <td class="py-5 px-8 font-bold text-on-surface">No credit card fees</td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
 <tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
 <td class="py-5 px-8 font-bold text-on-surface">Phone, Email and Live video call support w/ screen sharing</td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
 <tr class="bg-white hover:bg-slate-50 transition-colors border-b border-slate-100">
 <td class="py-5 px-8 font-bold text-on-surface">No fees when using your own carrier account or negotiated rates</td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
 <tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
 <td class="py-5 px-8 font-bold text-on-surface">Hybrid-cloud deployment</td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
 <tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
 <td class="py-5 px-8 font-bold text-on-surface">Hands-on setup and onboarding</td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
 <tr class="bg-white hover:bg-slate-50 transition-colors border-b border-slate-100">
 <td class="py-5 px-8 font-bold text-on-surface">Batch print 4 labels per second</td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
 <tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
 <td class="py-5 px-8 font-bold text-on-surface">Automated rate shopping based on your rules</td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-5 px-8"><span class="text-amber-500 font-bold text-sm">Limited</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8 text-center"><span class="text-amber-500 font-bold text-sm">Limited</span></td>
 </tr>
 <tr class="bg-white hover:bg-slate-50 transition-colors border-b border-slate-100">
 <td class="py-5 px-8 font-bold text-on-surface">Rate shop multiple accounts from the same carrier</td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
 <tr class="bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100">
 <td class="py-5 px-8 font-bold text-on-surface">One platform for shipping, returns, and post-purchase marketing</td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
 <tr class="bg-white hover:bg-slate-50 transition-colors">
 <td class="py-5 px-8 font-bold text-on-surface">Order-based CRM, team collaboration tools, &amp; order-based task management</td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
-<td class="py-5 px-8"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+<td class="py-5 px-8 text-center"><span class="material-symbols-outlined text-red-400 text-2xl">close</span></td>
 </tr>
 </tbody>
 </table>
