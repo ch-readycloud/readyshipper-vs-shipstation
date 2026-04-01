@@ -422,6 +422,14 @@ function createPit(holeX) {
 }
 createPit(ssHoleX);
 createPit(rsHoleX);
+// Opaque masks above grid to hide any grid lines drifting over holes
+const holeMaskMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+[ssHoleX, rsHoleX].forEach(hx => {
+  const mask = new THREE.Mesh(new THREE.PlaneGeometry(holeW, holeD), holeMaskMat);
+  mask.rotation.x = -Math.PI / 2;
+  mask.position.set(hx, 0.004, 0);
+  scene.add(mask);
+});
 
 // Floor shadow — parallelogram cast to the right from bar base
 // Matches reference: extends right with slight forward skew, dark at base
@@ -493,10 +501,9 @@ for (let z = 0.55 - cellWorld; z >= -gridExtent; z -= cellWorld) zPositions.push
 
 // Check if a point is inside a bar hole
 function inHole(x, z) {
-  var margin = cellWorld; // expand by one cell to account for grid animation
   return [ssHoleX, rsHoleX].some(hx =>
-    x >= hx - barWidth/2 - margin && x <= hx + barWidth/2 + margin &&
-    z >= -barDepth/2 - margin && z <= barDepth/2 + margin
+    x >= hx - barWidth/2 && x <= hx + barWidth/2 &&
+    z >= -barDepth/2 && z <= barDepth/2
   );
 }
 
