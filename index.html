@@ -419,6 +419,11 @@ function createPit(holeX) {
   bottom.rotation.x = -Math.PI / 2;
   bottom.position.set(holeX, -pitDepth, 0);
   scene.add(bottom);
+  // Interior shadow overlay — gradient darkening the left side of the hole opening
+  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(holeW, holeD), pitShadowMat);
+  shadow.rotation.x = -Math.PI / 2;
+  shadow.position.set(holeX, 0.005, 0); // above hole mask (0.004)
+  scene.add(shadow);
 }
 createPit(ssHoleX);
 createPit(rsHoleX);
