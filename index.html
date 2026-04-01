@@ -440,11 +440,11 @@ const colors = [];
 function addLine(x1, z1, x2, z2) {
   const d1 = Math.sqrt(x1*x1 + z1*z1) / fadeRadius;
   const d2 = Math.sqrt(x2*x2 + z2*z2) / fadeRadius;
-  const a1 = Math.max(0, 1 - d1) * 0.45;
-  const a2 = Math.max(0, 1 - d2) * 0.45;
+  const a1 = Math.max(0, 1 - d1) * 0.6;
+  const a2 = Math.max(0, 1 - d2) * 0.6;
   if (a1 < 0.01 && a2 < 0.01) return;
   positions.push(x1, gridY, z1, x2, gridY, z2);
-  colors.push(0.55, 0.6, 0.67, a1, 0.55, 0.6, 0.67, a2);
+  colors.push(0.4, 0.45, 0.52, a1, 0.4, 0.45, 0.52, a2);
 }
 
 // X-parallel lines (constant Z, varying X) — skip segments inside holes
