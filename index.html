@@ -1259,65 +1259,27 @@ document.addEventListener('click', (e) => {
     c.appendChild(d);
   }
 })();
-// Form section orbs — emit from form edges and travel outward
-window.addEventListener('load', function(){
+// Lead section orbs — come in from left and right screen edges
+(function(){
   var c = document.getElementById('form-orb-container');
   if (!c || window.innerWidth < 1024) return;
-  var section = c.parentElement;
-  var form = section.querySelector('.bg-white');
-  if (!form) return;
-  var sRect = section.getBoundingClientRect();
-  var fRect = form.getBoundingClientRect();
-  var fL = fRect.left - sRect.left;
-  var fT = fRect.top - sRect.top;
-  var fW = fRect.width;
-  var fH = fRect.height;
-  var fCx = fL + fW / 2;
-  var fCy = fT + fH / 2;
-
-  function spawnOrb() {
+  for (var i = 0; i < 120; i++) {
     var d = document.createElement('div');
-    var px, py;
-    var edge = Math.random();
-    if (edge < 0.25) {
-      px = fL + Math.random() * fW; py = fT;
-    } else if (edge < 0.5) {
-      px = fL + fW; py = fT + Math.random() * fH;
-    } else if (edge < 0.75) {
-      px = fL + Math.random() * fW; py = fT + fH;
-    } else {
-      px = fL; py = fT + Math.random() * fH;
-    }
-    // Direction: outward from form center
-    var dx = px - fCx, dy = py - fCy;
-    var dist = Math.sqrt(dx * dx + dy * dy) || 1;
-    var travel = 60 + Math.random() * 80;
-    var endX = px + (dx / dist) * travel;
-    var endY = py + (dy / dist) * travel;
-    var size = 3 + Math.random() * 8;
-    var dur = (2.5 + Math.random() * 3).toFixed(1);
-    var animName = 'form-orb-' + Math.floor(Math.random() * 100000);
-    var style = document.createElement('style');
-    style.textContent = '@keyframes ' + animName + '{' +
-      '0%{transform:translate(0,0);opacity:0.25;}' +
-      '100%{transform:translate(' + (endX - px).toFixed(0) + 'px,' + (endY - py).toFixed(0) + 'px);opacity:0;}}';
-    document.head.appendChild(style);
+    var fromLeft = Math.random() < 0.5;
+    var left = fromLeft ? Math.random() * 20 : 80 + Math.random() * 20;
+    var top = Math.random() * 100;
+    var size = 3 + Math.random() * 10;
+    var opacity = (0.06 + Math.random() * 0.16).toFixed(2);
+    var dur = (3 + Math.random() * 5).toFixed(1);
+    var delay = (Math.random() * 6).toFixed(1);
     d.style.cssText = 'position:absolute;border-radius:50%;filter:blur(1px);' +
       'width:' + size.toFixed(0) + 'px;height:' + size.toFixed(0) + 'px;' +
-      'left:' + px.toFixed(0) + 'px;top:' + py.toFixed(0) + 'px;' +
-      'background:rgba(24,201,141,0.2);' +
-      'animation:' + animName + ' ' + dur + 's ease-out forwards;';
+      'left:' + left.toFixed(1) + '%;top:' + top.toFixed(1) + '%;' +
+      'background:rgba(24,201,141,' + opacity + ');' +
+      'animation:orb-float ' + dur + 's ease-in-out ' + delay + 's infinite;';
     c.appendChild(d);
-    setTimeout(function() {
-      d.remove();
-      style.remove();
-    }, parseFloat(dur) * 1000 + 100);
   }
-  // Continuous emission
-  setInterval(function() {
-    for (var i = 0; i < 3; i++) spawnOrb();
-  }, 200);
-});
+})();
 </script>
 </div>
 </section>
