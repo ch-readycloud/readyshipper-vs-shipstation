@@ -1259,16 +1259,37 @@ document.addEventListener('click', (e) => {
     c.appendChild(d);
   }
 })();
-// Form section orbs — concentrated around form (right half), biased bottom
+// Form section orbs — emit from edges of the white form card
 (function(){
   var c = document.getElementById('form-orb-container');
   if (!c) return;
-  for (var i = 0; i < 60; i++) {
+  // Form card approximate bounds within the section (percentage-based)
+  // In a 2-col grid, form is roughly the right half: left ~52%, right ~98%, top ~8%, bottom ~92%
+  var fL = 52, fR = 98, fT = 8, fB = 92;
+  for (var i = 0; i < 70; i++) {
     var d = document.createElement('div');
-    // Cluster around right half (form area) with bottom bias
-    var left = 40 + Math.random() * 60;
-    var top = 30 + Math.pow(Math.random(), 0.6) * 70;
-    var size = 4 + Math.random() * 10;
+    var left, top;
+    // Pick a random edge: top, right, bottom, left of form card
+    var edge = Math.random();
+    var spread = (Math.random() - 0.5) * 8; // slight outward spread from edge
+    if (edge < 0.25) {
+      // Top edge
+      left = fL + Math.random() * (fR - fL);
+      top = fT + spread;
+    } else if (edge < 0.5) {
+      // Right edge
+      left = fR + spread;
+      top = fT + Math.random() * (fB - fT);
+    } else if (edge < 0.75) {
+      // Bottom edge
+      left = fL + Math.random() * (fR - fL);
+      top = fB + spread;
+    } else {
+      // Left edge
+      left = fL + spread;
+      top = fT + Math.random() * (fB - fT);
+    }
+    var size = 3 + Math.random() * 9;
     var opacity = (0.08 + Math.random() * 0.15).toFixed(2);
     var dur = (3 + Math.random() * 5).toFixed(1);
     var delay = (Math.random() * 6).toFixed(1);
