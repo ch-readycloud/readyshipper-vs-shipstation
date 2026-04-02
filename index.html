@@ -1260,47 +1260,50 @@ document.addEventListener('click', (e) => {
   }
 })();
 // Form section orbs — emit from edges of the white form card
-(function(){
+// Uses pixel positions from actual DOM to place orbs accurately
+window.addEventListener('load', function(){
   var c = document.getElementById('form-orb-container');
-  if (!c) return;
-  // Form card approximate bounds within the section (percentage-based)
-  // In a 2-col grid, form is roughly the right half: left ~52%, right ~98%, top ~8%, bottom ~92%
-  var fL = 52, fR = 98, fT = 8, fB = 92;
+  if (!c || window.innerWidth < 1024) return;
+  var section = c.parentElement;
+  var form = section.querySelector('.bg-white');
+  if (!form) return;
+  var sRect = section.getBoundingClientRect();
+  var fRect = form.getBoundingClientRect();
+  // Form position relative to section
+  var fL = fRect.left - sRect.left;
+  var fT = fRect.top - sRect.top;
+  var fW = fRect.width;
+  var fH = fRect.height;
   for (var i = 0; i < 70; i++) {
     var d = document.createElement('div');
-    var left, top;
-    // Pick a random edge: top, right, bottom, left of form card
+    var px, py;
     var edge = Math.random();
-    var spread = (Math.random() - 0.5) * 8; // slight outward spread from edge
+    var spread = (Math.random() - 0.5) * 30;
     if (edge < 0.25) {
-      // Top edge
-      left = fL + Math.random() * (fR - fL);
-      top = fT + spread;
+      px = fL + Math.random() * fW;
+      py = fT + spread;
     } else if (edge < 0.5) {
-      // Right edge
-      left = fR + spread;
-      top = fT + Math.random() * (fB - fT);
+      px = fL + fW + spread;
+      py = fT + Math.random() * fH;
     } else if (edge < 0.75) {
-      // Bottom edge
-      left = fL + Math.random() * (fR - fL);
-      top = fB + spread;
+      px = fL + Math.random() * fW;
+      py = fT + fH + spread;
     } else {
-      // Left edge
-      left = fL + spread;
-      top = fT + Math.random() * (fB - fT);
+      px = fL + spread;
+      py = fT + Math.random() * fH;
     }
     var size = 3 + Math.random() * 9;
-    var opacity = (0.08 + Math.random() * 0.15).toFixed(2);
+    var opacity = (0.1 + Math.random() * 0.15).toFixed(2);
     var dur = (3 + Math.random() * 5).toFixed(1);
     var delay = (Math.random() * 6).toFixed(1);
     d.style.cssText = 'position:absolute;border-radius:50%;filter:blur(1px);' +
       'width:' + size.toFixed(0) + 'px;height:' + size.toFixed(0) + 'px;' +
-      'left:' + left.toFixed(1) + '%;top:' + top.toFixed(1) + '%;' +
+      'left:' + px.toFixed(0) + 'px;top:' + py.toFixed(0) + 'px;' +
       'background:rgba(24,201,141,' + opacity + ');' +
       'animation:orb-float ' + dur + 's ease-in-out ' + delay + 's infinite;';
     c.appendChild(d);
   }
-})();
+});
 </script>
 </div>
 </section>
