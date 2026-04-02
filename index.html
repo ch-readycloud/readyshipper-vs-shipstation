@@ -1259,6 +1259,40 @@ document.addEventListener('click', (e) => {
     c.appendChild(d);
   }
 })();
+// Form section orbs — emit from edges of form, biased toward bottom
+(function(){
+  var c = document.getElementById('form-orb-container');
+  if (!c) return;
+  for (var i = 0; i < 60; i++) {
+    var d = document.createElement('div');
+    // Place along edges: left, right, bottom, with bottom bias
+    var edge = Math.random();
+    var left, top;
+    if (edge < 0.3) {
+      // Left edge
+      left = Math.random() * 15;
+      top = 20 + Math.random() * 80;
+    } else if (edge < 0.6) {
+      // Right edge
+      left = 85 + Math.random() * 15;
+      top = 20 + Math.random() * 80;
+    } else {
+      // Bottom area
+      left = Math.random() * 100;
+      top = 70 + Math.random() * 30;
+    }
+    var size = 4 + Math.random() * 10;
+    var opacity = (0.06 + Math.random() * 0.14).toFixed(2);
+    var dur = (3 + Math.random() * 5).toFixed(1);
+    var delay = (Math.random() * 6).toFixed(1);
+    d.style.cssText = 'position:absolute;border-radius:50%;filter:blur(1px);' +
+      'width:' + size.toFixed(0) + 'px;height:' + size.toFixed(0) + 'px;' +
+      'left:' + left.toFixed(1) + '%;top:' + top.toFixed(1) + '%;' +
+      'background:rgba(24,201,141,' + opacity + ');' +
+      'animation:orb-float ' + dur + 's ease-in-out ' + delay + 's infinite;';
+    c.appendChild(d);
+  }
+})();
 </script>
 </div>
 </section>
@@ -1533,7 +1567,9 @@ document.addEventListener('click', (e) => {
 </div>
 </div>
 </div>
-<div class="bg-white p-6 sm:p-8 lg:p-12 rounded-[2.5rem] text-on-surface shadow-2xl">
+<div class="relative">
+<div id="form-orb-container" class="absolute -inset-16 pointer-events-none hidden lg:block"></div>
+<div class="bg-white p-6 sm:p-8 lg:p-12 rounded-[2.5rem] text-on-surface shadow-2xl relative z-10">
 <form class="space-y-6">
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 <div class="space-y-2">
@@ -1571,6 +1607,7 @@ document.addEventListener('click', (e) => {
 </div>
 <button class="w-full bg-primary text-white py-5 rounded-full font-black text-lg shadow-xl shadow-primary/20 hover:opacity-90 transition-all mt-4 tracking-tight">Start the Conversation</button>
 </form>
+</div>
 </div>
 </div>
 </section>
