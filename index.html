@@ -622,8 +622,8 @@ function updateSlider(idx) {
   // SS bar: base + growth (breaks math cancellation so RS visibly changes)
   const lowestSS = VOLUME_TIERS[0].ss;
   if (tier.label) {
-    // "a lot" tier — make the bar comically tall
-    targetSSMaxH = ssBaseH + 2500 * ssGrowthRate;
+    // "a lot" tier — make the bar comically tall, way off screen
+    targetSSMaxH = 20;
     targetRSMaxH = targetSSMaxH * 0.02;
   } else {
     targetSSMaxH = ssBaseH + Math.max(ssEffective - lowestSS, 0) * ssGrowthRate;
