@@ -656,7 +656,8 @@ function updateSlider(idx) {
   if (idx >= 4) {
     const baseRecessPct = (idx - 3) * 0.25; // 15K=25%, 20K=50%
     const priceScale = Math.min(ssEffective / (tier.ss * 3), 1);
-    targetRSBaseY = barRestY - targetRSMaxH * baseRecessPct * priceScale;
+    const extraRecess = tier.label ? 0.08 : 0;
+    targetRSBaseY = barRestY - targetRSMaxH * baseRecessPct * priceScale - extraRecess;
   } else {
     targetRSBaseY = barRestY;
   }
