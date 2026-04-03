@@ -660,8 +660,12 @@ function updateSlider(idx) {
   // RS bar recesses into pit past 15K — depth scales with tier AND price ratio
   // Higher SS effective price = deeper recess; lower (no fees) = shallower
   if (tier.label) {
-    // 25K "a lot" tier — sink deep using SS bar height as reference
-    targetRSBaseY = barRestY - targetSSMaxH * 0.15;
+    // 25K "a lot" tier — roughly double the 20K recess depth
+    // 20K recess = targetRSMaxH * 0.50 * priceScale; double that
+    const t20 = VOLUME_TIERS[5]; // 20K tier
+    const rs20H = ssBaseH + Math.max(t20.ss - lowestSS, 0) * ssGrowthRate;
+    const rsMaxH20 = rs20H * (t20.rs / t20.ss);
+    targetRSBaseY = barRestY - rsMaxH20 * 1.0;
   } else if (idx >= 4) {
     const baseRecessPct = (idx - 3) * 0.25; // 15K=25%, 20K=50%
     const priceScale = Math.min(ssEffective / (tier.ss * 3), 1);
