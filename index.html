@@ -1267,22 +1267,21 @@ document.addEventListener('click', (e) => {
     c.appendChild(d);
   }
 })();
-// Lead section orbs — come in from left and right screen edges
+// Lead section orbs — same scattered style as switching section
 (function(){
   var c = document.getElementById('form-orb-container');
-  if (!c || window.innerWidth < 1024) return;
-  for (var i = 0; i < 120; i++) {
+  if (!c) return;
+  for (var i = 0; i < 80; i++) {
     var d = document.createElement('div');
-    var fromLeft = Math.random() < 0.5;
-    var left = fromLeft ? Math.random() * 20 : 80 + Math.random() * 20;
-    var top = Math.random() * 100;
-    var size = 3 + Math.random() * 10;
-    var opacity = (0.06 + Math.random() * 0.16).toFixed(2);
+    var topPct = Math.random() * 100;
+    var size = 4 + Math.random() * 10;
+    var opacity = (0.06 + Math.random() * 0.14).toFixed(2);
     var dur = (3 + Math.random() * 5).toFixed(1);
     var delay = (Math.random() * 6).toFixed(1);
     d.style.cssText = 'position:absolute;border-radius:50%;filter:blur(1px);' +
       'width:' + size.toFixed(0) + 'px;height:' + size.toFixed(0) + 'px;' +
-      'left:' + left.toFixed(1) + '%;top:' + top.toFixed(1) + '%;' +
+      'left:' + (Math.random() * 100).toFixed(1) + '%;' +
+      'top:' + topPct.toFixed(1) + '%;' +
       'background:rgba(24,201,141,' + opacity + ');' +
       'animation:orb-float ' + dur + 's ease-in-out ' + delay + 's infinite;';
     c.appendChild(d);
