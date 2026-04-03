@@ -663,8 +663,8 @@ function updateSlider(idx) {
     targetRSBaseY = barRestY;
   }
 
-  // Show "(we're down here)" joke for 15K+ tiers
-  showJokeText = idx >= 4;
+  // Show "(we're down here)" joke for 20K+ tiers
+  showJokeText = idx >= 5;
   if (animDone) {
     if (noteSubtext) noteSubtext.style.opacity = showJokeText ? '1' : '0';
     if (noteText) noteText.style.transform = showJokeText ? 'rotate(-4deg) translateY(0px)' : 'rotate(-4deg) translateY(18px)';
