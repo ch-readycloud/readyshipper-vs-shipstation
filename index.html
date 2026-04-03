@@ -621,15 +621,9 @@ function updateSlider(idx) {
 
   // SS bar: base + growth (breaks math cancellation so RS visibly changes)
   const lowestSS = VOLUME_TIERS[0].ss;
-  if (tier.label) {
-    // "a lot" tier — make the bar tall enough to go off screen
-    targetSSMaxH = 12;
-    targetRSMaxH = targetSSMaxH * 0.02;
-  } else {
-    targetSSMaxH = ssBaseH + Math.max(ssEffective - lowestSS, 0) * ssGrowthRate;
-    // RS bar: direct price ratio of SS bar height
-    targetRSMaxH = targetSSMaxH * (tier.rs / ssEffective);
-  }
+  targetSSMaxH = ssBaseH + Math.max(ssEffective - lowestSS, 0) * ssGrowthRate;
+  // RS bar: direct price ratio of SS bar height
+  targetRSMaxH = targetSSMaxH * (tier.rs / ssEffective);
 
   // SS layer heights (proportional to each fee's contribution)
   ssBaseTargetH = targetSSMaxH * (tier.ss / ssEffective);
@@ -659,10 +653,7 @@ function updateSlider(idx) {
 
   // RS bar recesses into pit past 15K — depth scales with tier AND price ratio
   // Higher SS effective price = deeper recess; lower (no fees) = shallower
-  if (tier.label) {
-    // 25K "a lot" tier — sink well below the floor
-    targetRSBaseY = barRestY - 0.5;
-  } else if (idx >= 4) {
+  if (idx >= 4) {
     const baseRecessPct = (idx - 3) * 0.25; // 15K=25%, 20K=50%
     const priceScale = Math.min(ssEffective / (tier.ss * 3), 1);
     targetRSBaseY = barRestY - targetRSMaxH * baseRecessPct * priceScale;
